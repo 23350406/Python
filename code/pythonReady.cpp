@@ -10,31 +10,84 @@
 // Класс, отвечающий за визуализацию игрового интерфейса.
 class Layout
 {
+private:
+	// Количество игроков.
+	unsigned _numberOfPlayers;
+	// Имена игроков.
+	sf::Text* _playersNames;
+
+	// Номер текущего раунда.
+	unsigned _currentRound;
+	// Колчиество раундов в многораундовой игре.
+	unsigned _numberOfRounds;
+	// Очки игроков.
+	unsigned* _scores;
 public:
-	// Конструктор игрового интерфейса для однораундовой игры.
-	Layout(sf::Color color, unsigned numberOfPlayers, sf::Text* playersNames)
+	// Конструктор по умолчанию.
+	Layout()
 	{
-		_color = color;
+		_playersNames = nullptr;
+		_scores = nullptr;
+	}
+	// Функция задает игроков.
+	void SetPlayers(unsigned numberOfPlayers, sf::Text* playersNames)
+	{
 		_numberOfPlayers = numberOfPlayers;
-		_playersNames = new sf::Text[numberOfPlayers];
-		for (int i = 0; i < numberOfPlayers; ++i)
+		if (_playersNames != nullptr) {
+			delete[] _playersNames;
+		}
+		_playersNames = new sf::Text[_numberOfPlayers];
+		for (int i = 0; i < _numberOfPlayers; ++i)
 		{
 			_playersNames[i] = playersNames[i];
 		}
-		// Однораундовая игра определяется по _round = 0;
-		_round = 0;
 	}
-	// Конструктор игрового интерфейса для многораундовой игры.
-	Layout(sf::Color color, unsigned numberOfPlayers, sf::Text* playersNames, unsigned round, unsigned* scores)
+	// Функция задает номер текущего раунда для многораундовой игры.
+	void SetCurrentRound(unsigned currentRound)
 	{
-		// Часть полей класса инициализируется, с помощью конструктора для однораундовой игры.
-		*this = Layout(color, numberOfPlayers, playersNames);
-		_round = round;
-		_scores = new unsigned[numberOfPlayers];
-		for (int i = 0; i < numberOfPlayers; ++i)
+		_currentRound = currentRound;
+	}
+	// Функция задает количество раундов в многораундовой игре.
+	void SetNumberOfRounds(unsigned numberOfRounds)
+	{
+		_numberOfRounds = numberOfRounds;
+	}
+	// Функция задает массив очков игроков.
+	void SetScores(unsigned* scores)
+	{
+		if (_scores != nullptr) {
+			delete[] _scores;
+		}
+		_scores = new unsigned[_numberOfPlayers];
+		for (int i = 0; i < _numberOfPlayers; ++i)
 		{
 			_scores[i] = scores[i];
 		}
+	}
+	// Функция задает количество игроков.
+	unsigned GetNumberOfPlayers()
+	{
+		return _numberOfPlayers;
+	}
+	// Функция задает имена игроков.
+	sf::Text* GetPlayersNames()
+	{
+		return _playersNames;
+	}
+	// Функция задает номер текущего раунда для многораундовой игры.
+	unsigned GetCurrentRound()
+	{
+		return _currentRound;
+	}
+	// Функция задает количество раундов в многораундовой игре.
+	unsigned GetNumberOfRounds()
+	{
+		return _numberOfRounds;
+	}
+	// Функция задает массив очков игроков.
+	unsigned* GetScores()
+	{
+		return _scores;
 	}
 	// Метод, выводящий игровой интерфейс на экран.
 	void draw(sf::RenderWindow& window)
@@ -85,14 +138,6 @@ public:
 			window.draw(_playersNames[i]);
 		}
 	}
-private:
-	sf::Color _color;
-
-	unsigned _numberOfPlayers;
-	sf::Text* _playersNames;
-
-	unsigned _round;
-	unsigned* _scores;
 };
 
 int main()
@@ -114,14 +159,21 @@ int main()
 	pythonSprite.setTexture(pythonTexture);
 	pythonSprite.setPosition(420, 25);
 
+
+	// Из файла считывается шрифт Consolas.
 	sf::Font consolas;
 	consolas.loadFromFile("fonts/Consolas.ttf");
+
+	// Создается массив имен игроков.
 	sf::Text* playersNames = new sf::Text[2];
 	playersNames[0] = sf::Text("frozzzen", consolas, 14);
 	playersNames[0].setFillColor(sf::Color::Cyan);
 	playersNames[1] = sf::Text("Sonador", consolas, 14);
 	playersNames[1].setFillColor(sf::Color::Green);
-	Layout scene(sf::Color::Yellow, 2, playersNames);
+
+	// Создается игровой интерфейс.
+	Layout scene;
+	scene.SetPlayers(2, playersNames);
 
 	while (window.isOpen())
 	{
