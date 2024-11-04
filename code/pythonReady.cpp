@@ -12,24 +12,31 @@
 class Layout
 {
 private:
+
 	// Количество игроков.
 	unsigned _numberOfPlayers;
+
 	// Имена игроков.
 	sf::Text* _playersNames;
 
 	// Номер текущего раунда.
 	unsigned _currentRound;
+
 	// Колчиество раундов в многораундовой игре.
 	unsigned _numberOfRounds;
+
 	// Очки игроков.
 	unsigned* _scores;
+
 public:
+
 	// Конструктор по умолчанию.
 	Layout()
 	{
 		_playersNames = nullptr;
 		_scores = nullptr;
 	}
+
 	// Функция задает игроков.
 	void SetPlayers(unsigned numberOfPlayers, sf::Text* playersNames)
 	{
@@ -43,16 +50,19 @@ public:
 			_playersNames[i] = playersNames[i];
 		}
 	}
+
 	// Функция задает номер текущего раунда для многораундовой игры.
 	void SetCurrentRound(unsigned currentRound)
 	{
 		_currentRound = currentRound;
 	}
+
 	// Функция задает количество раундов в многораундовой игре.
 	void SetNumberOfRounds(unsigned numberOfRounds)
 	{
 		_numberOfRounds = numberOfRounds;
 	}
+
 	// Функция задает массив очков игроков.
 	void SetScores(unsigned* scores)
 	{
@@ -65,34 +75,41 @@ public:
 			_scores[i] = scores[i];
 		}
 	}
+
 	// Функция задает количество игроков.
 	unsigned GetNumberOfPlayers()
 	{
 		return _numberOfPlayers;
 	}
+
 	// Функция задает имена игроков.
 	sf::Text* GetPlayersNames()
 	{
 		return _playersNames;
 	}
+
 	// Функция задает номер текущего раунда для многораундовой игры.
 	unsigned GetCurrentRound()
 	{
 		return _currentRound;
 	}
+
 	// Функция задает количество раундов в многораундовой игре.
 	unsigned GetNumberOfRounds()
 	{
 		return _numberOfRounds;
 	}
+
 	// Функция задает массив очков игроков.
 	unsigned* GetScores()
 	{
 		return _scores;
 	}
+
 	// Метод, выводящий игровой интерфейс на экран.
 	void draw(sf::RenderWindow& window)
 	{
+
 		// Окно заполняется черным цветом.
 		sf::RectangleShape background(sf::Vector2f(900, 600));
 		background.setFillColor(sf::Color::Black);
@@ -111,12 +128,14 @@ public:
 		// Из файла считывается шрифт Consolas.
 		sf::Font consolas;
 		consolas.loadFromFile("fonts/Consolas.ttf");
+
 		// На будущее создается переменная, куда будет записываться титульная надпись для игроков.
 		sf::Text titleText("", consolas, 16);
 
 		// Выводится информация о игроках.
 		for (int i = 0; i < _numberOfPlayers; ++i)
 		{
+
 			// Создается титульная надпись для игрока.
 			std::string title;
 			if (_numberOfPlayers != 1) {
@@ -153,6 +172,7 @@ public:
 
 		// Выводится номер раунда, если игра многораундовая.
 		if (_numberOfRounds > 0) {
+
 			// Формируется строка вида "Номер текущего раунда / Количество всех раундов"
 			std::string rounds = std::to_string(_currentRound) + " / " + std::to_string(_numberOfRounds);
 
@@ -173,6 +193,7 @@ public:
 
 int main()
 {
+
 	// Откроем окно для вывода
 	sf::RenderWindow window(sf::VideoMode(900, 600), "Python");
 
@@ -186,6 +207,7 @@ int main()
 	sf::Texture pythonTexture;
 	pythonTexture.loadFromImage(pythonImage);
 
+	// Необходимо для выгрузки изображения в окно
 	sf::Sprite pythonSprite;
 	pythonSprite.setTexture(pythonTexture);
 	pythonSprite.setPosition(420, 25);
@@ -206,21 +228,22 @@ int main()
 	Layout scene;
 	scene.SetPlayers(2, playersNames);
 
-	// Тест для многораундовой игры.
-	// Задается номер раунда для демонстарции интерфейса многопользовательской игры.
-	// scene.SetCurrentRound(4);
-	// scene.SetNumberOfRounds(7);
-	// 
-	// Тест для однораундовой игры.
-	// Количество раундов выставляется на 0.
+	/* Тест для многораундовой игры.
+	   Задается номер раунда для демонстарции интерфейса многопользовательской игры.
+	   scene.SetCurrentRound(4);
+	   scene.SetNumberOfRounds(7);*/ 
+	 
+	/* Тест для однораундовой игры.
+	   Количество раундов выставляется на 0.*/ 
 	scene.SetNumberOfRounds(0);
-	// 
+
 	// Задаются очки игроков.
 	unsigned* scores = new unsigned[2];
 	scores[0] = 2;
 	scores[1] = 3;
 	scene.SetScores(scores);
 
+	// Постоянное обновление картинки
 	while (window.isOpen())
 	{
 		sf::Event event;
