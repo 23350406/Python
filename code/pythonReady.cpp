@@ -6,6 +6,7 @@
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
+#include <string>
 
 // Класс, отвечающий за визуализацию игрового интерфейса.
 class Layout
@@ -107,13 +108,13 @@ public:
 		line[1].color = sf::Color::Yellow;
 		window.draw(line, 2, sf::Lines);
 
-
+		// Из файла считывается шрифт Consolas.
 		sf::Font consolas;
 		consolas.loadFromFile("fonts/Consolas.ttf");
 		// На будущее создается переменная, куда будет записываться титульная надпись для игроков.
-		sf::Text titleText("", consolas, 14);
+		sf::Text titleText("", consolas, 16);
 
-		// Выводятся имена всех игроков.
+		// Выводится информация о игроках.
 		for (int i = 0; i < _numberOfPlayers; ++i)
 		{
 			// Создается титульная надпись для игрока.
@@ -128,14 +129,44 @@ public:
 			// Задается стиль титульной надписи.
 			titleText.setString(title);
 			titleText.setFillColor(_playersNames[i].getFillColor());
-			titleText.setPosition(20 + i * 80, 560);
+			titleText.setPosition(20 + i * 160, 555);
 
 			// Титульная надпись выводится на экран.
 			window.draw(titleText);
 
+			// Для каждого игрока создается и выводится "Score:".
+			sf::Text scoreTitle("Score:", consolas, 16);
+			scoreTitle.setFillColor(_playersNames[i].getFillColor());
+			scoreTitle.setPosition(100 + i * 160, 555);
+			window.draw(scoreTitle);
+
 			// На экран выводится имя игрока.
-			_playersNames[i].setPosition(20 + i * 80, 573);
+			_playersNames[i].setPosition(20 + i * 160, 575);
 			window.draw(_playersNames[i]);
+
+			// Для каждого игрока создается и выводится надпись, отвечающая за его очки.
+			sf::Text scoreText(std::to_string(_scores[i]), consolas, 14);
+			scoreText.setFillColor(_playersNames[i].getFillColor());
+			scoreText.setPosition(100 + i * 160, 575);
+			window.draw(scoreText);
+		}
+
+		// Выводится номер раунда, если игра многораундовая.
+		if (_numberOfRounds > 0) {
+			// Формируется строка вида "Номер текущего раунда / Количество всех раундов"
+			std::string rounds = std::to_string(_currentRound) + " / " + std::to_string(_numberOfRounds);
+
+			// Текст, выводимый на экран создается и выводится.
+			sf::Text roundText(rounds, consolas, 14);
+			roundText.setFillColor(sf::Color::Yellow);
+			roundText.setPosition(820, 575);
+			window.draw(roundText);
+
+			// Формируется и выводится на экран надпись "Раунд:".
+			sf::Text roundTitle("Round:", consolas, 16);
+			roundTitle.setFillColor(sf::Color::Yellow);
+			roundTitle.setPosition(820, 555);
+			window.draw(roundTitle);
 		}
 	}
 };
@@ -174,6 +205,21 @@ int main()
 	// Создается игровой интерфейс.
 	Layout scene;
 	scene.SetPlayers(2, playersNames);
+
+	// Тест для многораундовой игры.
+	// Задается номер раунда для демонстарции интерфейса многопользовательской игры.
+	// scene.SetCurrentRound(4);
+	// scene.SetNumberOfRounds(7);
+	// 
+	// Тест для однораундовой игры.
+	// Количество раундов выставляется на 0.
+	scene.SetNumberOfRounds(0);
+	// 
+	// Задаются очки игроков.
+	unsigned* scores = new unsigned[2];
+	scores[0] = 2;
+	scores[1] = 3;
+	scene.SetScores(scores);
 
 	while (window.isOpen())
 	{
