@@ -1,12 +1,15 @@
-////////////////////////////////////////////////////////////
-// Headers
-////////////////////////////////////////////////////////////
+// pythonUpdate.h : включаемый файл для стандартных системных включаемых файлов
+// или включаемые файлы для конкретного проекта.
+
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
 #include <string>
+
 
 // Класс, отвечающий за визуализацию игрового интерфейса.
 class Layout
@@ -22,12 +25,14 @@ private:
 	// Номер текущего раунда.
 	unsigned _currentRound;
 
-	// Колчиество раундов в многораундовой игре.
+	// Количество раундов в многораундовой игре.
 	unsigned _numberOfRounds;
 
 	// Очки игроков.
 	unsigned* _scores;
 
+	// Размер поля. Поле квадратное, поэтому цифра одна
+	unsigned _fieldSize;
 public:
 
 	// Конструктор по умолчанию.
@@ -76,6 +81,12 @@ public:
 		}
 	}
 
+	// Функция задаёт размер поля
+	void SetFieldSize(int size)
+	{
+		_fieldSize = size;
+	}
+
 	// Функция задает количество игроков.
 	unsigned GetNumberOfPlayers()
 	{
@@ -106,6 +117,11 @@ public:
 		return _scores;
 	}
 
+	unsigned GetFieldSize()
+	{
+		return _fieldSize;
+	}
+
 	// Метод, выводящий игровой интерфейс на экран.
 	void draw(sf::RenderWindow& window)
 	{
@@ -127,13 +143,13 @@ public:
 
 		// Из файла считывается шрифт Consolas.
 		sf::Font consolas;
-		consolas.loadFromFile("fonts/Consolas.ttf");
+		consolas.loadFromFile("D:/Языки Программирования/myProjects/pythonUpdate/fonts/Consolas.ttf");
 
 		// На будущее создается переменная, куда будет записываться титульная надпись для игроков.
 		sf::Text titleText("", consolas, 16);
 
 		// Выводится информация о игроках.
-		for (int i = 0; i < _numberOfPlayers; ++i)
+		for (int i = 0; i < GetNumberOfPlayers(); ++i)
 		{
 
 			// Создается титульная надпись для игрока.
@@ -188,76 +204,25 @@ public:
 			roundTitle.setPosition(820, 555);
 			window.draw(roundTitle);
 		}
+
+		// Задаётся размер поля
+		SetFieldSize(400);
+
+		// Добавим отрисовку маленьких квадратиков
+		unsigned lengthSquare = GetFieldSize();
+		for (int i = 0; i < lengthSquare; i += 20) {
+			for (int j = 0; j < lengthSquare; j += 20) {
+				sf::RectangleShape littleSquare(sf::Vector2f(20, 20));
+				littleSquare.setFillColor(sf::Color(44, 44, 44)); // Черно-серый
+				littleSquare.setPosition(250 + i, 80 + j);
+
+				// Добавим цвет рамкии её толщину
+				littleSquare.setOutlineColor(sf::Color(15, 69, 7)); // Тёмно-зелёный
+				littleSquare.setOutlineThickness(1);
+				window.draw(littleSquare);
+			}
+		}
 	}
 };
 
-int main()
-{
-
-	// Откроем окно для вывода
-	sf::RenderWindow window(sf::VideoMode(900, 600), "Python");
-
-	/*Создадим объект типа image и будем выгружать его в оконное приложение
-	  Важно создавать объект, т.к. есть свойства, которые не всегда найдутся в текстуре.
-	  К примеру маска цветов - можем игнорировать какие либо цвета объекта*/
-	sf::Image pythonImage;
-	pythonImage.loadFromFile("images/pngwing.com.png");
-
-	// Текстура и есть изображение. Можно не использовать Image (НО НЕЛЬЗЯ!!)
-	sf::Texture pythonTexture;
-	pythonTexture.loadFromImage(pythonImage);
-
-	// Необходимо для выгрузки изображения в окно
-	sf::Sprite pythonSprite;
-	pythonSprite.setTexture(pythonTexture);
-	pythonSprite.setPosition(420, 25);
-
-
-	// Из файла считывается шрифт Consolas.
-	sf::Font consolas;
-	consolas.loadFromFile("fonts/Consolas.ttf");
-
-	// Создается массив имен игроков.
-	sf::Text* playersNames = new sf::Text[2];
-	playersNames[0] = sf::Text("frozzzen", consolas, 14);
-	playersNames[0].setFillColor(sf::Color::Cyan);
-	playersNames[1] = sf::Text("Sonador", consolas, 14);
-	playersNames[1].setFillColor(sf::Color::Green);
-
-	// Создается игровой интерфейс.
-	Layout scene;
-	scene.SetPlayers(2, playersNames);
-
-	/* Тест для многораундовой игры.
-	   Задается номер раунда для демонстарции интерфейса многопользовательской игры.
-	   scene.SetCurrentRound(4);
-	   scene.SetNumberOfRounds(7);*/ 
-	 
-	/* Тест для однораундовой игры.
-	   Количество раундов выставляется на 0.*/ 
-	scene.SetNumberOfRounds(0);
-
-	// Задаются очки игроков.
-	unsigned* scores = new unsigned[2];
-	scores[0] = 2;
-	scores[1] = 3;
-	scene.SetScores(scores);
-
-	// Постоянное обновление картинки
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		window.draw(pythonSprite);
-		scene.draw(window);
-		window.display();
-	}
-
-	return 0;
-}
+// TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.
