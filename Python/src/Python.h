@@ -1,4 +1,7 @@
-﻿#pragma once
+// pythonUpdate.h : включаемый файл для стандартных системных включаемых файлов
+// или включаемые файлы для конкретного проекта.
+
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -6,6 +9,9 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
+
+// Библиотека, чтобы узнавать размер экрана пользователя.
+#include <windows.h>
 
 
 // Класс, отвечающий за визуализацию игрового интерфейса.
@@ -140,7 +146,7 @@ public:
 
 		// Из файла считывается шрифт Consolas.
 		sf::Font consolas;
-		consolas.loadFromFile("../../../fonts/Consolas.ttf");
+		consolas.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/fonts/Consolas.ttf");
 
 		// На будущее создается переменная, куда будет записываться титульная надпись для игроков.
 		sf::Text titleText("", consolas, 16);
@@ -221,3 +227,58 @@ public:
 		}
 	}
 };
+
+
+// Функция выводит кнопку "старт" на экран.
+void DrawStart(sf::RenderWindow& window) {
+	sf::Image buttonImg;
+	buttonImg.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/images/start.png");
+	sf::Texture buttonTexture;
+	buttonTexture.loadFromImage(buttonImg);
+	sf::Sprite buttonSprite;
+	buttonSprite.setTexture(buttonTexture);
+	buttonSprite.setPosition(426, 50);
+
+	window.draw(buttonSprite);
+}
+
+// Функция выводит кнопку "настройки" на экран.
+void DrawSettings(sf::RenderWindow& window) {
+	sf::Image buttonImg;
+	buttonImg.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/images/settings.png");
+	sf::Texture buttonTexture;
+	buttonTexture.loadFromImage(buttonImg);
+	sf::Sprite buttonSprite;
+	buttonSprite.setTexture(buttonTexture);
+	buttonSprite.setPosition(426, 242);
+
+	window.draw(buttonSprite);
+}
+
+// Функция выводит кнопку "выйти" на экран.
+void DrawLeave(sf::RenderWindow& window) {
+	sf::Image buttonImg;
+	buttonImg.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/images/leave.png");
+	sf::Texture buttonTexture;
+	buttonTexture.loadFromImage(buttonImg);
+	sf::Sprite buttonSprite;
+	buttonSprite.setTexture(buttonTexture);
+	buttonSprite.setPosition(426, 434);
+
+	window.draw(buttonSprite);
+}
+
+// Функция выводит кнопку "авторы" на экран.
+void DrawAuthors(sf::RenderWindow& window) {
+	sf::Image buttonImg;
+	buttonImg.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/images/authors.png");
+	sf::Texture buttonTexture;
+	buttonTexture.loadFromImage(buttonImg);
+	sf::Sprite buttonSprite;
+	buttonSprite.setTexture(buttonTexture);
+	buttonSprite.setPosition(1012, 508);
+
+	window.draw(buttonSprite);
+}
+
+// TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.
