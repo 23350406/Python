@@ -1,15 +1,20 @@
-﻿include "Python.h"
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+#include "pythonUpdate.h"
 
 int main()
 {
+	
 	// Откроем окно для вывода
-	sf::RenderWindow window(sf::VideoMode(900, 600), "Python");
+	sf::RenderWindow window(sf::VideoMode(1152, 648), "Python");
 
 	/*Создадим объект типа image и будем выгружать его в оконное приложение
 	  Важно создавать объект, т.к. есть свойства, которые не всегда найдутся в текстуре.
 	  К примеру маска цветов - можем игнорировать какие либо цвета объекта*/
 	sf::Image pythonImage;
-	pythonImage.loadFromFile("../../../images/pngwing.com.png");
+	pythonImage.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/images/pngwing.com.png");
 
 	// Текстура и есть изображение. Можно не использовать Image (НО НЕЛЬЗЯ!!)
 	sf::Texture pythonTexture;
@@ -18,12 +23,11 @@ int main()
 	// Необходимо для выгрузки изображения в окно
 	sf::Sprite pythonSprite;
 	pythonSprite.setTexture(pythonTexture);
-	pythonSprite.setPosition(80, 80);
-
+	pythonSprite.setPosition(20, 468);
 
 	// Из файла считывается шрифт Consolas.
 	sf::Font consolas;
-	consolas.loadFromFile("../../../fonts/Consolas.ttf");
+	consolas.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/fonts/Consolas.ttf");
 
 	// Создается массив имен игроков.
 	sf::Text* playersNames = new sf::Text[2];
@@ -61,9 +65,20 @@ int main()
 				window.close();
 		}
 
-		window.clear();
-		scene.draw(window);
+		// Экран закрашивается черным.
+		window.clear(sf::Color::Black);
+		// scene.draw(window);
+
+		// В вывод на экран заносятся кнопки "старт", "настройки", "выйти", "авторы".
+		DrawStart(window);
+		DrawSettings(window);
+		DrawLeave(window);
+		DrawAuthors(window);
+
+		// В вывод на экран заносится змейка-талисман.
 		window.draw(pythonSprite);
+
+		// Записанное в вывод показывается пользователю.
 		window.display();
 	}
 
