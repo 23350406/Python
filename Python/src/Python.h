@@ -146,7 +146,7 @@ public:
 
 		// Из файла считывается шрифт Consolas.
 		sf::Font consolas;
-		consolas.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/fonts/Consolas.ttf");
+		consolas.loadFromFile("../../../fonts/Consolas.ttf");
 
 		// На будущее создается переменная, куда будет записываться титульная надпись для игроков.
 		sf::Text titleText("", consolas, 16);
@@ -228,57 +228,84 @@ public:
 	}
 };
 
-
-// Функция выводит кнопку "старт" на экран.
-void DrawStart(sf::RenderWindow& window) {
-	sf::Image buttonImg;
-	buttonImg.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/images/start.png");
+// Функция выводит кнопку "старт" в запись.
+void DrawStartButton(sf::RenderWindow& window) {
 	sf::Texture buttonTexture;
-	buttonTexture.loadFromImage(buttonImg);
-	sf::Sprite buttonSprite;
-	buttonSprite.setTexture(buttonTexture);
+	buttonTexture.loadFromFile("../../../images/start.png");
+	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(426, 50);
 
 	window.draw(buttonSprite);
 }
 
-// Функция выводит кнопку "настройки" на экран.
-void DrawSettings(sf::RenderWindow& window) {
-	sf::Image buttonImg;
-	buttonImg.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/images/settings.png");
+// Функция выводит кнопку "настройки" в запись.
+void DrawSettingsButton(sf::RenderWindow& window) {
 	sf::Texture buttonTexture;
-	buttonTexture.loadFromImage(buttonImg);
-	sf::Sprite buttonSprite;
-	buttonSprite.setTexture(buttonTexture);
+	buttonTexture.loadFromFile("../../../images/settings.png");
+	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(426, 242);
 
 	window.draw(buttonSprite);
 }
 
-// Функция выводит кнопку "выйти" на экран.
-void DrawLeave(sf::RenderWindow& window) {
-	sf::Image buttonImg;
-	buttonImg.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/images/leave.png");
+// Функция выводит кнопку "выйти" в запись.
+void DrawLeaveButton(sf::RenderWindow& window) {
 	sf::Texture buttonTexture;
-	buttonTexture.loadFromImage(buttonImg);
-	sf::Sprite buttonSprite;
-	buttonSprite.setTexture(buttonTexture);
+	buttonTexture.loadFromFile("../../../images/leave.png");
+	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(426, 434);
 
 	window.draw(buttonSprite);
 }
 
-// Функция выводит кнопку "авторы" на экран.
-void DrawAuthors(sf::RenderWindow& window) {
-	sf::Image buttonImg;
-	buttonImg.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/images/authors.png");
+// Функция выводит кнопку "авторы" в запись.
+void DrawAuthorsButton(sf::RenderWindow& window) {
 	sf::Texture buttonTexture;
-	buttonTexture.loadFromImage(buttonImg);
-	sf::Sprite buttonSprite;
-	buttonSprite.setTexture(buttonTexture);
+	buttonTexture.loadFromFile("../../../images/authors.png");
+	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(1012, 508);
 
 	window.draw(buttonSprite);
+}
+
+// Функция выводит в запись окно начального меню.
+void DrawMainMenuWindow(sf::RenderWindow& window) {
+	
+	// В запись заносится кнопка "старт".
+	DrawStartButton(window);
+
+	// В запись заносится кнопка "настройки".
+	DrawSettingsButton(window);
+
+	// В запись заносится кнопка "выйти".
+	DrawLeaveButton(window);
+
+	// В запись заносится кнопка "авторы".
+	DrawAuthorsButton(window);
+}
+
+// Функция выводит экран настроек старта игры.
+void DrawStartGameWindow(sf::RenderWindow& window) {
+	sf::Texture returnButtonTexture;
+	returnButtonTexture.loadFromFile("../../../images/return_arrow.png");
+	sf::Sprite returnButtonSprite(returnButtonTexture);
+	returnButtonSprite.setPosition(10, 10);
+
+	window.draw(returnButtonSprite);
+
+	sf::Texture leftArrowTexture;
+	leftArrowTexture.loadFromFile("../../../images/left_arrow.png");
+	sf::Sprite leftArrowSprite(leftArrowTexture);
+	leftArrowSprite.setPosition(50, 50);
+
+	window.draw(leftArrowSprite);
+
+	sf::Texture rightArrowTexture;
+	rightArrowTexture.loadFromFile("../../../images/right_arrow.png");
+	sf::Sprite rightArrowSprite(rightArrowTexture);
+	rightArrowSprite.setPosition(100, 50);
+
+	window.draw(rightArrowSprite);
 }
 
 // TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.
