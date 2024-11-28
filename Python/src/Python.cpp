@@ -14,7 +14,7 @@ int main()
 	  Важно создавать объект, т.к. есть свойства, которые не всегда найдутся в текстуре.
 	  К примеру маска цветов - можем игнорировать какие либо цвета объекта*/
 	sf::Image pythonImage;
-	pythonImage.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/images/pngwing.com.png");
+	pythonImage.loadFromFile("../../../images/pngwing.com.png");
 
 	// Текстура и есть изображение. Можно не использовать Image (НО НЕЛЬЗЯ!!)
 	sf::Texture pythonTexture;
@@ -27,7 +27,7 @@ int main()
 
 	// Из файла считывается шрифт Consolas.
 	sf::Font consolas;
-	consolas.loadFromFile("C:/Users/Admin/source/repos/SnakeGame/fonts/Consolas.ttf");
+	consolas.loadFromFile("../../../fonts/Consolas.ttf");
 
 	// Создается массив имен игроков.
 	sf::Text* playersNames = new sf::Text[2];
@@ -55,6 +55,8 @@ int main()
 	scores[1] = 3;
 	scene.SetScores(scores);
 
+	std::string currentWindowName = "MainMenu";
+
 	// Постоянное обновление картинки
 	while (window.isOpen())
 	{
@@ -69,11 +71,43 @@ int main()
 		window.clear(sf::Color::Black);
 		// scene.draw(window);
 
-		// В вывод на экран заносятся кнопки "старт", "настройки", "выйти", "авторы".
-		DrawStart(window);
-		DrawSettings(window);
-		DrawLeave(window);
-		DrawAuthors(window);
+		if (currentWindowName == "MainMenu") {
+
+			// В вывод на экран заносится главное меню.
+			DrawMainMenuWindow(window);
+
+			// Если пользователь нажал кнопку мыши.
+			if (event.type == sf::Event::MouseButtonPressed) {
+
+				// И это ЛКМ.
+				if (event.mouseButton.button == sf::Mouse::Left) {
+
+					// Пользователь нажал ЛКМ на кнопку "START" -> переход на страницу настроек старта игры.
+					if (event.mouseButton.x >= 426 && event.mouseButton.x <= 726 && event.mouseButton.y >= 50 && event.mouseButton.y <= 210) {
+						currentWindowName = "StartGame";
+					}
+				}
+			}
+		}
+
+		if (currentWindowName == "StartGame") {
+
+			// В вывод на экран заносится экран выбора настроек старта игры.
+			DrawStartGameWindow(window);
+
+			// Если пользователь нажал кнопку мыши.
+			if (event.type == sf::Event::MouseButtonPressed) {
+
+				// И это ЛКМ.
+				if (event.mouseButton.button == sf::Mouse::Left) {
+
+					// Пользователь нажал ЛКМ на кнопку "START" -> переход на страницу настроек старта игры.
+					if (event.mouseButton.x >= 10 && event.mouseButton.x <= 90 && event.mouseButton.y >= 10 && event.mouseButton.y <= 70) {
+						currentWindowName = "MainMenu";
+					}
+				}
+			}
+		}
 
 		// В вывод на экран заносится змейка-талисман.
 		window.draw(pythonSprite);
