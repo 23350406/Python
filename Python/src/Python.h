@@ -284,28 +284,94 @@ void DrawMainMenuWindow(sf::RenderWindow& window) {
 	DrawAuthorsButton(window);
 }
 
+// На экран выводится селектор количества чего-то (раундов/ботов) со смещением на x и y пикселей от верхнего левого угла экрана.
+void DrawSelector(sf::RenderWindow& window, int x, int y) {
+
+	// На экран выводится стрелка для уменьшения числа раундов.
+	sf::Texture leftArrowTexture;
+	leftArrowTexture.loadFromFile("../../../images/left_arrow.png");
+	sf::Sprite leftArrowSprite(leftArrowTexture);
+	leftArrowSprite.setPosition(x, y);
+
+	window.draw(leftArrowSprite);
+
+	// На экран выводится панель счетчика раундов.
+	sf::Texture selectCountTexture;
+	selectCountTexture.loadFromFile("../../../images/select_count.png");
+	sf::Sprite selectCountSprite(selectCountTexture);
+	selectCountSprite.setPosition(x + 50, y);
+
+	window.draw(selectCountSprite);
+
+	// На экран выводится стрелка для увеличения количества раундов.
+	sf::Texture rightArrowTexture;
+	rightArrowTexture.loadFromFile("../../../images/right_arrow.png");
+	sf::Sprite rightArrowSprite(rightArrowTexture);
+	rightArrowSprite.setPosition(x + 200, y);
+
+	window.draw(rightArrowSprite);
+}
+
+// Функция выводит кнопку "играть" в запись.
+void DrawPlayButton(sf::RenderWindow& window) {
+	sf::Texture buttonTexture;
+	buttonTexture.loadFromFile("../../../images/play.png");
+	sf::Sprite buttonSprite(buttonTexture);
+	buttonSprite.setPosition(426, 388);
+
+	window.draw(buttonSprite);
+}
+
+// На экран выводится заголовок счетчика раундов.
+void DrawRoundsHeader(sf::RenderWindow& window) {
+	sf::Texture returnButtonTexture;
+	returnButtonTexture.loadFromFile("../../../images/rounds_header.png");
+	sf::Sprite returnButtonSprite(returnButtonTexture);
+	returnButtonSprite.setPosition(276, 70);
+	window.draw(returnButtonSprite);
+}
+
+// На экран выводится заголовок счетчика ботов.
+void DrawBotsHeader(sf::RenderWindow& window) {
+	sf::Texture returnButtonTexture;
+	returnButtonTexture.loadFromFile("../../../images/rounds_header.png");
+	sf::Sprite returnButtonSprite(returnButtonTexture);
+	returnButtonSprite.setPosition(726, 70);
+	window.draw(returnButtonSprite);
+}
+
+// На экран выводится заголовок выбора карты.
+void DrawMapHeader(sf::RenderWindow& window) {
+	sf::Texture returnButtonTexture;
+	returnButtonTexture.loadFromFile("../../../images/map_header.png");
+	sf::Sprite returnButtonSprite(returnButtonTexture);
+	returnButtonSprite.setPosition(501, 194);
+	window.draw(returnButtonSprite);
+}
+
 // Функция выводит экран настроек старта игры.
 void DrawStartGameWindow(sf::RenderWindow& window) {
+
+	// На экран выводится стрелка возвращения назад.
 	sf::Texture returnButtonTexture;
 	returnButtonTexture.loadFromFile("../../../images/return_arrow.png");
 	sf::Sprite returnButtonSprite(returnButtonTexture);
 	returnButtonSprite.setPosition(10, 10);
-
 	window.draw(returnButtonSprite);
 
-	sf::Texture leftArrowTexture;
-	leftArrowTexture.loadFromFile("../../../images/left_arrow.png");
-	sf::Sprite leftArrowSprite(leftArrowTexture);
-	leftArrowSprite.setPosition(50, 50);
+	// На экран выводится селектор раундов.
+	DrawSelector(window, 226, 120);
+	DrawRoundsHeader(window);
 
-	window.draw(leftArrowSprite);
+	// На экран выводится селектор ботов.
+	DrawSelector(window, 676, 120);
+	DrawBotsHeader(window);
 
-	sf::Texture rightArrowTexture;
-	rightArrowTexture.loadFromFile("../../../images/right_arrow.png");
-	sf::Sprite rightArrowSprite(rightArrowTexture);
-	rightArrowSprite.setPosition(100, 50);
+	// На экран выводится селектор ботов.
+	DrawSelector(window, 451, 244);
+	DrawMapHeader(window);
 
-	window.draw(rightArrowSprite);
+	DrawPlayButton(window);
 }
 
 // TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.
