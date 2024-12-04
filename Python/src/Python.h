@@ -9,222 +9,87 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
+#include <fstream>
 
 // Библиотека, чтобы узнавать размер экрана пользователя.
 #include <windows.h>
 
-
-// Класс, отвечающий за визуализацию игрового интерфейса.
-class Layout
-{
+// Класс, содержащий информацию об игре.
+class GameInfo {
 private:
-
-	// Количество игроков.
-	unsigned _numberOfPlayers;
-
-	// Имена игроков.
-	sf::Text* _playersNames;
-
-	// Номер текущего раунда.
-	unsigned _currentRound;
-
-	// Количество раундов в многораундовой игре.
-	unsigned _numberOfRounds;
-
-	// Очки игроков.
-	unsigned* _scores;
-
-	// Размер поля. Поле квадратное, поэтому цифра одна
-	unsigned _fieldSize;
+	int _numberOfRounds;
+	int _numberOfBots;
+	
+	bool _somethingIsPressed;
+	std::string _currentWindowName;
 public:
 
 	// Конструктор по умолчанию.
-	Layout()
-	{
-		_playersNames = nullptr;
-		_scores = nullptr;
-	}
+	GameInfo() {
+		_numberOfRounds = 1;
+		_numberOfBots = 0;
+		_somethingIsPressed = false;
 
-	// Функция задает игроков.
-	void SetPlayers(unsigned numberOfPlayers, sf::Text* playersNames)
-	{
-		_numberOfPlayers = numberOfPlayers;
-		if (_playersNames != nullptr) {
-			delete[] _playersNames;
-		}
-		_playersNames = new sf::Text[_numberOfPlayers];
-		for (int i = 0; i < _numberOfPlayers; ++i)
-		{
-			_playersNames[i] = playersNames[i];
-		}
+		// Задается название открытого сейчас окна.
+		_currentWindowName = "MainMenu";
 	}
-
-	// Функция задает номер текущего раунда для многораундовой игры.
-	void SetCurrentRound(unsigned currentRound)
-	{
-		_currentRound = currentRound;
-	}
-
-	// Функция задает количество раундов в многораундовой игре.
-	void SetNumberOfRounds(unsigned numberOfRounds)
-	{
-		_numberOfRounds = numberOfRounds;
-	}
-
-	// Функция задает массив очков игроков.
-	void SetScores(unsigned* scores)
-	{
-		if (_scores != nullptr) {
-			delete[] _scores;
-		}
-		_scores = new unsigned[_numberOfPlayers];
-		for (int i = 0; i < _numberOfPlayers; ++i)
-		{
-			_scores[i] = scores[i];
-		}
-	}
-
-	// Функция задаёт размер поля
-	void SetFieldSize(int size)
-	{
-		_fieldSize = size;
-	}
-
-	// Функция задает количество игроков.
-	unsigned GetNumberOfPlayers()
-	{
-		return _numberOfPlayers;
-	}
-
-	// Функция задает имена игроков.
-	sf::Text* GetPlayersNames()
-	{
-		return _playersNames;
-	}
-
-	// Функция задает номер текущего раунда для многораундовой игры.
-	unsigned GetCurrentRound()
-	{
-		return _currentRound;
-	}
-
-	// Функция задает количество раундов в многораундовой игре.
-	unsigned GetNumberOfRounds()
-	{
+	
+	// Функция возвращает количество раундов в игре.
+	int GetNumberOfRounds() {
 		return _numberOfRounds;
 	}
 
-	// Функция задает массив очков игроков.
-	unsigned* GetScores()
-	{
-		return _scores;
+	// Функция увеличивает количество раундов в игре.
+	void IncreaseNumberOfRounds() {
+		if (_numberOfRounds < 9) {
+			++_numberOfRounds;
+		}
 	}
 
-	unsigned GetFieldSize()
-	{
-		return _fieldSize;
+	// Функция уменьшает количство раундов в игре.
+	void DecreaseNumberOfRounds() {
+		if (_numberOfRounds > 1) {
+			--_numberOfRounds;
+		}
 	}
 
-	// Метод, выводящий игровой интерфейс на экран.
-	void draw(sf::RenderWindow& window)
-	{
+	// Функция возвращает количество ботов в игре.
+	int GetNumberOfBots() {
+		return _numberOfBots;
+	}
 
-		// Окно заполняется черным цветом.
-		sf::RectangleShape background(sf::Vector2f(900, 600));
-		background.setFillColor(sf::Color::Black);
-		window.draw(background);
-
-		// По двум точкам создается прямая, разделяющая игровое и информационное поля.
-		sf::Vertex line[] =
-		{
-			sf::Vertex(sf::Vector2f(0, 550)),
-			sf::Vertex(sf::Vector2f(900, 550))
-		};
-		line[0].color = sf::Color::Yellow;
-		line[1].color = sf::Color::Yellow;
-		window.draw(line, 2, sf::Lines);
-
-		// Из файла считывается шрифт Consolas.
-		sf::Font consolas;
-		consolas.loadFromFile("../../../fonts/Consolas.ttf");
-
-		// На будущее создается переменная, куда будет записываться титульная надпись для игроков.
-		sf::Text titleText("", consolas, 16);
-
-		// Выводится информация о игроках.
-		for (int i = 0; i < GetNumberOfPlayers(); ++i)
-		{
-
-			// Создается титульная надпись для игрока.
-			std::string title;
-			if (_numberOfPlayers != 1) {
-				title = "Player" + std::to_string(i + 1) + ":";
-			}
-			else {
-				title = "Player:";
-			}
-
-			// Задается стиль титульной надписи.
-			titleText.setString(title);
-			titleText.setFillColor(_playersNames[i].getFillColor());
-			titleText.setPosition(20 + i * 160, 555);
-
-			// Титульная надпись выводится на экран.
-			window.draw(titleText);
-
-			// Для каждого игрока создается и выводится "Score:".
-			sf::Text scoreTitle("Score:", consolas, 16);
-			scoreTitle.setFillColor(_playersNames[i].getFillColor());
-			scoreTitle.setPosition(100 + i * 160, 555);
-			window.draw(scoreTitle);
-
-			// На экран выводится имя игрока.
-			_playersNames[i].setPosition(20 + i * 160, 575);
-			window.draw(_playersNames[i]);
-
-			// Для каждого игрока создается и выводится надпись, отвечающая за его очки.
-			sf::Text scoreText(std::to_string(_scores[i]), consolas, 14);
-			scoreText.setFillColor(_playersNames[i].getFillColor());
-			scoreText.setPosition(100 + i * 160, 575);
-			window.draw(scoreText);
+	// Функция увеличивает количество ботов в игре.
+	void IncreaseNumberOfBots() {
+		if (_numberOfBots < 3) {
+			++_numberOfBots;
 		}
+	}
 
-		// Выводится номер раунда, если игра многораундовая.
-		if (_numberOfRounds > 0) {
-
-			// Формируется строка вида "Номер текущего раунда / Количество всех раундов"
-			std::string rounds = std::to_string(_currentRound) + " / " + std::to_string(_numberOfRounds);
-
-			// Текст, выводимый на экран создается и выводится.
-			sf::Text roundText(rounds, consolas, 14);
-			roundText.setFillColor(sf::Color::Yellow);
-			roundText.setPosition(820, 575);
-			window.draw(roundText);
-
-			// Формируется и выводится на экран надпись "Раунд:".
-			sf::Text roundTitle("Round:", consolas, 16);
-			roundTitle.setFillColor(sf::Color::Yellow);
-			roundTitle.setPosition(820, 555);
-			window.draw(roundTitle);
+	// Функция уменьшает количетсов ботов в игре.
+	void DecreaseNumberOfBots() {
+		if (_numberOfBots > 0) {
+			--_numberOfBots;
 		}
+	}
 
-		// Задаётся размер поля
-		SetFieldSize(400);
+	bool GetPressedButton() {
+		return _somethingIsPressed;
+	}
 
-		// Добавим отрисовку маленьких квадратиков
-		unsigned lengthSquare = GetFieldSize();
-		for (int i = 0; i < lengthSquare; i += 20) {
-			for (int j = 0; j < lengthSquare; j += 20) {
-				sf::RectangleShape littleSquare(sf::Vector2f(20, 20));
-				littleSquare.setFillColor(sf::Color(44, 44, 44)); // Черно-серый
-				littleSquare.setPosition(250 + i, 80 + j);
+	void SetPressedButton() {
+		_somethingIsPressed = true;
+	}
 
-				// Добавим цвет рамкии её толщину
-				littleSquare.setOutlineColor(sf::Color(15, 69, 7)); // Тёмно-зелёный
-				littleSquare.setOutlineThickness(1);
-				window.draw(littleSquare);
-			}
-		}
+	void UnsetPressedButton() {
+		_somethingIsPressed = false;
+	}
+
+	std::string GetCurrentWindowName() {
+		return _currentWindowName;
+	}
+
+	void SetCurrentWindowName(std::string newWindowName) {
+		_currentWindowName = newWindowName;
 	}
 };
 
@@ -234,7 +99,6 @@ void DrawStartButton(sf::RenderWindow& window) {
 	buttonTexture.loadFromFile("../../../images/start.png");
 	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(426, 50);
-
 	window.draw(buttonSprite);
 }
 
@@ -292,7 +156,6 @@ void DrawSelector(sf::RenderWindow& window, int x, int y) {
 	leftArrowTexture.loadFromFile("../../../images/left_arrow.png");
 	sf::Sprite leftArrowSprite(leftArrowTexture);
 	leftArrowSprite.setPosition(x, y);
-
 	window.draw(leftArrowSprite);
 
 	// На экран выводится панель счетчика раундов.
@@ -300,7 +163,6 @@ void DrawSelector(sf::RenderWindow& window, int x, int y) {
 	selectCountTexture.loadFromFile("../../../images/select_count.png");
 	sf::Sprite selectCountSprite(selectCountTexture);
 	selectCountSprite.setPosition(x + 50, y);
-
 	window.draw(selectCountSprite);
 
 	// На экран выводится стрелка для увеличения количества раундов.
@@ -308,8 +170,29 @@ void DrawSelector(sf::RenderWindow& window, int x, int y) {
 	rightArrowTexture.loadFromFile("../../../images/right_arrow.png");
 	sf::Sprite rightArrowSprite(rightArrowTexture);
 	rightArrowSprite.setPosition(x + 200, y);
-
 	window.draw(rightArrowSprite);
+}
+
+// Функция выводит на экран количество раундов.
+void DrawNumberOfRounds(sf::RenderWindow& window, GameInfo& gameInfo) {
+	sf::Font consolas;
+	consolas.loadFromFile("../../../fonts/Consolas.ttf");
+
+	sf::Text numberOfRoundsText(std::to_string(gameInfo.GetNumberOfRounds()), consolas, 24);
+	numberOfRoundsText.setFillColor(sf::Color::White);
+	numberOfRoundsText.setPosition(345, 128);
+	window.draw(numberOfRoundsText);
+}
+
+// Функция выводит на экран количество ботов.
+void DrawNumberOfBots(sf::RenderWindow& window, GameInfo& gameInfo) {
+	sf::Font consolas;
+	consolas.loadFromFile("../../../fonts/Consolas.ttf");
+
+	sf::Text numberOfRoundsText(std::to_string(gameInfo.GetNumberOfBots()), consolas, 24);
+	numberOfRoundsText.setFillColor(sf::Color::White);
+	numberOfRoundsText.setPosition(796, 128);
+	window.draw(numberOfRoundsText);
 }
 
 // Функция выводит кнопку "играть" в запись.
@@ -318,7 +201,6 @@ void DrawPlayButton(sf::RenderWindow& window) {
 	buttonTexture.loadFromFile("../../../images/play.png");
 	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(426, 388);
-
 	window.draw(buttonSprite);
 }
 
@@ -334,7 +216,7 @@ void DrawRoundsHeader(sf::RenderWindow& window) {
 // На экран выводится заголовок счетчика ботов.
 void DrawBotsHeader(sf::RenderWindow& window) {
 	sf::Texture returnButtonTexture;
-	returnButtonTexture.loadFromFile("../../../images/rounds_header.png");
+	returnButtonTexture.loadFromFile("../../../images/bots_header.png");
 	sf::Sprite returnButtonSprite(returnButtonTexture);
 	returnButtonSprite.setPosition(726, 70);
 	window.draw(returnButtonSprite);
@@ -349,29 +231,193 @@ void DrawMapHeader(sf::RenderWindow& window) {
 	window.draw(returnButtonSprite);
 }
 
-// Функция выводит экран настроек старта игры.
-void DrawStartGameWindow(sf::RenderWindow& window) {
-
-	// На экран выводится стрелка возвращения назад.
+void DrawReturnArrow(sf::RenderWindow& window) {
 	sf::Texture returnButtonTexture;
 	returnButtonTexture.loadFromFile("../../../images/return_arrow.png");
 	sf::Sprite returnButtonSprite(returnButtonTexture);
 	returnButtonSprite.setPosition(10, 10);
 	window.draw(returnButtonSprite);
+}
+
+// Функция выводит экран настроек старта игры.
+void DrawStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+
+	// На экран выводится стрелка возвращения назад.
+	DrawReturnArrow(window);
 
 	// На экран выводится селектор раундов.
 	DrawSelector(window, 226, 120);
+	DrawNumberOfRounds(window, gameInfo);
 	DrawRoundsHeader(window);
 
 	// На экран выводится селектор ботов.
 	DrawSelector(window, 676, 120);
+	DrawNumberOfBots(window, gameInfo);
 	DrawBotsHeader(window);
 
 	// На экран выводится селектор ботов.
 	DrawSelector(window, 451, 244);
 	DrawMapHeader(window);
 
+	// На экран выводится кнопка "играть".
 	DrawPlayButton(window);
+}
+
+// Функция выводит на экран выводится змейка-талисман.
+void DrawPythonTalisman(sf::RenderWindow& window) {
+	/*Создадим объект типа image и будем выгружать его в оконное приложение
+	  Важно создавать объект, т.к. есть свойства, которые не всегда найдутся в текстуре.
+	  К примеру маска цветов - можем игнорировать какие либо цвета объекта*/
+	sf::Image pythonImage;
+	pythonImage.loadFromFile("../../../images/pngwing.com.png");
+
+	// Текстура и есть изображение. Можно не использовать Image (НО НЕЛЬЗЯ!!)
+	sf::Texture pythonTexture;
+	pythonTexture.loadFromImage(pythonImage);
+
+	// Необходимо для выгрузки изображения в окно
+	sf::Sprite pythonSprite;
+	pythonSprite.setTexture(pythonTexture);
+	pythonSprite.setPosition(20, 468);
+
+	// На экран выводится змейка-талисман.
+	window.draw(pythonSprite);
+}
+
+// Функция определяет: является ли действие нажатием на левую кнопку мыши.
+bool isLMC(sf::Event& event, GameInfo& gameInfo) {
+	// Если пользователь нажал не на мышку, то false.
+	if (event.type != sf::Event::MouseButtonReleased) {
+		return false;
+	}
+
+	// Если кнопка мыши не левая - false.
+	if (event.mouseButton.button != sf::Mouse::Left) {
+		return false;
+	}
+
+	// Если кнопка только нажалась - возвращается true.
+	return true;
+}
+
+// Функция определяет: было ли действие в прямоугольнике заданном координатами.
+bool isInBox(sf::Event& event, int x1, int y1, int x2, int y2) {
+	return event.mouseButton.x >= x1 && event.mouseButton.x <= x2 && event.mouseButton.y >= y1 && event.mouseButton.y <= y2;
+}
+
+void ChangeWindowToMainMenuWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+	// Записывается название экрана игры, на который перешел пользователь.
+	gameInfo.SetCurrentWindowName("MainMenu");
+
+	// Экран закрашивается черным.
+	window.clear(sf::Color::Black);
+
+	// В вывод на экран заносится главное меню.
+	DrawMainMenuWindow(window);
+
+	// В вывод на экран заносится змейка-талисман.
+	DrawPythonTalisman(window);
+
+	// Записанное в вывод показывается пользователю.
+	window.display();
+}
+
+void ChangeWindowToStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+	// Записывается название экрана игры, на который перешел пользователь.
+	gameInfo.SetCurrentWindowName("StartGame");
+
+	// Экран закрашивается черным.
+	window.clear(sf::Color::Black);
+
+	// В вывод на экран заносится экран выбора настроек старта игры.
+	DrawStartGameWindow(window, gameInfo);
+
+	// В вывод на экран заносится змейка-талисман.
+	DrawPythonTalisman(window);
+
+	// Записанное в вывод показывается пользователю.
+	window.display();
+}
+
+// Функция обрабатывает событие на экране главного меню.
+void ProcessActionInMainMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo) {
+	// Если пользователь нажал ЛКМ.
+
+	if (isLMC(event, gameInfo)) {
+
+		if (gameInfo.GetPressedButton()) {
+			return;
+		}
+
+		gameInfo.SetPressedButton();
+
+		// Пользователь нажал ЛКМ на кнопку "START" -> переход на страницу настроек старта игры.
+		if (isInBox(event, 426, 50, 726, 210)) {
+			ChangeWindowToStartGameWindow(window, gameInfo);
+		}
+
+		return;
+	}
+
+	gameInfo.UnsetPressedButton();
+}
+
+void ProcessActionInStartGameMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo) {
+
+	// Если пользователь нажал ЛКМ.
+	if (isLMC(event, gameInfo)) {
+
+		if (gameInfo.GetPressedButton()) {
+			return;
+		}
+
+		gameInfo.SetPressedButton();
+
+		// Пользователь нажал ЛКМ на кнопку "START" -> переход на страницу настроек старта игры.
+		if (isInBox(event, 10, 10, 90, 70)) {
+			ChangeWindowToMainMenuWindow(window, gameInfo);
+		}
+
+		// Пользователь уменьшил количество раундов.
+		if (isInBox(event, 226, 120, 276, 170)) {
+			gameInfo.DecreaseNumberOfRounds();
+			DrawStartGameWindow(window, gameInfo);
+		}
+
+		// Пользователь увеличил количество раундов.
+		if (isInBox(event, 426, 120, 476, 170)) {
+			gameInfo.IncreaseNumberOfRounds();
+			DrawStartGameWindow(window, gameInfo);
+		}
+
+		// Пользователь уменьшил количество раундов.
+		if (isInBox(event, 676, 120, 726, 170)) {
+			gameInfo.DecreaseNumberOfBots();
+			DrawStartGameWindow(window, gameInfo);
+		}
+
+		// Пользователь увеличил количество раундов.
+		if (isInBox(event, 876, 120, 926, 170)) {
+			gameInfo.IncreaseNumberOfBots();
+			DrawStartGameWindow(window, gameInfo);
+		}
+
+		return;
+	}
+
+	gameInfo.UnsetPressedButton();
+}
+
+void ProcessEvent(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo) {
+	if (gameInfo.GetCurrentWindowName() == "MainMenu") {
+		ProcessActionInMainMenu(window, event, gameInfo);
+		return;
+	}
+
+	if (gameInfo.GetCurrentWindowName() == "StartGame") {
+		ProcessActionInStartGameMenu(window, event, gameInfo);
+		return;
+	}
 }
 
 // TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.
