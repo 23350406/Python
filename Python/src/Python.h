@@ -381,25 +381,37 @@ void ProcessActionInStartGameMenu(sf::RenderWindow& window, sf::Event& event, Ga
 		// Пользователь уменьшил количество раундов.
 		if (isInBox(event, 226, 120, 276, 170)) {
 			gameInfo.DecreaseNumberOfRounds();
+			window.clear();
 			DrawStartGameWindow(window, gameInfo);
+			DrawPythonTalisman(window);
+			window.display();
 		}
 
 		// Пользователь увеличил количество раундов.
 		if (isInBox(event, 426, 120, 476, 170)) {
 			gameInfo.IncreaseNumberOfRounds();
+			window.clear();
 			DrawStartGameWindow(window, gameInfo);
+			DrawPythonTalisman(window);
+			window.display();
 		}
 
 		// Пользователь уменьшил количество раундов.
 		if (isInBox(event, 676, 120, 726, 170)) {
 			gameInfo.DecreaseNumberOfBots();
+			window.clear();
 			DrawStartGameWindow(window, gameInfo);
+			DrawPythonTalisman(window);
+			window.display();
 		}
 
 		// Пользователь увеличил количество раундов.
 		if (isInBox(event, 876, 120, 926, 170)) {
 			gameInfo.IncreaseNumberOfBots();
+			window.clear();
 			DrawStartGameWindow(window, gameInfo);
+			DrawPythonTalisman(window);
+			window.display();
 		}
 
 		return;
