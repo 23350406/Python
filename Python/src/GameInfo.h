@@ -12,6 +12,7 @@ class GameInfo {
 private:
 	int _numberOfRounds;
 	int _numberOfBots;
+	std::string _mapSize;
 
 	bool _somethingIsPressed;
 	std::string _currentWindowName;
@@ -21,6 +22,8 @@ public:
 	GameInfo() {
 		_numberOfRounds = 1;
 		_numberOfBots = 0;
+		_mapSize = "medium";
+
 		_somethingIsPressed = false;
 
 		// Задается название открытого сейчас окна.
@@ -62,6 +65,28 @@ public:
 	void DecreaseNumberOfBots() {
 		if (_numberOfBots > 0) {
 			--_numberOfBots;
+		}
+	}
+
+	std::string GetMapSize() {
+		return _mapSize;
+	}
+
+	void IncreaseMapSize() {
+		if (_mapSize == "medium") {
+			_mapSize = "large";
+		}
+		if (_mapSize == "small") {
+			_mapSize = "medium";
+		}
+	}
+
+	void DecreaseMapSize() {
+		if (_mapSize == "medium") {
+			_mapSize = "small";
+		}
+		if (_mapSize == "large") {
+			_mapSize = "medium";
 		}
 	}
 
