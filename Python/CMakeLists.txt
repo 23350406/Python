@@ -9,7 +9,7 @@ endif()
 
 set(CMAKE_DEFAULT_STARTUP_PROJECT ${PROJECT_NAME})
 
-add_executable (${PROJECT_NAME} "src/Python.cpp" "src/Python.h")
+add_executable (${PROJECT_NAME} "src/Python.cpp" "src/DrawingFunctions.h" "src/GameInfo.h" "src/ProcessingFunctions.h")
 
 find_package(SFML 2.6.2 COMPONENTS system window graphics audio network REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics sfml-audio sfml-network sfml-window sfml-system)
