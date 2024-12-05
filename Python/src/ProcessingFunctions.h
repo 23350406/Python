@@ -132,6 +132,24 @@ void ProcessActionInStartGameMenu(sf::RenderWindow& window, sf::Event& event, Ga
 			window.display();
 		}
 
+		// Пользователь уменьшил размер карты.
+		if (isInBox(event, 451, 224, 501, 294)) {
+			gameInfo.DecreaseMapSize();
+			window.clear();
+			DrawStartGameWindow(window, gameInfo);
+			DrawPythonTalisman(window);
+			window.display();
+		}
+
+		// Пользователь увеличил размер карты.
+		if (isInBox(event, 651, 224, 701, 294)) {
+			gameInfo.IncreaseMapSize();
+			window.clear();
+			DrawStartGameWindow(window, gameInfo);
+			DrawPythonTalisman(window);
+			window.display();
+		}
+
 		return;
 	}
 
