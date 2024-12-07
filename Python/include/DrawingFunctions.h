@@ -1,11 +1,9 @@
-#pragma once
-
-#include "GameInfo.h"
+#include "functionsFullProject.h"
 
 // Функция выводит кнопку "старт" в запись.
 void DrawStartButton(sf::RenderWindow& window) {
 	sf::Texture buttonTexture;
-	buttonTexture.loadFromFile("../../../images/start.png");
+	buttonTexture.loadFromFile("images/start.png");
 	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(426, 50);
 	window.draw(buttonSprite);
@@ -14,7 +12,7 @@ void DrawStartButton(sf::RenderWindow& window) {
 // Функция выводит кнопку "настройки" в запись.
 void DrawSettingsButton(sf::RenderWindow& window) {
 	sf::Texture buttonTexture;
-	buttonTexture.loadFromFile("../../../images/settings.png");
+	buttonTexture.loadFromFile("images/settings.png");
 	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(426, 242);
 
@@ -24,7 +22,7 @@ void DrawSettingsButton(sf::RenderWindow& window) {
 // Функция выводит кнопку "выйти" в запись.
 void DrawLeaveButton(sf::RenderWindow& window) {
 	sf::Texture buttonTexture;
-	buttonTexture.loadFromFile("../../../images/leave.png");
+	buttonTexture.loadFromFile("images/leave.png");
 	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(426, 434);
 
@@ -34,7 +32,7 @@ void DrawLeaveButton(sf::RenderWindow& window) {
 // Функция выводит кнопку "авторы" в запись.
 void DrawAuthorsButton(sf::RenderWindow& window) {
 	sf::Texture buttonTexture;
-	buttonTexture.loadFromFile("../../../images/authors.png");
+	buttonTexture.loadFromFile("images/authors.png");
 	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(1012, 508);
 
@@ -46,21 +44,21 @@ void DrawSelector(sf::RenderWindow& window, int x, int y) {
 
 	// На экран выводится стрелка для уменьшения числа раундов.
 	sf::Texture leftArrowTexture;
-	leftArrowTexture.loadFromFile("../../../images/left_arrow.png");
+	leftArrowTexture.loadFromFile("images/left_arrow.png");
 	sf::Sprite leftArrowSprite(leftArrowTexture);
 	leftArrowSprite.setPosition(x, y);
 	window.draw(leftArrowSprite);
 
 	// На экран выводится панель счетчика раундов.
 	sf::Texture selectCountTexture;
-	selectCountTexture.loadFromFile("../../../images/select_count.png");
+	selectCountTexture.loadFromFile("images/select_count.png");
 	sf::Sprite selectCountSprite(selectCountTexture);
 	selectCountSprite.setPosition(x + 50, y);
 	window.draw(selectCountSprite);
 
 	// На экран выводится стрелка для увеличения количества раундов.
 	sf::Texture rightArrowTexture;
-	rightArrowTexture.loadFromFile("../../../images/right_arrow.png");
+	rightArrowTexture.loadFromFile("images/right_arrow.png");
 	sf::Sprite rightArrowSprite(rightArrowTexture);
 	rightArrowSprite.setPosition(x + 200, y);
 	window.draw(rightArrowSprite);
@@ -69,7 +67,7 @@ void DrawSelector(sf::RenderWindow& window, int x, int y) {
 // Функция выводит на экран количество раундов.
 void DrawNumberOfRounds(sf::RenderWindow& window, GameInfo& gameInfo) {
 	sf::Font consolas;
-	consolas.loadFromFile("../../../fonts/Consolas.ttf");
+	consolas.loadFromFile("fonts/Consolas.ttf");
 
 	sf::Text numberOfRoundsText(std::to_string(gameInfo.GetNumberOfRounds()), consolas, 24);
 	numberOfRoundsText.setFillColor(sf::Color::White);
@@ -80,7 +78,7 @@ void DrawNumberOfRounds(sf::RenderWindow& window, GameInfo& gameInfo) {
 // Функция выводит на экран количество ботов.
 void DrawNumberOfBots(sf::RenderWindow& window, GameInfo& gameInfo) {
 	sf::Font consolas;
-	consolas.loadFromFile("../../../fonts/Consolas.ttf");
+	consolas.loadFromFile("fonts/Consolas.ttf");
 
 	sf::Text numberOfRoundsText(std::to_string(gameInfo.GetNumberOfBots()), consolas, 24);
 	numberOfRoundsText.setFillColor(sf::Color::White);
@@ -91,7 +89,7 @@ void DrawNumberOfBots(sf::RenderWindow& window, GameInfo& gameInfo) {
 // Функция выводит на размер карты.
 void DrawMapSize(sf::RenderWindow& window, GameInfo& gameInfo) {
 	sf::Font consolas;
-	consolas.loadFromFile("../../../fonts/Consolas.ttf");
+	consolas.loadFromFile("fonts/Consolas.ttf");
 
 	sf::Text mapSizeText(gameInfo.GetMapSize(), consolas, 24);
 	mapSizeText.setFillColor(sf::Color::White);
@@ -102,7 +100,7 @@ void DrawMapSize(sf::RenderWindow& window, GameInfo& gameInfo) {
 // Функция выводит кнопку "играть" в запись.
 void DrawPlayButton(sf::RenderWindow& window) {
 	sf::Texture buttonTexture;
-	buttonTexture.loadFromFile("../../../images/play.png");
+	buttonTexture.loadFromFile("images/play.png");
 	sf::Sprite buttonSprite(buttonTexture);
 	buttonSprite.setPosition(426, 388);
 	window.draw(buttonSprite);
@@ -111,7 +109,7 @@ void DrawPlayButton(sf::RenderWindow& window) {
 // На экран выводится заголовок счетчика раундов.
 void DrawRoundsHeader(sf::RenderWindow& window) {
 	sf::Texture returnButtonTexture;
-	returnButtonTexture.loadFromFile("../../../images/rounds_header.png");
+	returnButtonTexture.loadFromFile("images/rounds_header.png");
 	sf::Sprite returnButtonSprite(returnButtonTexture);
 	returnButtonSprite.setPosition(276, 70);
 	window.draw(returnButtonSprite);
@@ -120,7 +118,7 @@ void DrawRoundsHeader(sf::RenderWindow& window) {
 // На экран выводится заголовок счетчика ботов.
 void DrawBotsHeader(sf::RenderWindow& window) {
 	sf::Texture returnButtonTexture;
-	returnButtonTexture.loadFromFile("../../../images/bots_header.png");
+	returnButtonTexture.loadFromFile("images/bots_header.png");
 	sf::Sprite returnButtonSprite(returnButtonTexture);
 	returnButtonSprite.setPosition(726, 70);
 	window.draw(returnButtonSprite);
@@ -129,7 +127,7 @@ void DrawBotsHeader(sf::RenderWindow& window) {
 // На экран выводится заголовок выбора карты.
 void DrawMapHeader(sf::RenderWindow& window) {
 	sf::Texture returnButtonTexture;
-	returnButtonTexture.loadFromFile("../../../images/map_header.png");
+	returnButtonTexture.loadFromFile("images/map_header.png");
 	sf::Sprite returnButtonSprite(returnButtonTexture);
 	returnButtonSprite.setPosition(501, 194);
 	window.draw(returnButtonSprite);
@@ -137,7 +135,7 @@ void DrawMapHeader(sf::RenderWindow& window) {
 
 void DrawReturnArrow(sf::RenderWindow& window) {
 	sf::Texture returnButtonTexture;
-	returnButtonTexture.loadFromFile("../../../images/return_arrow.png");
+	returnButtonTexture.loadFromFile("images/return_arrow.png");
 	sf::Sprite returnButtonSprite(returnButtonTexture);
 	returnButtonSprite.setPosition(10, 10);
 	window.draw(returnButtonSprite);
@@ -149,7 +147,7 @@ void DrawPythonTalisman(sf::RenderWindow& window) {
 	  Важно создавать объект, т.к. есть свойства, которые не всегда найдутся в текстуре.
 	  К примеру маска цветов - можем игнорировать какие либо цвета объекта*/
 	sf::Image pythonImage;
-	pythonImage.loadFromFile("../../../images/pngwing.com.png");
+	pythonImage.loadFromFile("images/pngwing.com.png");
 
 	// Текстура и есть изображение. Можно не использовать Image (НО НЕЛЬЗЯ!!)
 	sf::Texture pythonTexture;

@@ -2,7 +2,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DrawingFunctions.h"
+#include "../include/fileForLink.h"
 
 int main()
 {

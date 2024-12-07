@@ -1,6 +1,8 @@
-#pragma once
 
-#include "DrawingFunctions.h"
+#ifndef PRFUNC_H
+#define PRFUNC_H
+
+#include "functionsFullProject.h"
 
 // Функция определяет: является ли действие нажатием на левую кнопку мыши.
 bool isLMC(sf::Event& event, GameInfo& gameInfo) {
@@ -167,3 +169,5 @@ void ProcessEvent(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo
 		return;
 	}
 }
+
+#endif
