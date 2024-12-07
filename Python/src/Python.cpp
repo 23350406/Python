@@ -2,14 +2,14 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "pythonUpdate.h"
+#include "DrawingFunctions.h"
 
 int main()
 {
 	
 	// Открывается окно для вывода
 	sf::RenderWindow window(sf::VideoMode(1152, 648), "Python");
-	//window.setSize(sf::Vector2u(1152, 648));
+	window.setSize(sf::Vector2u(1152, 648));
 
 	// Экран закрашивается черным.
 	window.clear(sf::Color::Black);
