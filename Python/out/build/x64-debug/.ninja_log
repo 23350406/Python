@@ -1,7 +1,0 @@
-# ninja log v5
-3	1151	7540904323094666	CMakeFiles/Python.dir/src/Python.cpp.obj	98ed8a0303cf11b9
-1153	1401	7540904325105099	Python.exe	d72f81af7ce180ae
-2	15	0	clean	8c45b54705a541e8
-2	14	0	clean	8c45b54705a541e8
-6	1099	7540904758227346	CMakeFiles/Python.dir/src/Python.cpp.obj	98ed8a0303cf11b9
-1099	1299	7540904759797557	Python.exe	d72f81af7ce180ae

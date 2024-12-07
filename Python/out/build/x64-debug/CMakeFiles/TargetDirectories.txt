@@ -1,3 +1,0 @@
-C:/Users/Bor012/Desktop/Kobrinski/Python/out/build/x64-debug/CMakeFiles/Python.dir
-C:/Users/Bor012/Desktop/Kobrinski/Python/out/build/x64-debug/CMakeFiles/edit_cache.dir
-C:/Users/Bor012/Desktop/Kobrinski/Python/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
