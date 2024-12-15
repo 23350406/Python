@@ -1,13 +1,11 @@
-
-#ifndef PRFUNC_H
-#define PRFUNC_H
+#pragma once
 
 #include "functionsFullProject.h"
 
 // Функция определяет: является ли действие нажатием на левую кнопку мыши.
 bool isLMC(sf::Event& event, GameInfo& gameInfo) {
 	// Если пользователь нажал не на мышку, то false.
-	if (event.type != sf::Event::MouseButtonReleased) {
+	if (event.type != sf::Event::MouseButtonPressed) {
 		return false;
 	}
 
@@ -35,9 +33,6 @@ void ChangeWindowToStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo)
 	// В вывод на экран заносится экран выбора настроек старта игры.
 	DrawStartGameWindow(window, gameInfo);
 
-	// В вывод на экран заносится змейка-талисман.
-	DrawPythonTalisman(window);
-
 	// Записанное в вывод показывается пользователю.
 	window.display();
 }
@@ -52,8 +47,47 @@ void ChangeWindowToMainMenuWindow(sf::RenderWindow& window, GameInfo& gameInfo) 
 	// В вывод на экран заносится главное меню.
 	DrawMainMenuWindow(window);
 
-	// В вывод на экран заносится змейка-талисман.
-	DrawPythonTalisman(window);
+	// Записанное в вывод показывается пользователю.
+	window.display();
+}
+
+void ChangeWindowToLeaveGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+	// Записывается название экрана игры, на который перешел пользователь.
+	gameInfo.SetCurrentWindowName("LeaveGame");
+
+	// Экран закрашивается черным.
+	window.clear(sf::Color::Black);
+
+	// В вывод на экран заносится окно выхода из игры.
+	DrawLeaveGameWindow(window);
+
+	// Записанное в вывод показывается пользователю.
+	window.display();
+}
+
+void ChangeWindowToSettingsWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+	// Записывается название экрана игры, на который перешел пользователь.
+	gameInfo.SetCurrentWindowName("Settings");
+
+	// Экран закрашивается черным.
+	window.clear(sf::Color::Black);
+
+	// В вывод на экран заносится меню настроек.
+	DrawSettingsWindow(window, gameInfo);
+
+	// Записанное в вывод показывается пользователю.
+	window.display();
+}
+
+void ChangeWindowToAuthorsWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+	// Записывается название экрана игры, на который перешел пользователь.
+	gameInfo.SetCurrentWindowName("Authors");
+
+	// Экран закрашивается черным.
+	window.clear(sf::Color::Black);
+
+	// В вывод на экран заносится меню настроек.
+	DrawAuthorsWindow(window);
 
 	// Записанное в вывод показывается пользователю.
 	window.display();
@@ -73,7 +107,34 @@ void ProcessActionInMainMenu(sf::RenderWindow& window, sf::Event& event, GameInf
 
 		// Пользователь нажал ЛКМ на кнопку "START" -> переход на страницу настроек старта игры.
 		if (isInBox(event, 426, 50, 726, 210)) {
+
+			// Переход между главным меню и меню начала игры.
+			MoveWindowFromMainToStart(window);
 			ChangeWindowToStartGameWindow(window, gameInfo);
+		}
+
+		// Пользователь нажал ЛКМ на кнопку "LEAVE" -> переход на страницу выхода из игры.
+		if (isInBox(event, 725, 309, 1026, 498)) {
+
+			// Переход между главным меню и меню выхода из игры.
+			MoveWindowFromMainToLeaveGame(window);
+			ChangeWindowToLeaveGameWindow(window, gameInfo);
+		}
+
+		// Пользователь нажал ЛКМ на кнопку "SETTINGS" -> переход на страницу настроек.
+		if (isInBox(event, 126, 320, 426, 499)) {
+
+			// Функция осуществляет переход с экрана главного меню на экран настроек игры.
+			MoveWindowFromMainToSettings(window);
+			ChangeWindowToSettingsWindow(window, gameInfo);
+		}
+
+		// Пользователь нажал ЛКМ на кнопку авторов -> переход на страницу авторов.
+		if (isInBox(event, 499, 490, 652, 648)) {
+
+			// Функция осуществляет переход с экрана главного меню на экран авторов игры.
+			MoveWindowFromMainToAuthors(window);
+			ChangeWindowToAuthorsWindow(window, gameInfo);
 		}
 
 		return;
@@ -93,63 +154,145 @@ void ProcessActionInStartGameMenu(sf::RenderWindow& window, sf::Event& event, Ga
 
 		gameInfo.SetPressedButton();
 
-		// Пользователь нажал ЛКМ на кнопку "START" -> переход на страницу настроек старта игры.
-		if (isInBox(event, 10, 10, 90, 70)) {
+		// Пользователь нажал ЛКМ на кнопку назад -> переход на страницу главного меню игры.
+		if (isInBox(event, 18, 13, 133, 74)) {
+			// Переход между главным меню и меню начала игры.
+			MoveWindowFromStartToMain(window);
 			ChangeWindowToMainMenuWindow(window, gameInfo);
 		}
 
 		// Пользователь уменьшил количество раундов.
-		if (isInBox(event, 226, 120, 276, 170)) {
+		if (isInBox(event, 197, 120, 247, 170)) {
 			gameInfo.DecreaseNumberOfRounds();
 			window.clear();
 			DrawStartGameWindow(window, gameInfo);
-			DrawPythonTalisman(window);
 			window.display();
 		}
 
 		// Пользователь увеличил количество раундов.
-		if (isInBox(event, 426, 120, 476, 170)) {
+		if (isInBox(event, 436, 120, 486, 170)) {
 			gameInfo.IncreaseNumberOfRounds();
 			window.clear();
 			DrawStartGameWindow(window, gameInfo);
-			DrawPythonTalisman(window);
 			window.display();
 		}
 
-		// Пользователь уменьшил количество раундов.
-		if (isInBox(event, 676, 120, 726, 170)) {
+		// Пользователь уменьшил количество ботов.
+		if (isInBox(event, 651, 120, 701, 170)) {
 			gameInfo.DecreaseNumberOfBots();
 			window.clear();
 			DrawStartGameWindow(window, gameInfo);
-			DrawPythonTalisman(window);
 			window.display();
 		}
 
-		// Пользователь увеличил количество раундов.
-		if (isInBox(event, 876, 120, 926, 170)) {
+		// Пользователь увеличил количество ботов.
+		if (isInBox(event, 891, 120, 941, 170)) {
 			gameInfo.IncreaseNumberOfBots();
 			window.clear();
 			DrawStartGameWindow(window, gameInfo);
-			DrawPythonTalisman(window);
 			window.display();
 		}
 
 		// Пользователь уменьшил размер карты.
-		if (isInBox(event, 451, 224, 501, 294)) {
+		if (isInBox(event, 432, 314, 482, 364)) {
 			gameInfo.DecreaseMapSize();
 			window.clear();
 			DrawStartGameWindow(window, gameInfo);
-			DrawPythonTalisman(window);
 			window.display();
 		}
 
 		// Пользователь увеличил размер карты.
-		if (isInBox(event, 651, 224, 701, 294)) {
+		if (isInBox(event, 671, 314, 721, 364)) {
 			gameInfo.IncreaseMapSize();
 			window.clear();
 			DrawStartGameWindow(window, gameInfo);
-			DrawPythonTalisman(window);
 			window.display();
+		}
+
+		return;
+	}
+
+	gameInfo.UnsetPressedButton();
+}
+
+void ProcessActionInLeaveGameMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo) {
+
+	// Если пользователь нажал ЛКМ.
+	if (isLMC(event, gameInfo)) {
+
+		if (gameInfo.GetPressedButton()) {
+			return;
+		}
+
+		gameInfo.SetPressedButton();
+
+		// Пользователь нажал ЛКМ на стрелку назад -> переход на главное меню.
+		if (isInBox(event, 16, 0, 131, 60)) {
+
+			// Переход между главным меню и меню выхода из игры.
+			MoveWindowFromLeaveGameToMain(window);
+			ChangeWindowToMainMenuWindow(window, gameInfo);
+		}
+
+		// Пользователь нажал ЛКМ на кнопку "NO" -> переход на главное меню.
+		if (isInBox(event, 746, 318, 1048, 498)) {
+
+			// Переход между главным меню и меню выхода из игры.
+			MoveWindowFromLeaveGameToMain(window);
+			ChangeWindowToMainMenuWindow(window, gameInfo);
+		}
+
+		// Пользователь нажал ЛКМ на кнопку "YES" -> выход из игры.
+		if (isInBox(event, 98, 318, 400, 498)) {
+			window.close();
+		}
+
+		return;
+	}
+
+	gameInfo.UnsetPressedButton();
+}
+
+void ProcessActionInSettingsMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo) {
+	// Если пользователь нажал ЛКМ.
+	if (isLMC(event, gameInfo)) {
+
+		if (gameInfo.GetPressedButton()) {
+			return;
+		}
+
+		gameInfo.SetPressedButton();
+
+		// Пользователь нажал ЛКМ на стрелку назад -> переход на главное меню.
+		if (isInBox(event, 7, 10, 122, 71)) {
+
+			// Функция осуществляет переход с экрана настроек игры на экран главного меню.
+			MoveWindowFromSettingsToMain(window);
+			ChangeWindowToMainMenuWindow(window, gameInfo);
+		}
+
+		return;
+	}
+
+	gameInfo.UnsetPressedButton();
+}
+
+void ProcessActionInAuthorsMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo) {
+	// Если пользователь нажал ЛКМ.
+	if (isLMC(event, gameInfo)) {
+
+		if (gameInfo.GetPressedButton()) {
+			return;
+		}
+
+		gameInfo.SetPressedButton();
+
+		// Пользователь нажал ЛКМ на стрелку назад -> переход на главное меню.
+		if (isInBox(event, 7, 10, 122, 71)) {
+
+			// Функция осуществляет переход с экрана авторов игры на экран главного меню.
+			MoveWindowFromAuthorsToMain(window);
+			ChangeWindowToMainMenuWindow(window, gameInfo);
 		}
 
 		return;
@@ -168,6 +311,19 @@ void ProcessEvent(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo
 		ProcessActionInStartGameMenu(window, event, gameInfo);
 		return;
 	}
-}
 
-#endif
+	if (gameInfo.GetCurrentWindowName() == "LeaveGame") {
+		ProcessActionInLeaveGameMenu(window, event, gameInfo);
+		return;
+	}
+
+	if (gameInfo.GetCurrentWindowName() == "Settings") {
+		ProcessActionInSettingsMenu(window, event, gameInfo);
+		return;
+	}
+
+	if (gameInfo.GetCurrentWindowName() == "Authors") {
+		ProcessActionInAuthorsMenu(window, event, gameInfo);
+		return;
+	}
+}
