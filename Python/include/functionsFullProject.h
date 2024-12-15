@@ -8,6 +8,8 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
+#include <chrono>
+#include <thread>
 class GameInfo {
 private:
 	int _numberOfRounds;
@@ -54,13 +56,13 @@ public:
 	// Функция, устанавливающая кнопку по умолчанию
 	void SetPressedButton();
 
-    //TODO: Дописать коммент
+    // Функция отжимает кнопку в классе.
 	void UnsetPressedButton();
 
-    //TODO: Дописать коммент
+    // Функция возвращает название текущего экрана.
 	std::string GetCurrentWindowName();
 
-    //TODO: Дописать коммент
+    // Функция устанавливает название текущего экрана.
 	void SetCurrentWindowName(std::string newWindowName);
 };
 
@@ -74,27 +76,29 @@ void ChangeWindowToStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo)
 
 void ChangeWindowToMainMenuWindow(sf::RenderWindow& window, GameInfo& gameInfo);
 
+void ChangeWindowToLeaveGameWindow(sf::RenderWindow& window, GameInfo& gameInfo);
+
+void ChangeWindowToSettingsWindow(sf::RenderWindow& window, GameInfo& gameInfo);
+
+void ChangeWindowToAuthorsWindow(sf::RenderWindow& window, GameInfo& gameInfo);
+
 // Функция обрабатывает событие на экране главного меню.
 void ProcessActionInMainMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo);
 
+// Функция обрабатывает событие в меню начала игры.
 void ProcessActionInStartGameMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo);
 
+// Функция обрабатывает событие в меню начала игры.
+void ProcessActionInLeaveGameMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo);
+
+// Функция обрабатывает событие в меню настроек.
+void ProcessActionInSettingsMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo);
+
+// Функция обрабатывает событие в меню настроек.
+void ProcessActionInAuthorsMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo);
+
+// Функция обрабатывает событие.
 void ProcessEvent(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo);
-
-// Функция выводит кнопку "старт" в запись.
-void DrawStartButton(sf::RenderWindow& window);
-
-// Функция выводит кнопку "настройки" в запись.
-void DrawSettingsButton(sf::RenderWindow& window);
-
-// Функция выводит кнопку "выйти" в запись.
-void DrawLeaveButton(sf::RenderWindow& window);
-
-// Функция выводит кнопку "авторы" в запись.
-void DrawAuthorsButton(sf::RenderWindow& window);
-
-// На экран выводится селектор количества чего-то (раундов/ботов) со смещением на x и y пикселей от верхнего левого угла экрана.
-void DrawSelector(sf::RenderWindow& window, int x, int y);
 
 // Функция выводит на экран количество раундов.
 void DrawNumberOfRounds(sf::RenderWindow& window, GameInfo& gameInfo);
@@ -105,20 +109,6 @@ void DrawNumberOfBots(sf::RenderWindow& window, GameInfo& gameInfo);
 // Функция выводит на размер карты.
 void DrawMapSize(sf::RenderWindow& window, GameInfo& gameInfo);
 
-// Функция выводит кнопку "играть" в запись.
-void DrawPlayButton(sf::RenderWindow& window);
-
-// На экран выводится заголовок счетчика раундов.
-void DrawRoundsHeader(sf::RenderWindow& window);
-
-// На экран выводится заголовок счетчика ботов.
-void DrawBotsHeader(sf::RenderWindow& window);
-
-// На экран выводится заголовок выбора карты.
-void DrawMapHeader(sf::RenderWindow& window);
-
-void DrawReturnArrow(sf::RenderWindow& window);
-
 // Функция выводит на экран выводится змейка-талисман.
 void DrawPythonTalisman(sf::RenderWindow& window);
 
@@ -128,5 +118,37 @@ void DrawMainMenuWindow(sf::RenderWindow& window);
 // Функция выводит экран настроек старта игры.
 void DrawStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo);
 
+// Функция выводит в запись окно начального меню.
+void DrawLeaveGameWindow(sf::RenderWindow& window);
+
+// Функция выводит экран настроек старта игры.
+void DrawSettingsWindow(sf::RenderWindow& window, GameInfo& gameInfo);
+
+// Функция выводит экран разработчиков.
+void DrawAuthorsWindow(sf::RenderWindow& window);
+
+// Функция осуществляет переход с экрана главного меню на экран начала игры.
+void MoveWindowFromMainToStart(sf::RenderWindow& window);
+
+// Функция осуществляет переход с экрана начала игры на экран главного меню.
+void MoveWindowFromStartToMain(sf::RenderWindow& window);
+
+// Функция осуществляет переход с экрана главного меню на экран выхода из игры.
+void MoveWindowFromMainToLeaveGame(sf::RenderWindow& window);
+
+// Функция осуществляет переход с экрана выхода из игры на экран главного меню.
+void MoveWindowFromLeaveGameToMain(sf::RenderWindow& window);
+
+// Функция осуществляет переход с экрана главного меню на экран настроек игры.
+void MoveWindowFromMainToSettings(sf::RenderWindow& window);
+
+// Функция осуществляет переход с экрана настроек игры на экран главного меню.
+void MoveWindowFromSettingsToMain(sf::RenderWindow& window);
+
+// Функция осуществляет переход с экрана главного меню на экран авторов игры.
+void MoveWindowFromMainToAuthors(sf::RenderWindow& window);
+
+// Функция осуществляет переход с экрана авторов игры на экран главного меню.
+void MoveWindowFromAuthorsToMain(sf::RenderWindow& window);
 
 #endif // FULL_H

@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/frozen/Документы/Python/Python/build",
+  "command": "/usr/bin/g++   -g -std=gnu++14 -o CMakeFiles/Python.dir/src/Python.cpp.o -c /home/frozen/Документы/Python/Python/src/Python.cpp",
+  "file": "/home/frozen/Документы/Python/Python/src/Python.cpp"
+}
+]
