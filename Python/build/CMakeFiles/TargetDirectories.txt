@@ -1,0 +1,3 @@
+/home/boris/Рабочий стол/project/Python/Python/build/CMakeFiles/Python.dir
+/home/boris/Рабочий стол/project/Python/Python/build/CMakeFiles/edit_cache.dir
+/home/boris/Рабочий стол/project/Python/Python/build/CMakeFiles/rebuild_cache.dir
