@@ -3,11 +3,6 @@
 #define GAMEINFO_HPP
 
 #include "functionsFullProject.h"
-#include <vector>
-#include <list>
-
-using std::vector;
-using std::string;
 
 // Конструктор по умолчанию.
 GameInfo::GameInfo() {
@@ -101,77 +96,5 @@ std::string GameInfo::GetCurrentWindowName() {
 void GameInfo::SetCurrentWindowName(std::string newWindowName) {
 	_currentWindowName = newWindowName;
 }
-
-class Player
-{
-    string _color;
-    string _username;
-    bool _isPlayer;
-    char _up    = 'w';
-    char _down  = 's';
-    char _left  = 'a';
-    char _right = 'd';
-public:
-    bool   Check_isPlayer();
-    string GetUsername();
-    string GetColor();
-    char   GetMove(string move);
-
-	void SetUsername(string username);
-	void SetColor(string color);
-	void SetMove(string moveName, char letterMove);
-	
-};
-
-class Cell
-{
-   string _typeCell;
-
-public:
-   string GetType();
-   void   SetType(string type);
-};
-class Field
-{
-    int _height;
-    int _width;
-    vector<Cell*> _line;
-    int _countPlayers;
-    int _countBots;
-    vector<Player> _team;
-public:
-    int GetHeight();
-    int GetWidth();
-	vector<Cell*> GetLine();
-    vector<Player> GetTeam();
-
-	void SetHeight(int height);
-	void SetWidth(int width);
-	void SetLine(vector<Cell*> line);
-    void SetTeam(vector<Player> team);
-
-};
-
-
-class Snake
-{
-    int _head_x;
-    int _head_y;
-    int _tail_x;
-    int _tail_y;
-    string _direction;
-public:
-    int GetxHead();
-    int GetyHead();
-    int GetxTail();
-    int GetyTail();
-    string GetDirection();
-
-	void SetxHead(int head_x);
-	void SetyHead(int head_y);
-	void SetxTail(int tail_x);
-	void SetyTail(int tail_y);
-	void SetDirection(string direction);
-};
 
 #endif // GAMEINFO_HPP
