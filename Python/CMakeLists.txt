@@ -15,6 +15,10 @@ include/functionsFullProject.h
 include/DrawingFunctions.h
 include/GameInfo.h
 include/ProcessingFunctions.h
+include/CellClass.h
+include/FieldClass.h
+include/PlayerClass.h
+include/SnakeClass.h
 )
 
 # Линковка с SFML
