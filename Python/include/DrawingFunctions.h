@@ -5,7 +5,7 @@
 // Функция выводит на экран количество раундов.
 void DrawNumberOfRounds(sf::RenderWindow& window, GameInfo& gameInfo) {
 	sf::Font consolas;
-	consolas.loadFromFile("fonts/Consolas.ttf");
+	consolas.loadFromFile("../fonts/Consolas.ttf");
 
 	sf::Text numberOfRoundsText(std::to_string(gameInfo.GetNumberOfRounds()), consolas, 24);
 	numberOfRoundsText.setFillColor(sf::Color::White);
@@ -27,7 +27,7 @@ void DrawNumberOfBots(sf::RenderWindow& window, GameInfo& gameInfo) {
 // Функция выводит на размер карты.
 void DrawMapSize(sf::RenderWindow& window, GameInfo& gameInfo) {
 	sf::Font consolas;
-	consolas.loadFromFile("fonts/Consolas.ttf");
+	consolas.loadFromFile("../fonts/Consolas.ttf");
 
 	sf::Text mapSizeText(gameInfo.GetMapSize(), consolas, 24);
 	mapSizeText.setFillColor(sf::Color::White);
@@ -41,7 +41,7 @@ void DrawPythonTalisman(sf::RenderWindow& window) {
 	  Важно создавать объект, т.к. есть свойства, которые не всегда найдутся в текстуре.
 	  К примеру маска цветов - можем игнорировать какие либо цвета объекта*/
 	sf::Image pythonImage;
-	pythonImage.loadFromFile("images/pngwing.com.png");
+	pythonImage.loadFromFile("../images/pngwing.com.png");
 
 	// Текстура и есть изображение. Можно не использовать Image (НО НЕЛЬЗЯ!!)
 	sf::Texture pythonTexture;
@@ -68,7 +68,7 @@ void DrawMainMenuWindow(sf::RenderWindow& window) {
 // Функция выводит экран настроек старта игры.
 void DrawStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
 	sf::Texture texture;
-	texture.loadFromFile("images/Start.png");
+	texture.loadFromFile("../images/Start.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.draw(sprite);
@@ -82,7 +82,7 @@ void DrawStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
 // Функция выводит экран выхода из игры.
 void DrawLeaveGameWindow(sf::RenderWindow& window) {
 	sf::Texture texture;
-	texture.loadFromFile("images/Leave.png");
+	texture.loadFromFile("../images/Leave.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.draw(sprite);
@@ -91,7 +91,7 @@ void DrawLeaveGameWindow(sf::RenderWindow& window) {
 // Функция выводит экран настроек.
 void DrawSettingsWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
 	sf::Texture texture;
-	texture.loadFromFile("images/Settings.png");
+	texture.loadFromFile("../images/Settings.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.draw(sprite);
@@ -100,7 +100,7 @@ void DrawSettingsWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
 // Функция выводит экран настроек.
 void DrawAuthorsWindow(sf::RenderWindow& window) {
 	sf::Texture texture;
-	texture.loadFromFile("images/Authors.png");
+	texture.loadFromFile("../images/Authors.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.draw(sprite);
@@ -114,7 +114,7 @@ void MoveWindowFromMainToStart(sf::RenderWindow& window) {
 
 	// На экран выводится изображение, связывающее главное меню и меню начала игры.
 	sf::Texture texture;
-	texture.loadFromFile("images/Menu-Start.png");
+	texture.loadFromFile("../images/Menu-Start.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.clear();
@@ -149,7 +149,7 @@ void MoveWindowFromStartToMain(sf::RenderWindow& window) {
 
 	// На экран выводится изображение, связывающее главное меню и меню начала игры.
 	sf::Texture texture;
-	texture.loadFromFile("images/Menu-Start.png");
+	texture.loadFromFile("../images/Menu-Start.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.clear();
@@ -183,7 +183,7 @@ void MoveWindowFromMainToLeaveGame(sf::RenderWindow& window) {
 
 	// На экран выводится изображение, связывающее главное меню и меню начала игры.
 	sf::Texture texture;
-	texture.loadFromFile("images/Menu-Leave.png");
+	texture.loadFromFile("../images/Menu-Leave.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.clear();
@@ -217,7 +217,7 @@ void MoveWindowFromLeaveGameToMain(sf::RenderWindow& window) {
 
 	// На экран выводится изображение, связывающее главное меню и меню начала игры.
 	sf::Texture texture;
-	texture.loadFromFile("images/Menu-Leave.png");
+	texture.loadFromFile("../images/Menu-Leave.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.clear();
@@ -251,7 +251,7 @@ void MoveWindowFromMainToSettings(sf::RenderWindow& window) {
 
 	// На экран выводится изображение, связывающее главное меню и меню начала игры.
 	sf::Texture texture;
-	texture.loadFromFile("images/Menu-Settings.png");
+	texture.loadFromFile("../images/Menu-Settings.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.clear();
@@ -285,7 +285,7 @@ void MoveWindowFromSettingsToMain(sf::RenderWindow& window) {
 
 	// На экран выводится изображение, связывающее главное меню и меню начала игры.
 	sf::Texture texture;
-	texture.loadFromFile("images/Menu-Settings.png");
+	texture.loadFromFile("../images/Menu-Settings.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.clear();
@@ -320,7 +320,7 @@ void MoveWindowFromMainToAuthors(sf::RenderWindow& window) {
 
 	// На экран выводится изображение, связывающее главное меню и меню начала игры.
 	sf::Texture texture;
-	texture.loadFromFile("images/Menu-Authors.png");
+	texture.loadFromFile("../images/Menu-Authors.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.clear();
@@ -355,7 +355,7 @@ void MoveWindowFromAuthorsToMain(sf::RenderWindow& window) {
 
 	// На экран выводится изображение, связывающее главное меню и меню начала игры.
 	sf::Texture texture;
-	texture.loadFromFile("images/Menu-Authors.png");
+	texture.loadFromFile("../images/Menu-Authors.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.clear();
