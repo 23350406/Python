@@ -1,17 +1,16 @@
-#include "GameInfo.h"
-
+#include "functionsFullProject.h"
 bool Player::Check_isPlayer() { return this->_isPlayer; }
 
 string Player::GetUsername() { return this->_username; }
 
 string Player::GetColor() { return this->_color; }
 
-char Player::GetMove(string move)
+char Player::GetMove(string moveName)
 {
-    if(move == "up")    {return this->_up;}
-    if(move == "down")  {return this->_down;}
-    if(move == "left")  {return this->_left;}
-    if(move == "right") {return this->_right;}
+    if(moveName == "up")    {return this->_up;}
+    if(moveName == "down")  {return this->_down;}
+    if(moveName == "left")  {return this->_left;}
+    if(moveName == "right") {return this->_right;}
     // return '0';
 }
 

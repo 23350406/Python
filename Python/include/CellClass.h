@@ -1,4 +1,4 @@
-#include "GameInfo.h"
+#include "functionsFullProject.h"
 
 string Cell::GetType()  { return this->_typeCell; }
 

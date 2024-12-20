@@ -1,4 +1,4 @@
-#include "GameInfo.h"
+#include "functionsFullProject.h"
 
 int Snake::GetxHead() { return this->_head_x; }
 

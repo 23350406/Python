@@ -64,6 +64,78 @@ public:
 	void SetCurrentWindowName(std::string newWindowName);
 };
 
+class Field
+{
+    int _height;
+    int _width;
+    vector<Cell*> _field;
+    int _countPlayers;
+    int _countBots;
+    vector<Player> _players;
+public:
+    int GetHeight();
+    int GetWidth();
+	vector<Cell*> GetLine();
+    vector<Player> GetTeam();
+
+	void SetHeight(int height);
+	void SetWidth(int width);
+	void SetLine(vector<Cell*> line);
+    void SetTeam(vector<Player> team);
+
+};
+
+class Player
+{
+    string _color;
+    string _username;
+    bool _isPlayer;
+    char _up    = 'w';
+    char _down  = 's';
+    char _left  = 'a';
+    char _right = 'd';
+public:
+    bool   Check_isPlayer();
+    string GetUsername();
+    sf::Color GetColor();
+    char   GetMove(string moveName);
+
+	void SetUsername(string username);
+	void SetColor(sf::Color color);
+	void SetMove(string moveName, char letterMove);
+	
+};
+
+class Cell
+{
+   string _typeCell;
+
+public:
+   string GetType();
+   void   SetType(string type);
+};
+
+class Snake
+{
+    int _head_x;
+    int _head_y;
+    int _tail_x;
+    int _tail_y;
+    string _direction;
+public:
+    int GetxHead();
+    int GetyHead();
+    int GetxTail();
+    int GetyTail();
+    string GetDirection();
+
+	void SetxHead(int head_x);
+	void SetyHead(int head_y);
+	void SetxTail(int tail_x);
+	void SetyTail(int tail_y);
+	void SetDirection(string direction);
+};
+
 // Функция определяет: является ли действие нажатием на левую кнопку мыши.
 bool isLMC(sf::Event& event, GameInfo& gameInfo);
 

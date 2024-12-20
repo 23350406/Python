@@ -1,4 +1,4 @@
-#include "GameInfo.h"
+#include "functionsFullProject.h"
 
 int Field::GetHeight() { return this->_height; }
 
