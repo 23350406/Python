@@ -127,18 +127,26 @@ class Snake
     int _tail_x;
     int _tail_y;
     string _direction;
+    vector<std::pair<int, int>> _body; //pair хранит 2 типа как 1 с ключами first, second  порядок важен
 public:
+    Snake(int startX, int startY, string direction);
+
     int GetxHead();
     int GetyHead();
     int GetxTail();
     int GetyTail();
     string GetDirection();
+    vector<std::pair<int, int>> GetBody();
 
 	void SetxHead(int head_x);
 	void SetyHead(int head_y);
 	void SetxTail(int tail_x);
 	void SetyTail(int tail_y);
-	void SetDirection(string direction);
+    void SetDirection(string newDirection);
+
+    void MoveSnake();
+    void Grow();
+    
 };
 
 // Функция определяет: является ли действие нажатием на левую кнопку мыши.
