@@ -1,8 +1,0 @@
-[
-{
-  "directory": "/home/boris/Рабочий стол/project/Python/Python/build",
-  "command": "/usr/bin/c++   -g -std=gnu++14 -o CMakeFiles/Python.dir/src/Python.cpp.o -c \"/home/boris/Рабочий стол/project/Python/Python/src/Python.cpp\"",
-  "file": "/home/boris/Рабочий стол/project/Python/Python/src/Python.cpp",
-  "output": "CMakeFiles/Python.dir/src/Python.cpp.o"
-}
-]
