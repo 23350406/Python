@@ -1,9 +1,10 @@
 #include "functionsFullProject.h"
+
 bool Player::Check_isPlayer() { return this->_isPlayer; }
 
 string Player::GetUsername() { return this->_username; }
 
-string Player::GetColor() { return this->_color; }
+sf::Color Player::GetColor() { return this->_color; }
 
 char Player::GetMove(string moveName)
 {
@@ -11,12 +12,14 @@ char Player::GetMove(string moveName)
     if(moveName == "down")  {return this->_down;}
     if(moveName == "left")  {return this->_left;}
     if(moveName == "right") {return this->_right;}
-    // return '0';
+    return '0';
 }
 
 void Player::SetUsername(string username) { this->_username = username; }
 
-void Player::SetColor(string color) { this->_color = color; }
+void Player::SetColor(int r, int g, int b) {
+    _color = sf::Color(r,g,b);
+}
 
 void Player::SetMove(string moveName, char letterMove) //movename - какое движение будет перезаписываться, letterMove - кнопка записи
 {

@@ -8,6 +8,11 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
+#include <vector>
+#include <list>
+
+using std::vector;
+using std::string;
 class GameInfo {
 private:
 	int _numberOfRounds;
@@ -64,6 +69,36 @@ public:
 	void SetCurrentWindowName(std::string newWindowName);
 };
 
+class Cell
+{
+   string _typeCell;
+
+public:
+   string GetType();
+   void   SetType(string type);
+};
+
+class Player
+{
+    sf::Color _color;
+    string _username;
+    bool _isPlayer;
+    char _up    = 'w';
+    char _down  = 's';
+    char _left  = 'a';
+    char _right = 'd';
+public:
+    bool Check_isPlayer();
+    string GetUsername();
+    sf::Color GetColor();
+    char GetMove(string moveName);
+
+	void SetUsername(string username);
+	void SetColor(int r, int g, int b);
+	void SetMove(string moveName, char letterMove);
+	
+};
+
 class Field
 {
     int _height;
@@ -75,7 +110,7 @@ class Field
 public:
     int GetHeight();
     int GetWidth();
-	vector<Cell*> GetLine();
+	vector<Cell*> GetField();
     vector<Player> GetTeam();
 
 	void SetHeight(int height);
@@ -83,36 +118,6 @@ public:
 	void SetLine(vector<Cell*> line);
     void SetTeam(vector<Player> team);
 
-};
-
-class Player
-{
-    string _color;
-    string _username;
-    bool _isPlayer;
-    char _up    = 'w';
-    char _down  = 's';
-    char _left  = 'a';
-    char _right = 'd';
-public:
-    bool   Check_isPlayer();
-    string GetUsername();
-    sf::Color GetColor();
-    char   GetMove(string moveName);
-
-	void SetUsername(string username);
-	void SetColor(sf::Color color);
-	void SetMove(string moveName, char letterMove);
-	
-};
-
-class Cell
-{
-   string _typeCell;
-
-public:
-   string GetType();
-   void   SetType(string type);
 };
 
 class Snake

@@ -3,11 +3,6 @@
 #define GAMEINFO_HPP
 
 #include "functionsFullProject.h"
-#include <vector>
-#include <list>
-
-using std::vector;
-using std::string;
 
 // Конструктор по умолчанию.
 GameInfo::GameInfo() {
