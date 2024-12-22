@@ -8,8 +8,14 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
+#include <vector>
+#include <list>
 #include <chrono>
 #include <thread>
+
+using std::vector;
+using std::string;
+
 class GameInfo {
 private:
 	int _numberOfRounds;
@@ -64,6 +70,86 @@ public:
 
     // Функция устанавливает название текущего экрана.
 	void SetCurrentWindowName(std::string newWindowName);
+};
+
+class Cell
+{
+   string _typeCell;
+
+public:
+   string GetType();
+   void   SetType(string type);
+};
+
+class Player
+{
+    sf::Color _color;
+    string _username;
+    bool _isPlayer;
+    char _up    = 'w';
+    char _down  = 's';
+    char _left  = 'a';
+    char _right = 'd';
+public:
+    bool Check_isPlayer();
+    string GetUsername();
+    sf::Color GetColor();
+    char GetMove(string moveName);
+
+	void SetUsername(string username);
+	void SetColor(int r, int g, int b);
+	void SetMove(string moveName, char letterMove);
+	
+};
+
+class Field
+{
+    int _height;
+    int _width;
+    vector<Cell*> _field;
+    int _countPlayers;
+    int _countBots;
+    vector<Player> _players;
+public:
+    int GetHeight();
+    int GetWidth();
+	vector<Cell*> GetField();
+    vector<Player> GetTeam();
+
+	void SetHeight(int height);
+	void SetWidth(int width);
+	void SetLine(vector<Cell*> line);
+    void SetTeam(vector<Player> team);
+
+};
+
+class Snake
+{
+    int _head_x;
+    int _head_y;
+    int _tail_x;
+    int _tail_y;
+    string _direction;
+    vector<std::pair<int, int>> _body; //pair хранит 2 типа как 1 с ключами first, second  порядок важен
+public:
+    Snake(int startX, int startY, string direction);
+
+    int GetxHead();
+    int GetyHead();
+    int GetxTail();
+    int GetyTail();
+    string GetDirection();
+    vector<std::pair<int, int>> GetBody();
+
+	void SetxHead(int head_x);
+	void SetyHead(int head_y);
+	void SetxTail(int tail_x);
+	void SetyTail(int tail_y);
+    void SetDirection(string newDirection);
+
+    void MoveSnake();
+    void Grow();
+    
 };
 
 // Функция определяет: является ли действие нажатием на левую кнопку мыши.
