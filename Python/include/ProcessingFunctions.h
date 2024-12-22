@@ -208,6 +208,15 @@ void ProcessActionInStartGameMenu(sf::RenderWindow& window, sf::Event& event, Ga
 			DrawStartGameWindow(window, gameInfo);
 			window.display();
 		}
+		
+		if (isInBox(event, 432, 466, 722, 645)) {
+			vector<int> temp = DefineParametersForField(gameInfo);
+			Field fieldInfo(temp[0], temp[1], temp[2], temp[3]);
+			
+			window.clear();
+			DrawMap(window, gameInfo, fieldInfo);
+			window.display();
+		}
 
 		return;
 	}

@@ -65,6 +65,23 @@ void DrawMainMenuWindow(sf::RenderWindow& window) {
 	window.draw(sprite);
 }
 
+// Функция выведет карту игры
+void DrawMap(sf::RenderWindow& window, GameInfo& gameInfo, Field& field) {
+
+	vector<vector<Cell>> myMap = field.GetField();
+	sf::Texture texture;
+	sf::Sprite sprite;
+
+	for (int i = 0; i < field.GetHeight() - 1; ++i) {
+		for (int j = 0; j < field.GetWidth() - 1; ++j) {
+			texture.loadFromImage(myMap[i][j].GetImage());
+			sprite.setTexture(texture);
+			sprite.setPosition(280 + 20 * i, 50 + 20 * j);
+			window.draw(sprite);
+		}
+	}
+}
+
 // Функция выводит экран настроек старта игры.
 void DrawStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
 	sf::Texture texture;
