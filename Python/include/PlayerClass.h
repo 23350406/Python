@@ -1,5 +1,11 @@
 #include "functionsFullProject.h"
 
+Player::Player(sf::Color color, string username, bool isPlayer) {
+    _color = color;
+    _username = username;
+    _isPlayer = isPlayer;
+}
+
 bool Player::Check_isPlayer() { return _isPlayer; }
 
 string Player::GetUsername() { return _username; }

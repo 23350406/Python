@@ -97,7 +97,10 @@ class Player
     char _down  = 's';
     char _left  = 'a';
     char _right = 'd';
+
 public:
+    Player(sf::Color color, string username, bool isPlayer);
+
     bool Check_isPlayer();
     string GetUsername();
     sf::Color GetColor();
@@ -109,6 +112,35 @@ public:
 	
 };
 
+class Snake
+{
+    int _head_x = 0;
+    int _head_y = 0;
+    int _tail_x = 0;
+    int _tail_y = 0;
+    string _direction = "up";
+    vector<std::pair<int, int>> _body; // pair хранит 2 типа как 1 с ключами first, second  порядок важен
+public:
+    Snake(int startX, int startY, string direction);
+    Snake(){};
+
+    int GetxHead();
+    int GetyHead();
+    int GetxTail();
+    int GetyTail();
+    string GetDirection();
+    vector<std::pair<int, int>> GetBody();
+
+	void SetxHead(int head_x);
+	void SetyHead(int head_y);
+	void SetxTail(int tail_x);
+	void SetyTail(int tail_y);
+    void SetDirection(string newDirection);
+
+    void MoveSnake();
+    void Grow();  
+};
+
 class Field
 {
     int _height;
@@ -117,7 +149,9 @@ class Field
     int _countPlayers;
     int _countBots;
     void InitializeFrom(int height, int width, int _countPlayers, int _countBots);
-    // vector<Player> _players;
+    vector<Player> _players;
+
+    Snake _snake;
 
 public:
     Field(int height, int width, int _countPlayers, int _countBots);
@@ -136,35 +170,6 @@ public:
     void SetCountBots(int countBots);
     void SetCountPlayers(int countPlayers);
 
-};
-
-class Snake
-{
-    int _head_x;
-    int _head_y;
-    int _tail_x;
-    int _tail_y;
-    string _direction;
-    vector<std::pair<int, int>> _body; // pair хранит 2 типа как 1 с ключами first, second  порядок важен
-public:
-    Snake(int startX, int startY, string direction);
-
-    int GetxHead();
-    int GetyHead();
-    int GetxTail();
-    int GetyTail();
-    string GetDirection();
-    vector<std::pair<int, int>> GetBody();
-
-	void SetxHead(int head_x);
-	void SetyHead(int head_y);
-	void SetxTail(int tail_x);
-	void SetyTail(int tail_y);
-    void SetDirection(string newDirection);
-
-    void MoveSnake();
-    void Grow();
-    
 };
 
 // Функция определяет: является ли действие нажатием на левую кнопку мыши.

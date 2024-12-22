@@ -18,7 +18,7 @@ void Field::SetWidth(int width) { _width = width; }
 
 void Field::SetLine(vector<vector<Cell>> field) { _field = field;}
 
-// void Field::SetTeam(vector<Player> players) { _players = players; }
+void Field::SetTeam(vector<Player> players) { _players = players; }
 
 void Field::SetCountBots(int countBots) { _countBots = countBots; }
 
@@ -44,6 +44,12 @@ void Field::InitializeFrom(int height, int width, int countPlayers, int countBot
                     headImage.loadFromFile("../images/headSnake.png");
 				    temp.SetImage(headImage);
                     temp.SetIsBusy(true);
+
+                    _snake.SetxHead(i);
+                    _snake.SetyHead(j);
+                    _snake.SetxTail(i);
+                    _snake.SetyTail(j);
+
                     ++countRandomElement;
                     row.insert(row.begin() + j, temp);
                     continue;
@@ -71,7 +77,10 @@ void Field::InitializeFrom(int height, int width, int countPlayers, int countBot
     }
 
     _countBots = countBots;
-    _countPlayers = countPlayers;  
+    _countPlayers = countPlayers;
+
+    Player player(sf::Color::Magenta, "bro", true);
+    _players.push_back(player);
 }
 
 Field::Field(int height, int width, int countPlayers, int countBots) {

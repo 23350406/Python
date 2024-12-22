@@ -37,6 +37,19 @@ void ChangeWindowToStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo)
 	window.display();
 }
 
+void ChangeWindowToGameWindow(sf::RenderWindow& window, GameInfo& gameInfo, Field& field) {
+	// Записывается название экрана игры, на который перешел пользователь.
+	gameInfo.SetCurrentWindowName("Game");
+
+	// Экран закрашивается черным.
+	window.clear(sf::Color::Black);
+
+	DrawMap(window, gameInfo, field);
+
+	// Записанное в вывод показывается пользователю.
+	window.display();
+}
+
 void ChangeWindowToMainMenuWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
 	// Записывается название экрана игры, на который перешел пользователь.
 	gameInfo.SetCurrentWindowName("MainMenu");
@@ -95,8 +108,8 @@ void ChangeWindowToAuthorsWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
 
 // Функция обрабатывает событие на экране главного меню.
 void ProcessActionInMainMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo) {
+	
 	// Если пользователь нажал ЛКМ.
-
 	if (isLMC(event, gameInfo)) {
 
 		if (gameInfo.GetPressedButton()) {
@@ -208,14 +221,14 @@ void ProcessActionInStartGameMenu(sf::RenderWindow& window, sf::Event& event, Ga
 			DrawStartGameWindow(window, gameInfo);
 			window.display();
 		}
-		
+
 		if (isInBox(event, 432, 466, 722, 645)) {
 			vector<int> temp = DefineParametersForField(gameInfo);
 			Field fieldInfo(temp[0], temp[1], temp[2], temp[3]);
+
 			
-			window.clear();
-			DrawMap(window, gameInfo, fieldInfo);
-			window.display();
+
+			ChangeWindowToGameWindow(window, gameInfo, fieldInfo);
 		}
 
 		return;
@@ -286,6 +299,14 @@ void ProcessActionInSettingsMenu(sf::RenderWindow& window, sf::Event& event, Gam
 	gameInfo.UnsetPressedButton();
 }
 
+void ProcessActionInGame(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo) {
+	if (event.type == sf::Event::KeyPressed) {
+		if (event.key.code == sf::Keyboard::W) {
+
+		}
+	}
+}
+
 void ProcessActionInAuthorsMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo) {
 	// Если пользователь нажал ЛКМ.
 	if (isLMC(event, gameInfo)) {
@@ -333,6 +354,11 @@ void ProcessEvent(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo
 
 	if (gameInfo.GetCurrentWindowName() == "Authors") {
 		ProcessActionInAuthorsMenu(window, event, gameInfo);
+		return;
+	}
+
+	if (gameInfo.GetCurrentWindowName() == "Game") {
+		ProcessActionInGame(window, event, gameInfo);
 		return;
 	}
 }

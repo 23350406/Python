@@ -33,6 +33,7 @@ vector<int> DefineParametersForField(GameInfo& gameInfo) {
 
 vector<int> GenerateRandomValues(int maxSize) {
     vector<int> randomValue;
+    
     // Составим значения для разных штук
     srand(time(0));
     for (int i = 0; i < 7; ++i) {
