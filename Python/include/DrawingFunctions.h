@@ -1,68 +1,6 @@
+#pragma once
+
 #include "functionsFullProject.h"
-
-// Функция выводит кнопку "старт" в запись.
-void DrawStartButton(sf::RenderWindow& window) {
-	sf::Texture buttonTexture;
-	buttonTexture.loadFromFile("../images/start.png");
-	sf::Sprite buttonSprite(buttonTexture);
-	buttonSprite.setPosition(426, 50);
-	window.draw(buttonSprite);
-}
-
-// Функция выводит кнопку "настройки" в запись.
-void DrawSettingsButton(sf::RenderWindow& window) {
-	sf::Texture buttonTexture;
-	buttonTexture.loadFromFile("../images/settings.png");
-	sf::Sprite buttonSprite(buttonTexture);
-	buttonSprite.setPosition(426, 242);
-
-	window.draw(buttonSprite);
-}
-
-// Функция выводит кнопку "выйти" в запись.
-void DrawLeaveButton(sf::RenderWindow& window) {
-	sf::Texture buttonTexture;
-	buttonTexture.loadFromFile("../images/leave.png");
-	sf::Sprite buttonSprite(buttonTexture);
-	buttonSprite.setPosition(426, 434);
-
-	window.draw(buttonSprite);
-}
-
-// Функция выводит кнопку "авторы" в запись.
-void DrawAuthorsButton(sf::RenderWindow& window) {
-	sf::Texture buttonTexture;
-	buttonTexture.loadFromFile("../images/authors.png");
-	sf::Sprite buttonSprite(buttonTexture);
-	buttonSprite.setPosition(1012, 508);
-
-	window.draw(buttonSprite);
-}
-
-// На экран выводится селектор количества чего-то (раундов/ботов) со смещением на x и y пикселей от верхнего левого угла экрана.
-void DrawSelector(sf::RenderWindow& window, int x, int y) {
-
-	// На экран выводится стрелка для уменьшения числа раундов.
-	sf::Texture leftArrowTexture;
-	leftArrowTexture.loadFromFile("../images/left_arrow.png");
-	sf::Sprite leftArrowSprite(leftArrowTexture);
-	leftArrowSprite.setPosition(x, y);
-	window.draw(leftArrowSprite);
-
-	// На экран выводится панель счетчика раундов.
-	sf::Texture selectCountTexture;
-	selectCountTexture.loadFromFile("../images/select_count.png");
-	sf::Sprite selectCountSprite(selectCountTexture);
-	selectCountSprite.setPosition(x + 50, y);
-	window.draw(selectCountSprite);
-
-	// На экран выводится стрелка для увеличения количества раундов.
-	sf::Texture rightArrowTexture;
-	rightArrowTexture.loadFromFile("../images/right_arrow.png");
-	sf::Sprite rightArrowSprite(rightArrowTexture);
-	rightArrowSprite.setPosition(x + 200, y);
-	window.draw(rightArrowSprite);
-}
 
 // Функция выводит на экран количество раундов.
 void DrawNumberOfRounds(sf::RenderWindow& window, GameInfo& gameInfo) {
@@ -71,7 +9,7 @@ void DrawNumberOfRounds(sf::RenderWindow& window, GameInfo& gameInfo) {
 
 	sf::Text numberOfRoundsText(std::to_string(gameInfo.GetNumberOfRounds()), consolas, 24);
 	numberOfRoundsText.setFillColor(sf::Color::White);
-	numberOfRoundsText.setPosition(345, 128);
+	numberOfRoundsText.setPosition(335, 128);
 	window.draw(numberOfRoundsText);
 }
 
@@ -82,7 +20,7 @@ void DrawNumberOfBots(sf::RenderWindow& window, GameInfo& gameInfo) {
 
 	sf::Text numberOfRoundsText(std::to_string(gameInfo.GetNumberOfBots()), consolas, 24);
 	numberOfRoundsText.setFillColor(sf::Color::White);
-	numberOfRoundsText.setPosition(796, 128);
+	numberOfRoundsText.setPosition(791, 128);
 	window.draw(numberOfRoundsText);
 }
 
@@ -93,52 +31,8 @@ void DrawMapSize(sf::RenderWindow& window, GameInfo& gameInfo) {
 
 	sf::Text mapSizeText(gameInfo.GetMapSize(), consolas, 24);
 	mapSizeText.setFillColor(sf::Color::White);
-	mapSizeText.setPosition(541, 252);
+	mapSizeText.setPosition(541, 322);
 	window.draw(mapSizeText);
-}
-
-// Функция выводит кнопку "играть" в запись.
-void DrawPlayButton(sf::RenderWindow& window) {
-	sf::Texture buttonTexture;
-	buttonTexture.loadFromFile("../images/play.png");
-	sf::Sprite buttonSprite(buttonTexture);
-	buttonSprite.setPosition(426, 388);
-	window.draw(buttonSprite);
-}
-
-// На экран выводится заголовок счетчика раундов.
-void DrawRoundsHeader(sf::RenderWindow& window) {
-	sf::Texture returnButtonTexture;
-	returnButtonTexture.loadFromFile("../images/rounds_header.png");
-	sf::Sprite returnButtonSprite(returnButtonTexture);
-	returnButtonSprite.setPosition(276, 70);
-	window.draw(returnButtonSprite);
-}
-
-// На экран выводится заголовок счетчика ботов.
-void DrawBotsHeader(sf::RenderWindow& window) {
-	sf::Texture returnButtonTexture;
-	returnButtonTexture.loadFromFile("../images/bots_header.png");
-	sf::Sprite returnButtonSprite(returnButtonTexture);
-	returnButtonSprite.setPosition(726, 70);
-	window.draw(returnButtonSprite);
-}
-
-// На экран выводится заголовок выбора карты.
-void DrawMapHeader(sf::RenderWindow& window) {
-	sf::Texture returnButtonTexture;
-	returnButtonTexture.loadFromFile("../images/map_header.png");
-	sf::Sprite returnButtonSprite(returnButtonTexture);
-	returnButtonSprite.setPosition(501, 194);
-	window.draw(returnButtonSprite);
-}
-
-void DrawReturnArrow(sf::RenderWindow& window) {
-	sf::Texture returnButtonTexture;
-	returnButtonTexture.loadFromFile("../images/return_arrow.png");
-	sf::Sprite returnButtonSprite(returnButtonTexture);
-	returnButtonSprite.setPosition(10, 10);
-	window.draw(returnButtonSprite);
 }
 
 // Функция выводит на экран выводится змейка-талисман.
@@ -162,45 +56,328 @@ void DrawPythonTalisman(sf::RenderWindow& window) {
 	window.draw(pythonSprite);
 }
 
-
-
 // Функция выводит в запись окно начального меню.
 void DrawMainMenuWindow(sf::RenderWindow& window) {
-
-	// В запись заносится кнопка "старт".
-	DrawStartButton(window);
-
-	// В запись заносится кнопка "настройки".
-	DrawSettingsButton(window);
-
-	// В запись заносится кнопка "выйти".
-	DrawLeaveButton(window);
-
-	// В запись заносится кнопка "авторы".
-	DrawAuthorsButton(window);
+	sf::Texture texture;
+	texture.loadFromFile("../images/Menu.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.draw(sprite);
 }
 
 // Функция выводит экран настроек старта игры.
 void DrawStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+	sf::Texture texture;
+	texture.loadFromFile("../images/Start.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.draw(sprite);
 
-	// На экран выводится стрелка возвращения назад.
-	DrawReturnArrow(window);
-
-	// На экран выводится селектор раундов.
-	DrawSelector(window, 226, 120);
+	// На экран выводится информация о выбранных значениях счетчиков.
 	DrawNumberOfRounds(window, gameInfo);
-	DrawRoundsHeader(window);
-
-	// На экран выводится селектор ботов.
-	DrawSelector(window, 676, 120);
 	DrawNumberOfBots(window, gameInfo);
-	DrawBotsHeader(window);
-
-	// На экран выводится размер карты.
-	DrawSelector(window, 451, 244);
 	DrawMapSize(window, gameInfo);
-	DrawMapHeader(window);
+}
 
-	// На экран выводится кнопка "играть".
-	DrawPlayButton(window);
+// Функция выводит экран выхода из игры.
+void DrawLeaveGameWindow(sf::RenderWindow& window) {
+	sf::Texture texture;
+	texture.loadFromFile("../images/Leave.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.draw(sprite);
+}
+
+// Функция выводит экран настроек.
+void DrawSettingsWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+	sf::Texture texture;
+	texture.loadFromFile("../images/Settings.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.draw(sprite);
+}
+
+// Функция выводит экран настроек.
+void DrawAuthorsWindow(sf::RenderWindow& window) {
+	sf::Texture texture;
+	texture.loadFromFile("../images/Authors.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.draw(sprite);
+}
+
+// Функция осуществляет переход с экрана главного меню на экран начала игры.
+void MoveWindowFromMainToStart(sf::RenderWindow& window) {
+
+	// Создается камера.
+	sf::View view(sf::FloatRect(0, 648, 1152, 648));
+
+	// На экран выводится изображение, связывающее главное меню и меню начала игры.
+	sf::Texture texture;
+	texture.loadFromFile("../images/Menu-Start.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.clear();
+	window.draw(sprite);	
+	view.setCenter(1152 / 2, 648 / 2 + 648);
+
+	// Задаются часы.
+	sf::Clock clock;
+	sf::Time startTime = clock.getElapsedTime();
+
+	// Камера двигается относительно изображения.
+	while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
+		view.setCenter(1152 / 2, (int)(648 / 2 + 648 - ((clock.getElapsedTime() - startTime) / sf::seconds(3.24)) * 648));
+		window.clear();
+		window.setView(view);
+		window.draw(sprite);
+		window.display();
+	}
+
+	// Камера возвращается в исходное положение.
+	view.setCenter(1152 / 2, 648 / 2);
+	window.clear();
+	window.setView(view);
+	window.display();
+}
+
+// Функция осуществляет переход с экрана главного меню на экран начала игры.
+void MoveWindowFromStartToMain(sf::RenderWindow& window) {
+
+	// Создается камера.
+	sf::View view(sf::FloatRect(0, 648, 1152, 648));
+
+	// На экран выводится изображение, связывающее главное меню и меню начала игры.
+	sf::Texture texture;
+	texture.loadFromFile("../images/Menu-Start.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.clear();
+	window.draw(sprite);	
+	view.setCenter(1152 / 2, 648 / 2);
+
+	// Задаются часы.
+	sf::Clock clock;
+	sf::Time startTime = clock.getElapsedTime();
+
+	// Камера двигается относительно изображения.
+	while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
+		view.setCenter((int)(1152 / 2), (int)(648 / 2 + ((clock.getElapsedTime() - startTime) / sf::seconds(3.24)) * 648));
+		window.clear();
+		window.setView(view);
+		window.draw(sprite);
+		window.display();
+	}
+
+	// Камера возвращается в исходное положение.
+	view.setCenter(1152 / 2, 648 / 2);
+	window.clear();
+	window.setView(view);
+	window.display();
+}
+
+// Функция осуществляет переход с экрана главного меню на экран выхода из игры.
+void MoveWindowFromMainToLeaveGame(sf::RenderWindow& window) {
+	// Создается камера.
+	sf::View view(sf::FloatRect(0, 648, 1152, 648));
+
+	// На экран выводится изображение, связывающее главное меню и меню начала игры.
+	sf::Texture texture;
+	texture.loadFromFile("../images/Menu-Leave.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.clear();
+	window.draw(sprite);	
+	view.setCenter(1152 / 2, 648 / 2);
+
+	// Задаются часы.
+	sf::Clock clock;
+	sf::Time startTime = clock.getElapsedTime();
+
+	// Камера двигается относительно изображения.
+	while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
+		view.setCenter((int)(1152 / 2 + ((clock.getElapsedTime() - startTime) / sf::seconds(3.24)) * 1152), (int)(648 / 2));
+		window.clear();
+		window.setView(view);
+		window.draw(sprite);
+		window.display();
+	}
+
+	// Камера возвращается в исходное положение.
+	view.setCenter(1152 / 2, 648 / 2);
+	window.clear();
+	window.setView(view);
+	window.display();
+}
+
+// Функция осуществляет переход с экрана главного меню на экран выхода из игры.
+void MoveWindowFromLeaveGameToMain(sf::RenderWindow& window) {
+	// Создается камера.
+	sf::View view(sf::FloatRect(0, 648, 1152, 648));
+
+	// На экран выводится изображение, связывающее главное меню и меню начала игры.
+	sf::Texture texture;
+	texture.loadFromFile("../images/Menu-Leave.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.clear();
+	window.draw(sprite);	
+	view.setCenter(1152 / 2 + 1152, 648 / 2);
+
+	// Задаются часы.
+	sf::Clock clock;
+	sf::Time startTime = clock.getElapsedTime();
+
+	// Камера двигается относительно изображения.
+	while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
+		view.setCenter((int)(1152 / 2 + 1152 - ((clock.getElapsedTime() - startTime) / sf::seconds(3.24)) * 1152), (int)(648 / 2));
+		window.clear();
+		window.setView(view);
+		window.draw(sprite);
+		window.display();
+	}
+
+	// Камера возвращается в исходное положение.
+	view.setCenter(1152 / 2, 648 / 2);
+	window.clear();
+	window.setView(view);
+	window.display();
+}
+
+// Функция осуществляет переход с экрана главного меню на экран настроек игры.
+void MoveWindowFromMainToSettings(sf::RenderWindow& window) {
+	// Создается камера.
+	sf::View view(sf::FloatRect(0, 648, 1152, 648));
+
+	// На экран выводится изображение, связывающее главное меню и меню начала игры.
+	sf::Texture texture;
+	texture.loadFromFile("../images/Menu-Settings.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.clear();
+	window.draw(sprite);	
+	view.setCenter(1152 / 2 + 1152, 648 / 2);
+
+	// Задаются часы.
+	sf::Clock clock;
+	sf::Time startTime = clock.getElapsedTime();
+
+	// Камера двигается относительно изображения.
+	while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
+		view.setCenter((int)(1152 / 2 + 1152 - ((clock.getElapsedTime() - startTime) / sf::seconds(3.24)) * 1152), (int)(648 / 2));
+		window.clear();
+		window.setView(view);
+		window.draw(sprite);
+		window.display();
+	}
+
+	// Камера возвращается в исходное положение.
+	view.setCenter(1152 / 2, 648 / 2);
+	window.clear();
+	window.setView(view);
+	window.display();
+}
+
+// Функция осуществляет переход с экрана настроек на экран главного меню.
+void MoveWindowFromSettingsToMain(sf::RenderWindow& window) {
+	// Создается камера.
+	sf::View view(sf::FloatRect(0, 648, 1152, 648));
+
+	// На экран выводится изображение, связывающее главное меню и меню начала игры.
+	sf::Texture texture;
+	texture.loadFromFile("../images/Menu-Settings.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.clear();
+	window.draw(sprite);	
+	view.setCenter(1152 / 2, 648 / 2);
+
+	// Задаются часы.
+	sf::Clock clock;
+	sf::Time startTime = clock.getElapsedTime();
+
+	// Камера двигается относительно изображения.
+	while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
+		view.setCenter((int)(1152 / 2 + ((clock.getElapsedTime() - startTime) / sf::seconds(3.24)) * 1152), (int)(648 / 2));
+		window.clear();
+		window.setView(view);
+		window.draw(sprite);
+		window.display();
+	}
+
+	// Камера возвращается в исходное положение.
+	view.setCenter(1152 / 2, 648 / 2);
+	window.clear();
+	window.setView(view);
+	window.display();
+}
+
+// Функция осуществляет переход с экрана главного меню на экран авторов игры.
+void MoveWindowFromMainToAuthors(sf::RenderWindow& window) {
+
+	// Создается камера.
+	sf::View view(sf::FloatRect(0, 648, 1152, 648));
+
+	// На экран выводится изображение, связывающее главное меню и меню начала игры.
+	sf::Texture texture;
+	texture.loadFromFile("../images/Menu-Authors.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.clear();
+	window.draw(sprite);	
+	view.setCenter(1152 / 2, 648 / 2 + 648);
+
+	// Задаются часы.
+	sf::Clock clock;
+	sf::Time startTime = clock.getElapsedTime();
+
+	// Камера двигается относительно изображения.
+	while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
+		view.setCenter(1152 / 2, (int)(648 / 2 + ((clock.getElapsedTime() - startTime) / sf::seconds(3.24)) * 648));
+		window.clear();
+		window.setView(view);
+		window.draw(sprite);
+		window.display();
+	}
+
+	// Камера возвращается в исходное положение.
+	view.setCenter(1152 / 2, 648 / 2);
+	window.clear();
+	window.setView(view);
+	window.display();
+}
+
+// Функция осуществляет переход с экрана авторов игры на экран главного меню.
+void MoveWindowFromAuthorsToMain(sf::RenderWindow& window) {
+
+	// Создается камера.
+	sf::View view(sf::FloatRect(0, 648, 1152, 648));
+
+	// На экран выводится изображение, связывающее главное меню и меню начала игры.
+	sf::Texture texture;
+	texture.loadFromFile("../images/Menu-Authors.png");
+	sf::Sprite sprite(texture);
+	sprite.setPosition(0, 0);
+	window.clear();
+	window.draw(sprite);	
+	view.setCenter(1152 / 2, 648 / 2);
+
+	// Задаются часы.
+	sf::Clock clock;
+	sf::Time startTime = clock.getElapsedTime();
+
+	// Камера двигается относительно изображения.
+	while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
+		view.setCenter((int)(1152 / 2), (int)(648 / 2 + 648 - ((clock.getElapsedTime() - startTime) / sf::seconds(3.24)) * 648));
+		window.clear();
+		window.setView(view);
+		window.draw(sprite);
+		window.display();
+	}
+
+	// Камера возвращается в исходное положение.
+	view.setCenter(1152 / 2, 648 / 2);
+	window.clear();
+	window.setView(view);
+	window.display();
 }
