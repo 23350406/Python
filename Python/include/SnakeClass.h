@@ -2,42 +2,42 @@
 
 Snake::Snake(int startX, int startY, string startDirection)
 {
-    this->_head_x = startX;
-    this->_head_y = startY;
-    this->_direction = startDirection;
+    _head_x = startX;
+    _head_y = startY;
+    _direction = startDirection;
 
-    this->_body.push_back({_head_x, _head_y});
+    _body.push_back({_head_x, _head_y});
 }
 
-int Snake::GetxHead() { return this->_head_x; }
+int Snake::GetxHead() { return _head_x; }
 
-int Snake::GetyHead() { return this->_head_y; }
+int Snake::GetyHead() { return _head_y; }
 
-int Snake::GetxTail() { return this->_tail_x; }
+int Snake::GetxTail() { return _tail_x; }
 
-int Snake::GetyTail() { return this->_tail_y; }
+int Snake::GetyTail() { return _tail_y; }
 
-string Snake::GetDirection() { return this->_direction; }
+string Snake::GetDirection() { return _direction; }
 
-vector<std::pair<int, int>> Snake::GetBody() { return this->_body; }
+vector<std::pair<int, int>> Snake::GetBody() { return _body; }
 
-void Snake::SetxHead(int head_x) { this->_head_x = head_x; }
+void Snake::SetxHead(int head_x) { _head_x = head_x; }
 
-void Snake::SetyHead(int head_y) { this->_head_y = head_y; }
+void Snake::SetyHead(int head_y) { _head_y = head_y; }
 
-void Snake::SetxTail(int tail_x) { this->_tail_x = tail_x; }
+void Snake::SetxTail(int tail_x) { _tail_x = tail_x; }
 
-void Snake::SetyTail(int tail_y) { this->_tail_y = tail_y; }
+void Snake::SetyTail(int tail_y) { _tail_y = tail_y; }
 
 // Изменяет направление движения змейки
 void Snake::SetDirection(string newDirection)
 {
-    if ((newDirection == "up" && this->_direction != "down") ||
-        (newDirection == "down" && this->_direction != "up") ||
-        (newDirection == "left" && this->_direction != "right") ||
-        (newDirection == "right" && this->_direction != "left"))
+    if ((newDirection == "up" && _direction != "down") ||
+        (newDirection == "down" && _direction != "up") ||
+        (newDirection == "left" && _direction != "right") ||
+        (newDirection == "right" && _direction != "left"))
     {
-        this->_direction = newDirection;
+        _direction = newDirection;
     }
 }
 
@@ -82,5 +82,5 @@ void Snake::MoveSnake()
 // Увеличивает длину змейки
 void Snake::Grow()
 {
-    this->_body.push_back({this->_tail_x, this->_tail_y});
+    _body.push_back({_tail_x, _tail_y});
 }

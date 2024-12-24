@@ -74,11 +74,18 @@ public:
 
 class Cell
 {
-   string _typeCell;
+   sf::Image _imageCell;
+   bool _isBusy;
 
 public:
-   string GetType();
-   void   SetType(string type);
+    Cell();
+    Cell(sf::Image img, bool isBusy);
+
+    sf::Image GetImage();
+    bool GetIsBusy();
+
+    void SetIsBusy(bool busy);
+    void   SetImage(sf::Image type);
 };
 
 class Player
@@ -90,7 +97,10 @@ class Player
     char _down  = 's';
     char _left  = 'a';
     char _right = 'd';
+
 public:
+    Player(sf::Color color, string username, bool isPlayer);
+
     bool Check_isPlayer();
     string GetUsername();
     sf::Color GetColor();
@@ -102,37 +112,17 @@ public:
 	
 };
 
-class Field
-{
-    int _height;
-    int _width;
-    vector<Cell*> _field;
-    int _countPlayers;
-    int _countBots;
-    vector<Player> _players;
-public:
-    int GetHeight();
-    int GetWidth();
-	vector<Cell*> GetField();
-    vector<Player> GetTeam();
-
-	void SetHeight(int height);
-	void SetWidth(int width);
-	void SetLine(vector<Cell*> line);
-    void SetTeam(vector<Player> team);
-
-};
-
 class Snake
 {
-    int _head_x;
-    int _head_y;
-    int _tail_x;
-    int _tail_y;
-    string _direction;
-    vector<std::pair<int, int>> _body; //pair хранит 2 типа как 1 с ключами first, second  порядок важен
+    int _head_x = 0;
+    int _head_y = 0;
+    int _tail_x = 0;
+    int _tail_y = 0;
+    string _direction = "up";
+    vector<std::pair<int, int>> _body; // pair хранит 2 типа как 1 с ключами first, second  порядок важен
 public:
     Snake(int startX, int startY, string direction);
+    Snake(){};
 
     int GetxHead();
     int GetyHead();
@@ -148,8 +138,38 @@ public:
     void SetDirection(string newDirection);
 
     void MoveSnake();
-    void Grow();
-    
+    void Grow();  
+};
+
+class Field
+{
+    int _height;
+    int _width;
+    vector<vector<Cell>> _field;
+    int _countPlayers;
+    int _countBots;
+    void InitializeFrom(int height, int width, int _countPlayers, int _countBots);
+    vector<Player> _players;
+
+    Snake _snake;
+
+public:
+    Field(int height, int width, int _countPlayers, int _countBots);
+
+    int GetHeight();
+    int GetWidth();
+	vector<vector<Cell>> GetField();
+    vector<Player> GetTeam();
+    int GetCountPlayers();
+    int GetCountBots();
+
+	void SetHeight(int height);
+	void SetWidth(int width);
+	void SetLine(vector<vector<Cell>> line);
+    void SetTeam(vector<Player> team);
+    void SetCountBots(int countBots);
+    void SetCountPlayers(int countPlayers);
+
 };
 
 // Функция определяет: является ли действие нажатием на левую кнопку мыши.
@@ -213,6 +233,9 @@ void DrawSettingsWindow(sf::RenderWindow& window, GameInfo& gameInfo);
 // Функция выводит экран разработчиков.
 void DrawAuthorsWindow(sf::RenderWindow& window);
 
+// Функция выведет карту игры
+void DrawMap(sf::RenderWindow& window, GameInfo& gameInfo, Field& field);
+
 // Функция осуществляет переход с экрана главного меню на экран начала игры.
 void MoveWindowFromMainToStart(sf::RenderWindow& window);
 
@@ -236,5 +259,14 @@ void MoveWindowFromMainToAuthors(sf::RenderWindow& window);
 
 // Функция осуществляет переход с экрана авторов игры на экран главного меню.
 void MoveWindowFromAuthorsToMain(sf::RenderWindow& window);
+
+// Функция создаст размеры карты, в зависимости от выбранного размера карты
+int DefineMapSize(string size);
+
+// Функция создаст карту игры
+vector<int> DefineParametersForField (GameInfo& gameInfo);
+
+// Функция создаст рандомные значения
+vector<int> GenerateRandomValues(int maxSize);
 
 #endif // FULL_H
