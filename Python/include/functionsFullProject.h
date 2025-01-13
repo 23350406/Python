@@ -1,4 +1,3 @@
-
 #ifndef FULL_H
 #define FULL_H
 
@@ -85,7 +84,7 @@ public:
     bool GetIsBusy();
 
     void SetIsBusy(bool busy);
-    void   SetImage(sf::Image type);
+    void SetImage(sf::Image type);
 };
 
 class Player
@@ -118,27 +117,30 @@ class Snake
     int _head_y = 0;
     int _tail_x = 0;
     int _tail_y = 0;
-    string _direction = "up";
-    vector<std::pair<int, int>> _body; // pair хранит 2 типа как 1 с ключами first, second  порядок важен
+    std::pair<float, float> _direction;
 public:
-    Snake(int startX, int startY, string direction);
-    Snake(){};
+    std::vector<std::pair<float, float>> _body;
+    sf::Clock clock;  // Часы для контроля времени
+    float moveSpeed = 0.0005f;  // Скорость движения змейки (чем меньше значение, тем быстрее)
+
+    Snake(int startX, int startY, std::pair<float, float> direction = {0.1f, 0});
+    Snake() {};
 
     int GetxHead();
     int GetyHead();
     int GetxTail();
     int GetyTail();
-    string GetDirection();
-    vector<std::pair<int, int>> GetBody();
+    std::pair<float, float> GetDirection();
+    std::pair<float, float> GetBody(int partNumber);
 
-	void SetxHead(int head_x);
-	void SetyHead(int head_y);
-	void SetxTail(int tail_x);
-	void SetyTail(int tail_y);
-    void SetDirection(string newDirection);
+    void SetxHead(int head_x);
+    void SetyHead(int head_y);
+    void SetxTail(int tail_x);
+    void SetyTail(int tail_y);
+    void SetDirection(float x, float y);
 
     void MoveSnake();
-    void Grow();  
+    void Grow();
 };
 
 class Field

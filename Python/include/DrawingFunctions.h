@@ -1,5 +1,5 @@
 #pragma once
-
+#include <time.h>
 #include "functionsFullProject.h"
 
 // Функция выводит на экран количество раундов.
@@ -65,21 +65,137 @@ void DrawMainMenuWindow(sf::RenderWindow& window) {
 	window.draw(sprite);
 }
 
+
 // Функция выведет карту игры
 void DrawMap(sf::RenderWindow& window, GameInfo& gameInfo, Field& field) {
+    // Загрузка текстур
+    sf::Image snakeImage, foodImage, obstacleImage, cellImage;
+    snakeImage.loadFromFile("../images/headSnake.png");
+    foodImage.loadFromFile("../images/klukva.png");
+    obstacleImage.loadFromFile("../images/obstacle.png");
+    cellImage.loadFromFile("../images/cell.png");
 
-	vector<vector<Cell>> myMap = field.GetField();
-	sf::Texture texture;
-	sf::Sprite sprite;
+    // Текстуры
+    sf::Texture snakeTexture, foodTexture, obstacleTexture, cellTexture;
+    snakeTexture.loadFromImage(snakeImage);
+    foodTexture.loadFromImage(foodImage);
+    obstacleTexture.loadFromImage(obstacleImage);
+    cellTexture.loadFromImage(cellImage);
 
-	for (int i = 0; i < field.GetHeight() - 1; ++i) {
-		for (int j = 0; j < field.GetWidth() - 1; ++j) {
-			texture.loadFromImage(myMap[i][j].GetImage());
-			sprite.setTexture(texture);
-			sprite.setPosition(280 + 20 * i, 50 + 20 * j);
-			window.draw(sprite);
-		}
-	}
+    // Сприты
+    sf::Sprite snake_head(snakeTexture);
+    sf::Sprite snake_body(cellTexture);
+    sf::Sprite snake_tail(cellTexture);
+    sf::Sprite food(foodTexture);
+    sf::Sprite obstacle(obstacleTexture);
+
+    // Установка начальной позиции еды
+    food.setPosition(rand() % window.getSize().x, rand() % window.getSize().y);
+
+    Snake snake(20, 20);
+    snake_head.setTextureRect(sf::IntRect(0, 0, 20, 20));
+
+    // Основной игровой цикл
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+                return;
+            }
+        }
+
+        // Управление направлением змейки
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && snake.GetDirection() != std::make_pair(0.f, 0.1f)) {
+            snake.SetDirection(0, -0.1);
+            snake_head.setTextureRect(sf::IntRect(0, 0, 20, 20)); // Текстура для головы вверх
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && snake.GetDirection() != std::make_pair(0.f, -0.1f)) {
+            snake.SetDirection(0, 0.1);
+            snake_head.setTextureRect(sf::IntRect(74, 0, 20, 20)); // Текстура для головы вниз
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && snake.GetDirection() != std::make_pair(0.1f, 0.f)) {
+            snake.SetDirection(-0.1, 0);
+            snake_head.setTextureRect(sf::IntRect(148, 0, 20, 20)); // Текстура для головы влево
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && snake.GetDirection() != std::make_pair(-0.1f, 0.f)) {
+            snake.SetDirection(0.1, 0);
+            snake_head.setTextureRect(sf::IntRect(222, 0, 20, 20)); // Текстура для головы вправо
+        }
+
+        // Устанавливаем позицию головы змейки в зависимости от направления
+        snake_head.setPosition(snake._body[0].first, snake._body[0].second);
+
+        // Перемещение змейки
+        snake.MoveSnake();
+
+        // Проверка на столкновение с границами окна
+        auto head = snake._body.front();
+        if (head.first < 0 || head.first >= window.getSize().x || head.second < 0 || head.second >= window.getSize().y) {
+            window.clear(sf::Color::Black);
+            window.display();
+            return;
+        }
+
+        // Проверка на столкновение с самой собой
+        for (size_t i = 1; i < snake._body.size(); ++i) {
+            if (head == snake._body[i]) {
+                window.clear(sf::Color::Black);
+                window.display();
+                return;
+            }
+        }
+
+        // Проверка на столкновение с препятствием
+        if (head.first >= obstacle.getPosition().x && head.first < obstacle.getPosition().x + obstacleTexture.getSize().x &&
+            head.second >= obstacle.getPosition().y && head.second < obstacle.getPosition().y + obstacleTexture.getSize().y) {
+            window.clear(sf::Color::Black);
+            window.display();
+            return;
+        }
+
+        // Проверка на съедание еды
+        if (head.first >= food.getPosition().x && head.first <= food.getPosition().x + foodTexture.getSize().x &&
+            head.second >= food.getPosition().y && head.second <= food.getPosition().y + foodTexture.getSize().y) {
+            // Добавляем новую ячейку в тело змейки
+            snake.Grow();
+
+            // Перемещаем еду на новое место
+            food.setPosition(rand() % window.getSize().x, rand() % window.getSize().y);
+
+            // Изменяем направление змейки после съедания еды
+            if (snake.GetDirection() == std::make_pair(0.f, 0.1f)) {
+                snake.SetDirection(0, -0.1);  // вверх
+            } else if (snake.GetDirection() == std::make_pair(0.f, -0.1f)) {
+                snake.SetDirection(0, 0.1);   // вниз
+            } else if (snake.GetDirection() == std::make_pair(-0.1f, 0.f)) {
+                snake.SetDirection(0.1, 0);   // вправо
+            } else if (snake.GetDirection() == std::make_pair(0.1f, 0.f)) {
+                snake.SetDirection(-0.1, 0);  // влево
+            }
+        }
+
+        // Отрисовка
+        window.clear();
+
+        // Отрисовка препятствия
+        window.draw(obstacle);
+
+        // Отрисовка еды
+        window.draw(food);
+
+        // Отрисовка частей змейки
+        for (size_t i = 0; i < snake._body.size(); ++i) {
+            if (i == 0) {
+                window.draw(snake_head);
+            } else {
+                snake_body.setPosition(snake._body[i].first, snake._body[i].second);
+                window.draw(snake_body);
+            }
+        }
+
+        window.display();
+    }
 }
 
 // Функция выводит экран настроек старта игры.

@@ -1,12 +1,11 @@
 #include "functionsFullProject.h"
 
-Snake::Snake(int startX, int startY, string startDirection)
+Snake::Snake(int startX, int startY, std::pair<float, float> startDirection)
 {
     _head_x = startX;
     _head_y = startY;
     _direction = startDirection;
-
-    _body.push_back({_head_x, _head_y});
+    _body.push_back({startX, startY});
 }
 
 int Snake::GetxHead() { return _head_x; }
@@ -17,9 +16,12 @@ int Snake::GetxTail() { return _tail_x; }
 
 int Snake::GetyTail() { return _tail_y; }
 
-string Snake::GetDirection() { return _direction; }
+std::pair<float, float> Snake::GetDirection() { return _direction; }
 
-vector<std::pair<int, int>> Snake::GetBody() { return _body; }
+std::pair<float, float> Snake::GetBody(int partNumber) 
+{
+    return (partNumber < _body.size()) ? _body[partNumber] : _body[0];
+}
 
 void Snake::SetxHead(int head_x) { _head_x = head_x; }
 
@@ -30,57 +32,28 @@ void Snake::SetxTail(int tail_x) { _tail_x = tail_x; }
 void Snake::SetyTail(int tail_y) { _tail_y = tail_y; }
 
 // Изменяет направление движения змейки
-void Snake::SetDirection(string newDirection)
+void Snake::SetDirection(float x, float y)
 {
-    if ((newDirection == "up" && _direction != "down") ||
-        (newDirection == "down" && _direction != "up") ||
-        (newDirection == "left" && _direction != "right") ||
-        (newDirection == "right" && _direction != "left"))
-    {
-        _direction = newDirection;
+    _direction.first = x;
+    _direction.second = y;
+}
+
+void Snake::MoveSnake() {
+    // Проверка прошедшего времени
+    if (clock.getElapsedTime().asSeconds() >= moveSpeed) {
+        // Сначала добавляем новую голову в начало тела змейки
+        _body.insert(_body.begin(), {_body[0].first + _direction.first, _body[0].second + _direction.second});
+
+        // Удаляем хвост (последнюю часть змейки)
+        _body.pop_back();
+
+        // Сброс времени
+        clock.restart();
     }
 }
 
-// Движение змейки
-void Snake::MoveSnake()
-{
-    // Сохраняем текущее положение головы, понадобится при разукрашевании клетки
-    int prevX = _head_x;
-    int prevY = _head_y;
-
-    // Обновляем координаты головы в зависимости от направления
-    if (_direction == "up")
-    {
-        _head_y--;
-    }
-    else if (_direction == "down")
-    {
-        _head_y++;
-    }
-    else if (_direction == "left")
-    {
-        _head_x--;
-    }
-    else if (_direction == "right")
-    {
-        _head_x++;
-    }
-
-    // Обновляем тело змейки
-    if (!_body.empty())
-    {
-        // Сохраняем старую позицию головы
-        _body.insert(_body.begin(), {_head_x, _head_y}); // Добавляем новую голову
-        _body.pop_back();                                // Удаляем последний сегмент (хвост)
-    }
-    else
-    {
-        _body.push_back({_head_x, _head_y}); // Если тело пустое, добавляем только голову
-    }
-}
-
-// Увеличивает длину змейки
-void Snake::Grow()
-{
-    _body.push_back({_tail_x, _tail_y});
+void Snake::Grow() {
+    // Добавляем новый сегмент в хвост змейки
+    std::pair<float, float> newSegment = _body.back();
+    _body.push_back(newSegment);
 }
