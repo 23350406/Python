@@ -1,88 +1,77 @@
 #include "functionsFullProject.h"
 
-int Field::GetHeight() { return _height; }
+Field::Field(int height, int width) : _height(height), _width(width) {
+  _field.resize(_height, std::vector<Cell>(_width));
 
-int Field::GetWidth() { return _width; }
-
-vector<vector<Cell>> Field::GetField() { return _field; }
-
-// vector<Player> Field::GetTeam() { return _players; }
-
-int Field::GetCountPlayers() { return _countPlayers; }
-
-int Field::GetCountBots() { return _countBots; }
-
-void Field::SetHeight(int height) { _height = height; }
-
-void Field::SetWidth(int width) { _width = width; }
-
-void Field::SetLine(vector<vector<Cell>> field) { _field = field;}
-
-void Field::SetTeam(vector<Player> players) { _players = players; }
-
-void Field::SetCountBots(int countBots) { _countBots = countBots; }
-
-void Field::SetCountPlayers(int countPlayers) { _countPlayers = countPlayers; };
-
-void Field::InitializeFrom(int height, int width, int countPlayers, int countBots) {
-    _height = height;
-    _width = width;
-
-    vector<int> randomValuesX = GenerateRandomValues(height);
-    vector<int> randomValuesY = GenerateRandomValues(height);
-
-    int countRandomElement = 0;
-    // Инициализация карты
-    for (int i = 0; i < height; ++i) {
-        vector<Cell> row;
-
-        for (int j = 0; j < width; ++j) {
-            Cell temp;
-            if (find(randomValuesX.begin(), randomValuesX.end(), i) != randomValuesX.end() && find(randomValuesY.begin(), randomValuesY.end(), j) != randomValuesY.end()) {
-                if (countRandomElement == 0) {
-                    sf::Image headImage;
-                    headImage.loadFromFile("../images/headSnake.png");
-				    temp.SetImage(headImage);
-                    temp.SetIsBusy(true);
-
-                    _snake.SetxHead(i);
-                    _snake.SetyHead(j);
-                    _snake.SetxTail(i);
-                    _snake.SetyTail(j);
-
-                    ++countRandomElement;
-                    row.insert(row.begin() + j, temp);
-                    continue;
-                }
-
-                if (countRandomElement == 4) {
-                    sf::Image headImage;
-                    headImage.loadFromFile("../images/klukva.png");
-				    temp.SetImage(headImage);
-                    ++countRandomElement;
-                    row.insert(row.begin() + j, temp);
-                    continue;
-                }
-
-                sf::Image headImage;
-                headImage.loadFromFile("../images/stena.png");
-				temp.SetImage(headImage);
-                temp.SetIsBusy(true);
-                ++countRandomElement;
-			}
-            row.insert(row.begin() + j, temp);
-        }
-
-        _field.insert(_field.begin() + i, row);
+  // Инициализация карты
+  for (int y = 0; y < _height; ++y) {
+    for (int x = 0; x < _width; ++x) {
+      _field[y][x] = Cell(); // Все ячейки по умолчанию пустые
     }
+  }
 
-    _countBots = countBots;
-    _countPlayers = countPlayers;
-
-    Player player(sf::Color::Magenta, "bro", true);
-    _players.push_back(player);
+  PlaceFood();
+  PlaceObstacles(5);
 }
 
-Field::Field(int height, int width, int countPlayers, int countBots) {
-      InitializeFrom(height, width, countPlayers, countBots);
+void Field::PlaceObstacles(int numberOfObstacles) {
+  std::srand(std::time(nullptr));
+  int obstacleX, obstacleY;
+
+  for (int i = 0; i < numberOfObstacles; ++i) {
+    do {
+      obstacleX = rand() % _width;
+      obstacleY = rand() % _height;
+    } while (_field[obstacleY][obstacleX].GetType() !=
+             CellType::EMPTY); // Проверяем, что ячейка пуста
+
+    // Размещение препятствия
+    _field[obstacleY][obstacleX].SetType(CellType::OBSTACLE);
+  }
+}
+
+void Field::PlaceFood() {
+  std::srand(std::time(nullptr));
+  int foodX, foodY;
+
+  do {
+    foodX = rand() % _width;
+    foodY = rand() % _height;
+  } while (_field[foodY][foodX].GetType() !=
+           CellType::EMPTY); // Проверяем, что ячейка пуста (т.е. тип - EMPTY)
+
+  // Размещение еды на поле
+  SetFood(foodX, foodY);
+}
+
+void Field::UpdateMap(const Snake &snake) {
+  // Сначала очищаем карту, но не трогаем еду и препятствия
+  for (int y = 0; y < _height; ++y) {
+    for (int x = 0; x < _width; ++x) {
+      // Если клетка не пустая и не еда, сбрасываем её
+      if (_field[y][x].GetType() != CellType::FOOD &&
+          _field[y][x].GetType() != CellType::OBSTACLE) {
+        _field[y][x].SetType(CellType::EMPTY);
+      }
+    }
+  }
+
+  // Обновляем карту в соответствии с текущими координатами змейки
+  if (!snake.GetBody().empty()) {
+    // Голова змейки
+    _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetType(
+        CellType::SNAKE_HEAD);
+
+    // Тело змейки
+    for (size_t i = 1; i < snake.GetBody().size() - 1; ++i) {
+      _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetType(
+          CellType::SNAKE_BODY);
+    }
+
+    // Хвост змейки
+    if (snake.GetBody().size() > 1) {
+      _field[snake.GetBody().back().second][snake.GetBody().back().first]
+          .SetType(CellType::SNAKE_TAIL);
+    }
+  }
 }

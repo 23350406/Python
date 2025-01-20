@@ -1,0 +1,3 @@
+/home/andrew/Документы/tpro/Python/Python/build/CMakeFiles/Python.dir
+/home/andrew/Документы/tpro/Python/Python/build/CMakeFiles/edit_cache.dir
+/home/andrew/Документы/tpro/Python/Python/build/CMakeFiles/rebuild_cache.dir
