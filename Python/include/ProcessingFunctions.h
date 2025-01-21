@@ -1,6 +1,7 @@
 #pragma once
 
 #include "functionsFullProject.h"
+#include <SFML/Window/Keyboard.hpp>
 
 // Функция определяет: является ли действие нажатием на левую кнопку мыши.
 bool isLMC(sf::Event& event, GameInfo& gameInfo) {
@@ -216,11 +217,11 @@ void ProcessActionInStartGameMenu(sf::RenderWindow& window, sf::Event& event, Ga
 			// Изменяется значение режима игры.
 			if (!gameInfo.GetIsSolo()) {
 				gameInfo.SetSolo();
-				soloTexture.loadFromFile("../images/Solo.png");
+				soloTexture.loadFromFile("../images/Solo.jpg");
 			}
 			else {
 				gameInfo.SetDuo();
-				soloTexture.loadFromFile("../images/Duo.png");
+				soloTexture.loadFromFile("../images/Duo.jpg");
 			}
 			// Режим игры выводится на экран
 			sf::Sprite soloSprite(soloTexture);
@@ -468,8 +469,11 @@ void ProcessActionInSettingsMenu(sf::RenderWindow& window, sf::Event& event, Gam
 	}
 
 	// Если пользователь нажал клавишу на клавиатуре.
-	if (sf::Keyboard::Key pressedKey = GetPressedKey()) {
-
+	sf::Keyboard::Key pressedKey = GetPressedKey();
+	if (pressedKey) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			pressedKey = sf::Keyboard::A;
+		}
 		// Определяется изменяемое поле.
 		std::string fieldInUse = gameInfo.GetFieldInUse();
 
@@ -683,7 +687,7 @@ std::string GetKeyboardCharacter(sf::Keyboard::Key key) {
 // Функция возвращает нажатую кнопку клавиатуры.
 sf::Keyboard::Key GetPressedKey() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		return sf::Keyboard::A;
+		return sf::Keyboard::Divide;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
 		return sf::Keyboard::B;

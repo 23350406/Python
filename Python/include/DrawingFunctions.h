@@ -69,7 +69,7 @@ void DrawMainMenuWindow(sf::RenderWindow& window) {
 void DrawStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
 	// На экран выводится фон.
 	sf::Texture texture;
-	texture.loadFromFile("../images/Start.png");
+	texture.loadFromFile("../images/Start.jpg");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.draw(sprite);
@@ -77,10 +77,10 @@ void DrawStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
 	// На экран выводится режим (одиночный или мультиплеер).
 	sf::Texture soloTexture;
 	if (gameInfo.GetIsSolo()) {
-		soloTexture.loadFromFile("../images/Solo.png");
+		soloTexture.loadFromFile("../images/Solo.jpg");
 	}
 	else {
-		soloTexture.loadFromFile("../images/Duo.png");
+		soloTexture.loadFromFile("../images/Duo.jpg");
 	}
 	sf::Sprite soloSprite(soloTexture);
 	soloSprite.setPosition(960, 200);
@@ -189,7 +189,7 @@ void MoveWindowFromMainToStart(sf::RenderWindow& window) {
 
 	// На экран выводится изображение, связывающее главное меню и меню начала игры.
 	sf::Texture texture;
-	texture.loadFromFile("../images/Menu-Start.png");
+	texture.loadFromFile("../images/Menu-Start.jpg");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.clear();
@@ -224,7 +224,7 @@ void MoveWindowFromStartToMain(sf::RenderWindow& window) {
 
 	// На экран выводится изображение, связывающее главное меню и меню начала игры.
 	sf::Texture texture;
-	texture.loadFromFile("../images/Menu-Start.png");
+	texture.loadFromFile("../images/Menu-Start.jpg");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.clear();
