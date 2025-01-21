@@ -1,86 +1,100 @@
 #include "functionsFullProject.h"
 
-// Snake::Snake(int startX, int startY, string startDirection)
-// {
-//     this->_head_x = startX;
-//     this->_head_y = startY;
-//     this->_direction = startDirection;
+Snake::Snake(int startX, int startY) {
+  // Инициализация змейки (размещение в 3 клетки)
+  _body.push_back({startX, startY});     // Голова
+  _body.push_back({startX - 1, startY}); // Тело
+  _body.push_back({startX - 2, startY}); // Тело
+  _direction = {1, 0}; // Начальное направление - вправо
+}
 
-//     this->_body.push_back({_head_x, _head_y});
-// }
+std::vector<std::pair<int, int>> Snake::GetBody() const { return _body; }
 
-// int Snake::GetxHead() { return this->_head_x; }
+void Snake::Grow() {
+  // Добавляем новую часть в хвост, которая будет иметь те же координаты, что и
+  // текущий хвост
+  std::pair<int, int> newTail =
+      _body.back(); // Координаты последней части змейки
+  _body.push_back(newTail); // Добавляем эту координату как новый сегмент
+  _grew = true;             // Устанавливаем флаг роста
+}
 
-// int Snake::GetyHead() { return this->_head_y; }
+void Snake::MoveSnake(int fieldWidth, int fieldHeight) {
+  // Добавляем новое положение головы
+  std::pair<int, int> newHead = {_body[0].first + _direction.first,
+                                 _body[0].second + _direction.second};
 
-// int Snake::GetxTail() { return this->_tail_x; }
+  // Перемещаем голову в зависимости от столкновения с границей
+  if (newHead.first < 0) {
+    newHead.first = fieldWidth - 1; // Появление с правой стороны
+  } else if (newHead.first >= fieldWidth) {
+    newHead.first = 0; // Появление с левой стороны
+  } else if (newHead.second < 0) {
+    newHead.second = fieldHeight - 1; // Появление снизу
+  } else if (newHead.second >= fieldHeight) {
+    newHead.second = 0; // Появление сверху
+  }
 
-// int Snake::GetyTail() { return this->_tail_y; }
+  // Добавляем новую голову
+  _body.insert(_body.begin(), newHead);
 
-// string Snake::GetDirection() { return this->_direction; }
+  // Если змейка не съела еду, то удаляем хвост
+  if (!_grew) {
+    _body.pop_back();
+  } else {
+    _grew =
+        false; // Сбрасываем флаг роста после того как змейка "переваривает" еду
+  }
+}
 
-// vector<std::pair<int, int>> Snake::GetBody() { return this->_body; }
+void Snake::MoveBot(int fieldWidth, int fieldHeight) {
+    // Простая логика для бота: случайное направление
+    // Сначала определяем случайное направление
+    static sf::Clock moveClock;
+    if (moveClock.getElapsedTime().asSeconds() > 0.5f) { // Бот меняет направление раз в 0.5 секунд
+        int direction = rand() % 4; // Случайное направление (0-3)
+        switch (direction) {
+            case 0: // Вверх
+                ChangeDirection({0, -1});
+                break;
+            case 1: // Вниз
+                ChangeDirection({0, 1});
+                break;
+            case 2: // Влево
+                ChangeDirection({-1, 0});
+                break;
+            case 3: // Вправо
+                ChangeDirection({1, 0});
+                break;
+        }
+        moveClock.restart(); // Перезапускаем таймер
+    }
+    
+    // Теперь выполняем движение змейки (то же, что и для игрока)
+    std::pair<int, int> newHead = {_body[0].first + _direction.first, _body[0].second + _direction.second};
+    
+    // Обработка столкновений с границами
+    if (newHead.first < 0) newHead.first = fieldWidth - 1;
+    if (newHead.first >= fieldWidth) newHead.first = 0;
+    if (newHead.second < 0) newHead.second = fieldHeight - 1;
+    if (newHead.second >= fieldHeight) newHead.second = 0;
 
-// void Snake::SetxHead(int head_x) { this->_head_x = head_x; }
+    // Добавляем новую голову
+    _body.insert(_body.begin(), newHead);
 
-// void Snake::SetyHead(int head_y) { this->_head_y = head_y; }
+    // Если бот не съел еду, то удаляем хвост
+    if (!_grew) {
+        _body.pop_back();
+    } else {
+        _grew = false; // Сбрасываем флаг роста после того, как змейка "переваривает" еду
+    }
+}
 
-// void Snake::SetxTail(int tail_x) { this->_tail_x = tail_x; }
 
-// void Snake::SetyTail(int tail_y) { this->_tail_y = tail_y; }
-
-// // Изменяет направление движения змейки
-// void Snake::SetDirection(string newDirection)
-// {
-//     if ((newDirection == "up" && this->_direction != "down") ||
-//         (newDirection == "down" && this->_direction != "up") ||
-//         (newDirection == "left" && this->_direction != "right") ||
-//         (newDirection == "right" && this->_direction != "left"))
-//     {
-//         this->_direction = newDirection;
-//     }
-// }
-
-// // Движение змейки
-// void Snake::MoveSnake()
-// {
-//     // Сохраняем текущее положение головы, понадобится при разукрашевании клетки
-//     int prevX = _head_x;
-//     int prevY = _head_y;
-
-//     // Обновляем координаты головы в зависимости от направления
-//     if (_direction == "up")
-//     {
-//         _head_y--;
-//     }
-//     else if (_direction == "down")
-//     {
-//         _head_y++;
-//     }
-//     else if (_direction == "left")
-//     {
-//         _head_x--;
-//     }
-//     else if (_direction == "right")
-//     {
-//         _head_x++;
-//     }
-
-//     // Обновляем тело змейки
-//     if (!_body.empty())
-//     {
-//         // Сохраняем старую позицию головы
-//         _body.insert(_body.begin(), {_head_x, _head_y}); // Добавляем новую голову
-//         _body.pop_back();                                // Удаляем последний сегмент (хвост)
-//     }
-//     else
-//     {
-//         _body.push_back({_head_x, _head_y}); // Если тело пустое, добавляем только голову
-//     }
-// }
-
-// // Увеличивает длину змейки
-// void Snake::Grow()
-// {
-//     this->_body.push_back({this->_tail_x, this->_tail_y});
-// }
+void Snake::ChangeDirection(const std::pair<int, int> &newDirection) {
+  // Змейка не может разворачиваться на 180 градусов
+  if ((_direction.first == 0 && newDirection.first != 0) ||
+      (_direction.second == 0 && newDirection.second != 0)) {
+    _direction = newDirection;
+  }
+}
