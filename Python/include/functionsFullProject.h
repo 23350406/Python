@@ -151,7 +151,13 @@ enum class CellType {
   SNAKE_BODY, // Тело змейки
   SNAKE_TAIL, // Хвост змейки
   FOOD,       // Еда
-  OBSTACLE    // Препятствие
+  OBSTACLE,    // Препятствие
+  SNAKE_HEAD_1,
+  SNAKE_BODY_1,
+  SNAKE_TAIL_1,
+  SNAKE_HEAD_2,
+  SNAKE_BODY_2,
+  SNAKE_TAIL_2
 };
 
 class Cell {
@@ -216,7 +222,6 @@ private:
   float _moveSpeed = 0.12f; // Скорость движения змейки
   bool _grew = false; // Флаг для отслеживания, выросла ли змейка
   std::pair<int, int> _direction; // Направление движения змейки
-  std::string color;
 
 public:
   Snake(int startX, int startY);
@@ -275,6 +280,9 @@ public:
 
   // Движение без бота
   void UpdateMap(const Snake &snake);
+
+  // Движение в многопользовательской игре
+  void UpdateMap(const Snake &snake1, const Snake &snake2);
 };
 
 // Функция ищет еду
@@ -536,6 +544,9 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, std::v
 // Игровой процесс без ботов
 void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake &snake);
 
+// Игровой процесс многопользовательской игры
+void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake &snake1, Snake &snake2);
+
 // Функция возвращает строковую запись кнопки с клавиатуры.
 std::string GetKeyboardCharacter(sf::Keyboard::Key key);
 
@@ -544,5 +555,8 @@ sf::Keyboard::Key GetPressedKey();
 
 // Функция проверяет, что клавиша не используется в управлении.
 bool keyIsntUsed(GameInfo& gameInfo, sf::Keyboard::Key keyToUse);
+
+// Функция вернёт цвет змейки
+std::string ChoiceSelection(sf::Color color);
 
 #endif // FULL_H

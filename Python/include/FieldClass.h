@@ -119,3 +119,35 @@ void Field::UpdateMap(const Snake &snake) {
     }
   }
 }
+
+void Field::UpdateMap(const Snake &snake1, const Snake &snake2) {
+  // Очищаем карту, оставляя еду и препятствия
+  for (int y = 0; y < _height; ++y) {
+    for (int x = 0; x < _width; ++x) {
+      if (_field[y][x].GetType() != CellType::FOOD &&
+          _field[y][x].GetType() != CellType::OBSTACLE) {
+        _field[y][x].SetType(CellType::EMPTY);
+      }
+    }
+  }
+
+  // Обновляем карту для первой змеи
+  if (!snake1.GetBody().empty()) {
+    _field[snake1.GetBody()[0].second][snake1.GetBody()[0].first].SetType(CellType::SNAKE_HEAD_1);
+    for (size_t i = 1; i < snake1.GetBody().size() - 1; ++i) {
+      _field[snake1.GetBody()[i].second][snake1.GetBody()[i].first].SetType(CellType::SNAKE_BODY_1);
+    }
+    _field[snake1.GetBody().back().second][snake1.GetBody().back().first].SetType(CellType::SNAKE_TAIL_1);
+  }
+
+  // Обновляем карту для второй змеи
+  if (!snake2.GetBody().empty()) {
+    _field[snake2.GetBody()[0].second][snake2.GetBody()[0].first].SetType(CellType::SNAKE_HEAD_2);
+    for (size_t i = 1; i < snake2.GetBody().size() - 1; ++i) {
+      _field[snake2.GetBody()[i].second][snake2.GetBody()[i].first].SetType(CellType::SNAKE_BODY_2);
+    }
+    _field[snake2.GetBody().back().second][snake2.GetBody().back().first].SetType(CellType::SNAKE_TAIL_2);
+  }
+}
+
+

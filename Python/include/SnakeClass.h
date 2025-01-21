@@ -2,9 +2,9 @@
 
 Snake::Snake(int startX, int startY) {
   // Инициализация змейки (размещение в 3 клетки)
-  _body.push_back({startX, startY});     // Голова
+  _body.push_back({startX, startY});    // Голова
   _body.push_back({startX - 1, startY}); // Тело
-  _body.push_back({startX - 2, startY}); // Тело
+  _body.push_back({startX - 2, startY}); // Хвост
   _direction = {1, 0}; // Начальное направление - вправо
 }
 
@@ -20,32 +20,34 @@ void Snake::Grow() {
 }
 
 void Snake::MoveSnake(int fieldWidth, int fieldHeight) {
-  // Добавляем новое положение головы
+  // Вычисляем новые координаты головы
   std::pair<int, int> newHead = {_body[0].first + _direction.first,
                                  _body[0].second + _direction.second};
 
-  // Перемещаем голову в зависимости от столкновения с границей
+  // Перемещаем голову в зависимости от выхода за границы
   if (newHead.first < 0) {
-    newHead.first = fieldWidth - 1; // Появление с правой стороны
+    newHead.first = fieldWidth - 1;
   } else if (newHead.first >= fieldWidth) {
-    newHead.first = 0; // Появление с левой стороны
+    newHead.first = 0;
   } else if (newHead.second < 0) {
-    newHead.second = fieldHeight - 1; // Появление снизу
+    newHead.second = fieldHeight - 1;
   } else if (newHead.second >= fieldHeight) {
-    newHead.second = 0; // Появление сверху
+    newHead.second = 0;
   }
 
   // Добавляем новую голову
   _body.insert(_body.begin(), newHead);
 
-  // Если змейка не съела еду, то удаляем хвост
+  // Если змея должна вырасти, пропускаем удаление хвоста
   if (!_grew) {
-    _body.pop_back();
+    _body.pop_back(); // Удаляем хвост
   } else {
-    _grew =
-        false; // Сбрасываем флаг роста после того как змейка "переваривает" еду
+    // Лог роста завершен, сбрасываем флаг
+    _grew = false;
   }
 }
+
+
 
 void Snake::MoveBot(int fieldWidth, int fieldHeight) {
     // Простая логика для бота: случайное направление

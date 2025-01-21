@@ -22,13 +22,13 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     // Движение игрока (первая змейка в векторе)
     if (playerClock.getElapsedTime().asSeconds() >= snakes[0].GetMoveSpeed()) {
       // Обработка нажатий клавиш для управления направлением змейки игрока
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+      if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetUpKey())) {
         snakes[0].ChangeDirection({0, -1}); // вверх
-      } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+      } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetDownKey())) {
         snakes[0].ChangeDirection({0, 1}); // вниз
-      } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+      } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetLeftKey())) {
         snakes[0].ChangeDirection({-1, 0}); // влево
-      } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+      } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetRightKey())) {
         snakes[0].ChangeDirection({1, 0}); // вправо
       }
 
@@ -194,13 +194,13 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     }
 
     // Обработка нажатий клавиш для управления направлением змейки
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+    if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetUpKey())) {
       snake.ChangeDirection({0, -1}); // вверх
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetDownKey())) {
       snake.ChangeDirection({0, 1}); // вниз
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetLeftKey())) {
       snake.ChangeDirection({-1, 0}); // влево
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetRightKey())) {
       snake.ChangeDirection({1, 0}); // вправо
     }
 
@@ -272,6 +272,149 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
   }
 }
 
+void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
+              Snake &snake1, Snake &snake2) {
+  sf::Clock clock;
+
+  while (window.isOpen()) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+      if (event.type == sf::Event::Closed)
+        window.close();
+    }
+
+    // Движение змей по времени (с постоянным интервалом)
+    if (clock.getElapsedTime().asSeconds() >= snake1.GetMoveSpeed()) {
+      snake1.MoveSnake(field.GetWidth(), field.GetHeight());
+      snake2.MoveSnake(field.GetWidth(), field.GetHeight());
+      clock.restart();
+    }
+
+    // Обработка нажатий клавиш для управления первой змейкой
+    if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetUpKey())) {
+      snake1.ChangeDirection({0, -1}); // вверх
+    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetDownKey())) {
+      snake1.ChangeDirection({0, 1}); // вниз
+    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetLeftKey())) {
+      snake1.ChangeDirection({-1, 0}); // влево
+    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetRightKey())) {
+      snake1.ChangeDirection({1, 0}); // вправо
+    }
+
+    // Обработка нажатий клавиш для управления второй змейкой
+    if (sf::Keyboard::isKeyPressed(gameInfo.GetSecondPlayerInfo().GetUpKey())) {
+      snake2.ChangeDirection({0, -1}); // вверх
+    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetSecondPlayerInfo().GetDownKey())) {
+      snake2.ChangeDirection({0, 1}); // вниз
+    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetSecondPlayerInfo().GetLeftKey())) {
+      snake2.ChangeDirection({-1, 0}); // влево
+    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetSecondPlayerInfo().GetRightKey())) {
+      snake2.ChangeDirection({1, 0}); // вправо
+    }
+
+    // Проверка на столкновение змей с границами и их перенос на противоположную сторону
+    for (auto &snake : {std::ref(snake1), std::ref(snake2)}) {
+      auto head = snake.get().GetBody()[0];
+      if (head.first < 0) {
+        snake.get().GetBody()[0].first = field.GetWidth() - 1;
+      } else if (head.first >= field.GetWidth()) {
+        snake.get().GetBody()[0].first = 0;
+      } else if (head.second < 0) {
+        snake.get().GetBody()[0].second = field.GetHeight() - 1;
+      } else if (head.second >= field.GetHeight()) {
+        snake.get().GetBody()[0].second = 0;
+      }
+    }
+
+    // Проверка на столкновение с телом каждой змеи
+    for (auto &snake : {std::ref(snake1), std::ref(snake2)}) {
+      auto head = snake.get().GetBody()[0];
+      for (size_t i = 1; i < snake.get().GetBody().size(); ++i) {
+        if (head == snake.get().GetBody()[i]) {
+          window.clear();
+          window.display();
+          return; // Выход из игры при столкновении с собой
+        }
+      }
+    }
+
+    if (!snake1.GetBody().empty()) {
+  for (auto &segment : snake2.GetBody()) {
+    if (snake1.GetBody()[0] == segment) {
+      window.clear();
+      sf::Texture gameOverTexture;
+      gameOverTexture.loadFromFile("../images/gameOver.jpg");
+      
+      sf::Sprite GOSprite;
+      GOSprite.setTexture(gameOverTexture);
+      window.draw(GOSprite);
+
+      window.display();
+      return;
+    }
+  }
+}
+
+if (!snake2.GetBody().empty()) {
+  for (auto &segment : snake1.GetBody()) {
+    if (snake2.GetBody()[0] == segment) {
+      window.clear();
+      sf::Texture gameOverTexture;
+      gameOverTexture.loadFromFile("../images/gameOver.jpg");
+      
+      sf::Sprite GOSprite;
+      GOSprite.setTexture(gameOverTexture);
+      window.draw(GOSprite);
+
+      window.display();
+      return;
+    }
+  }
+}
+
+
+    // Проверка на столкновение с препятствиями и еду
+    for (auto &snake : {std::ref(snake1), std::ref(snake2)}) {
+      auto head = snake.get().GetBody()[0];
+
+      // Столкновение с препятствием
+      if (field.GetField()[head.second][head.first].GetType() == CellType::OBSTACLE) {
+        window.clear();
+        window.display();
+        return;
+      }
+
+      // Змейка съела еду
+      if (field.GetField()[head.second][head.first].GetType() == CellType::FOOD) {
+        snake.get().Grow();
+        do {
+          field.PlaceFood();
+        } while (field.GetField()[head.second][head.first].GetType() == CellType::SNAKE_BODY ||
+                 field.GetField()[head.second][head.first].GetType() == CellType::SNAKE_HEAD);
+      }
+    }
+
+    // Обновляем карту с текущим состоянием змей
+    field.UpdateMap(snake1, snake2);
+
+    // Отрисовка
+    window.clear(); // Очистить экран
+
+    // Добавим фоновое изображение
+    static sf::Texture fonTexture;
+    fonTexture.loadFromFile("../images/fon.jpg");
+
+    // Спрайт для фонового изображения
+    static sf::Sprite fon_sprite;
+    fon_sprite.setTexture(fonTexture);
+    window.draw(fon_sprite);
+
+    DrawMap(window, gameInfo, field); // Отрисовать карту
+    window.display(); // Показать обновленное окно
+  }
+}
+
+
 int DefineMapSize(string size) {
 
   if (size == "small") {
@@ -333,4 +476,45 @@ bool FindApple(Field &field, int &appleX, int &appleY) {
     }
   }
   return false; // Яблоко не найдено
+}
+
+std::string ChoiceSelection(sf::Color color) {
+  if (color == sf::Color(255, 0, 0))
+  {
+    return "../images/Red.png";
+  }
+
+  if (color == sf::Color(0, 255, 234))
+  {
+    return "../images/Aqua.png";
+  }
+
+  if (color == sf::Color(233, 148, 0))
+  {
+    return "../images/Orange.png";
+  }
+
+  if (color == sf::Color(255, 246, 0))
+  {
+    return "../images/Yellow.png";
+  }
+  if (color == sf::Color(84, 255, 0))
+  {
+    return "../images/Lime.png";
+  }
+
+  if (color == sf::Color(120, 0, 255))
+  {
+    return "../images/Purple.png";
+  }
+
+  if (color == sf::Color(255, 0, 162))
+  {
+    return "../images/Magenta.png";
+  }
+
+  if (color == sf::Color(255, 255, 229))
+  {
+    return "../images/White.png";
+  }
 }

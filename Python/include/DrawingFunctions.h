@@ -72,32 +72,41 @@ void DrawMainMenuWindow(sf::RenderWindow &window) {
 // Функция выведет карту игры
 void DrawMap(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
   static bool texturesLoaded = false;
-  static sf::Texture headTexture, tailTexture, bodyTexture, cellTexture,
-      foodTexture, obstacleTexture;
-  static sf::Sprite snake_head, snake_tail, snake_body, empty_cell, food_sprite,
-      obstacle_sprite;
+
+  // Текстуры для первой и второй змей
+  static sf::Texture headTexture1, tailTexture1, bodyTexture1;
+  static sf::Texture headTexture2, tailTexture2, bodyTexture2;
+
+  // Общие текстуры
+  static sf::Texture cellTexture, foodTexture, obstacleTexture;
+
+  // Спрайты
+  static sf::Sprite currentCell;
 
   if (!texturesLoaded) {
-    // Загрузка текстур
-    headTexture.loadFromFile("../images/White.png");
-    tailTexture.loadFromFile("../images/White.png");
-    bodyTexture.loadFromFile("../images/Aqua.png");
+    // Загрузка текстур для первой змеи
+    std::string colorFirstPlayer = ChoiceSelection(gameInfo.GetFirstPlayerInfo().GetColor());
+    headTexture1.loadFromFile(colorFirstPlayer);
+    tailTexture1.loadFromFile(colorFirstPlayer);
+    bodyTexture1.loadFromFile(colorFirstPlayer);
+
+    // Загрузка текстур для второй змеи
+    if (!gameInfo.GetIsSolo()) {
+      std::string colorSecondPlayer = ChoiceSelection(gameInfo.GetSecondPlayerInfo().GetColor());
+      headTexture2.loadFromFile(colorSecondPlayer);
+      tailTexture2.loadFromFile(colorSecondPlayer);
+      bodyTexture2.loadFromFile(colorSecondPlayer);
+    }
+
+    // Загрузка общих текстур
     cellTexture.loadFromFile("../images/cell.png");
     foodTexture.loadFromFile("../images/klukva.png");
     obstacleTexture.loadFromFile("../images/obstacle.png");
 
-    // Настройка спрайтов
-    snake_head.setTexture(headTexture);
-    snake_tail.setTexture(tailTexture);
-    snake_body.setTexture(bodyTexture);
-    empty_cell.setTexture(cellTexture);
-    food_sprite.setTexture(foodTexture);
-    obstacle_sprite.setTexture(obstacleTexture);
-
     texturesLoaded = true;
   }
 
-  // Определим размер карты
+  // Определяем размер карты
   int mapWidth = field.GetWidth() * 20; // Каждая ячейка 20x20
   int mapHeight = field.GetHeight() * 20;
 
@@ -108,37 +117,44 @@ void DrawMap(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
   // Отрисовка карты
   for (int y = 0; y < field.GetHeight(); ++y) {
     for (int x = 0; x < field.GetWidth(); ++x) {
-      sf::Sprite currentCell;
-
-      // В зависимости от типа ячейки, выбираем текстуру
       switch (field.GetField()[y][x].GetType()) {
-      case CellType::EMPTY:
-        currentCell.setTexture(cellTexture);
-        break;
-      case CellType::SNAKE_HEAD:
-        currentCell.setTexture(headTexture);
-        break;
-      case CellType::SNAKE_BODY:
-        currentCell.setTexture(bodyTexture);
-        break;
-      case CellType::SNAKE_TAIL:
-        currentCell.setTexture(tailTexture);
-        break;
-      case CellType::FOOD:
-        currentCell.setTexture(foodTexture);
-        break;
-      case CellType::OBSTACLE:
-        currentCell.setTexture(obstacleTexture);
-        break;
-      default:
-        break;
+        case CellType::EMPTY:
+          currentCell.setTexture(cellTexture);
+          break;
+        case CellType::FOOD:
+          currentCell.setTexture(foodTexture);
+          break;
+        case CellType::OBSTACLE:
+          currentCell.setTexture(obstacleTexture);
+          break;
+        case CellType::SNAKE_HEAD_1:
+          currentCell.setTexture(headTexture1);
+          break;
+        case CellType::SNAKE_BODY_1:
+          currentCell.setTexture(bodyTexture1);
+          break;
+        case CellType::SNAKE_TAIL_1:
+          currentCell.setTexture(tailTexture1);
+          break;
+        case CellType::SNAKE_HEAD_2:
+          currentCell.setTexture(headTexture2);
+          break;
+        case CellType::SNAKE_BODY_2:
+          currentCell.setTexture(bodyTexture2);
+          break;
+        case CellType::SNAKE_TAIL_2:
+          currentCell.setTexture(tailTexture2);
+          break;
+        default:
+          break;
       }
 
-      currentCell.setPosition(x * 20 + offsetX, y * 20 + offsetY); // Добавляем смещение
+      currentCell.setPosition(x * 20 + offsetX, y * 20 + offsetY);
       window.draw(currentCell);
     }
   }
 }
+
 
 // Функция выводит экран настроек старта игры.
 
