@@ -67,11 +67,24 @@ void DrawMainMenuWindow(sf::RenderWindow& window) {
 
 // Функция выводит экран настроек старта игры.
 void DrawStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+	// На экран выводится фон.
 	sf::Texture texture;
 	texture.loadFromFile("../images/Start.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.draw(sprite);
+
+	// На экран выводится режим (одиночный или мультиплеер).
+	sf::Texture soloTexture;
+	if (gameInfo.GetIsSolo()) {
+		soloTexture.loadFromFile("../images/Solo.png");
+	}
+	else {
+		soloTexture.loadFromFile("../images/Duo.png");
+	}
+	sf::Sprite soloSprite(soloTexture);
+	soloSprite.setPosition(960, 200);
+	window.draw(soloSprite);
 
 	// На экран выводится информация о выбранных значениях счетчиков.
 	DrawNumberOfRounds(window, gameInfo);
@@ -90,11 +103,73 @@ void DrawLeaveGameWindow(sf::RenderWindow& window) {
 
 // Функция выводит экран настроек.
 void DrawSettingsWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+
+	// На экран выводится фон.
 	sf::Texture texture;
 	texture.loadFromFile("../images/Settings.png");
 	sf::Sprite sprite(texture);
 	sprite.setPosition(0, 0);
 	window.draw(sprite);
+
+	// Из файла достается шрифт.
+	sf::Font consolas;
+	consolas.loadFromFile("../fonts/Consolas.ttf");
+
+	// На экран выводятся текущие имена игроков.
+	sf::Text firstPlayerName(gameInfo.GetFirstPlayerInfo().GetName(), consolas, 24);
+	firstPlayerName.setFillColor(sf::Color(35, 35, 35));
+	firstPlayerName.setPosition(450, 165);
+	window.draw(firstPlayerName);
+	sf::Text secondPlayerName(gameInfo.GetSecondPlayerInfo().GetName(), consolas, 24);
+	secondPlayerName.setFillColor(sf::Color(35, 35, 35));
+	secondPlayerName.setPosition(450, 400);
+	window.draw(secondPlayerName);
+
+	// На экран выводятся цвета игроков.
+	sf::RectangleShape firstColorBox(sf::Vector2f(40, 40));
+	firstColorBox.setFillColor(gameInfo.GetFirstPlayerInfo().GetColor());
+	firstColorBox.move(850, 225);
+	window.draw(firstColorBox);
+	sf::RectangleShape secondColorBox(sf::Vector2f(40, 40));
+	secondColorBox.setFillColor(gameInfo.GetSecondPlayerInfo().GetColor());
+	secondColorBox.move(850, 460);
+	window.draw(secondColorBox);
+
+	// На экран выводятся кнопки первого игрока.
+	sf::Text firstPlayerUp(GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetUpKey()), consolas, 32);
+	firstPlayerUp.setFillColor(sf::Color(35, 35, 35));
+	firstPlayerUp.setPosition(220, 110);
+	window.draw(firstPlayerUp);
+	sf::Text firstPlayerRight(GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetRightKey()), consolas, 32);
+	firstPlayerRight.setFillColor(sf::Color(35, 35, 35));
+	firstPlayerRight.setPosition(280, 170);
+	window.draw(firstPlayerRight);
+	sf::Text firstPlayerDown(GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetDownKey()), consolas, 32);
+	firstPlayerDown.setFillColor(sf::Color(35, 35, 35));
+	firstPlayerDown.setPosition(220, 170);
+	window.draw(firstPlayerDown);
+	sf::Text firstPlayerLeft(GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetLeftKey()), consolas, 32);
+	firstPlayerLeft.setFillColor(sf::Color(35, 35, 35));
+	firstPlayerLeft.setPosition(160, 170);
+	window.draw(firstPlayerLeft);
+
+	// На экран выводятся кнопки второго игрока.
+	sf::Text secondPlayerUp(GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetUpKey()), consolas, 32);
+	secondPlayerUp.setFillColor(sf::Color(35, 35, 35));
+	secondPlayerUp.setPosition(220, 345);
+	window.draw(secondPlayerUp);
+	sf::Text secondPlayerRight(GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetRightKey()), consolas, 32);
+	secondPlayerRight.setFillColor(sf::Color(35, 35, 35));
+	secondPlayerRight.setPosition(280, 405);
+	window.draw(secondPlayerRight);
+	sf::Text secondPlayerDown(GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetDownKey()), consolas, 32);
+	secondPlayerDown.setFillColor(sf::Color(35, 35, 35));
+	secondPlayerDown.setPosition(220, 405);
+	window.draw(secondPlayerDown);
+	sf::Text secondPlayerLeft(GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetLeftKey()), consolas, 32);
+	secondPlayerLeft.setFillColor(sf::Color(35, 35, 35));
+	secondPlayerLeft.setPosition(160, 405);
+	window.draw(secondPlayerLeft);
 }
 
 // Функция выводит экран настроек.

@@ -209,6 +209,26 @@ void ProcessActionInStartGameMenu(sf::RenderWindow& window, sf::Event& event, Ga
 			window.display();
 		}
 
+		// Пользователь нажал ЛКМ на кнопку выбора режима игры.
+		if (isInBox(event, 960, 200, 1020, 260)) {
+
+			sf::Texture soloTexture;
+			// Изменяется значение режима игры.
+			if (!gameInfo.GetIsSolo()) {
+				gameInfo.SetSolo();
+				soloTexture.loadFromFile("../images/Solo.png");
+			}
+			else {
+				gameInfo.SetDuo();
+				soloTexture.loadFromFile("../images/Duo.png");
+			}
+			// Режим игры выводится на экран
+			sf::Sprite soloSprite(soloTexture);
+			soloSprite.setPosition(960, 200);
+			window.draw(soloSprite);
+			window.display();
+		}
+
 		return;
 	}
 
@@ -271,10 +291,292 @@ void ProcessActionInSettingsMenu(sf::RenderWindow& window, sf::Event& event, Gam
 			ChangeWindowToMainMenuWindow(window, gameInfo);
 		}
 
+		// Пользователь нажал ЛКМ по кнопке "вверх" для первого игрока - она становится изменяемой.
+		if (isInBox(event, 204, 106, 258, 160)) {
+			gameInfo.SetFieldInUse("P1-Up");
+			return;
+		}
+
+		// Пользователь нажал ЛКМ по кнопке "влево" для первого игрока - она становится изменяемой.
+		if (isInBox(event, 148, 162, 202, 214)) {
+			gameInfo.SetFieldInUse("P1-Left");
+			return;
+		}
+
+		// Пользователь нажал ЛКМ по кнопке "вправо" для первого игрока - она становится изменяемой.
+		if (isInBox(event, 204, 162, 258, 214)) {
+			gameInfo.SetFieldInUse("P1-Down");
+			return;
+		}
+
+		// Пользователь нажал ЛКМ по кнопке "вниз" для первого игрока - она становится изменяемой.
+		if (isInBox(event, 262, 162, 318, 214)) {
+			gameInfo.SetFieldInUse("P1-Right");
+			return;
+		}
+
+		// Пользователь нажал ЛКМ по кнопке "вверх" для второго игрока - она становится изменяемой.
+		if (isInBox(event, 204, 340, 258, 394)) {
+			gameInfo.SetFieldInUse("P2-Up");
+			return;
+		}
+
+		// Пользователь нажал ЛКМ по кнопке "влево" для второго игрока - она становится изменяемой.
+		if (isInBox(event, 148, 396, 202, 448)) {
+			gameInfo.SetFieldInUse("P2-Left");
+			return;
+		}
+
+		// Пользователь нажал ЛКМ по кнопке "вправо" для второго игрока - она становится изменяемой.
+		if (isInBox(event, 204, 396, 258, 448)) {
+			gameInfo.SetFieldInUse("P2-Down");
+			return;
+		}
+
+		// Пользователь нажал ЛКМ по кнопке "вниз" для второго игрока - она становится изменяемой.
+		if (isInBox(event, 262, 396, 318, 448)) {
+			gameInfo.SetFieldInUse("P2-Right");
+			return;
+		}
+
+		// Пользователь нажал ЛКМ по кнопке "имя" для первого игрока - она становится изменяемой.
+		if (isInBox(event, 416, 150, 614, 212)) {
+			gameInfo.SetFieldInUse("P1-Name");
+			return;
+		}
+
+		// Пользователь нажал ЛКМ по кнопке "имя" для второго игрока - она становится изменяемой.
+		if (isInBox(event, 416, 380, 614, 436)) {
+			gameInfo.SetFieldInUse("P2-Name");
+			return;
+		}
+
+		// Считывается информация об игроках.
+		PlayerInfo firstPlayerInfo = gameInfo.GetFirstPlayerInfo();
+		PlayerInfo secondPlayerInfo = gameInfo.GetSecondPlayerInfo();
+
+		// Задаются игровые цвета.
+		sf::Color red(255, 0, 0);
+		sf::Color orange(233, 148, 0);
+		sf::Color yellow(255, 246, 0);
+		sf::Color lime(84, 255, 0);
+		sf::Color cyan(0, 255, 234);
+		sf::Color purple(120, 0, 255);
+		sf::Color magenta(255, 0, 162);
+		sf::Color white(255, 255, 229);
+
+		// Для каждой ячейки цвета проверяется нажато ли туда, занята ли она и если нет, то она становится новым цветом.
+		if (isInBox(event, 704, 96, 758, 156)) {
+			if (secondPlayerInfo.GetColor() != red && firstPlayerInfo.GetColor() != red) {
+				firstPlayerInfo.SetColor(red);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+			}
+		}
+		if (isInBox(event, 758, 96, 812, 156)) {
+			if (secondPlayerInfo.GetColor() != orange && firstPlayerInfo.GetColor() != orange) {
+				firstPlayerInfo.SetColor(orange);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+			}
+		}
+		if (isInBox(event, 812, 96, 866, 156)) {
+			if (secondPlayerInfo.GetColor() != yellow && firstPlayerInfo.GetColor() != yellow) {
+				firstPlayerInfo.SetColor(yellow);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+			}
+		}
+		if (isInBox(event, 866, 96, 920, 156)) {
+			if (secondPlayerInfo.GetColor() != lime && firstPlayerInfo.GetColor() != lime) {
+				firstPlayerInfo.SetColor(lime);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+			}
+		}
+		if (isInBox(event, 704, 156, 758, 216)) {
+			if (secondPlayerInfo.GetColor() != cyan && firstPlayerInfo.GetColor() != cyan) {
+				firstPlayerInfo.SetColor(cyan);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+			}
+		}
+		if (isInBox(event, 758, 156, 812, 216)) {
+			if (secondPlayerInfo.GetColor() != purple && firstPlayerInfo.GetColor() != purple) {
+				firstPlayerInfo.SetColor(purple);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+			}
+		}
+		if (isInBox(event, 812, 156, 866, 216)) {
+			if (secondPlayerInfo.GetColor() != magenta && firstPlayerInfo.GetColor() != magenta) {
+				firstPlayerInfo.SetColor(magenta);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+			}
+		}
+		if (isInBox(event, 866, 156, 920, 216)) {
+			if (secondPlayerInfo.GetColor() != white && firstPlayerInfo.GetColor() != white) {
+				firstPlayerInfo.SetColor(white);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+			}
+		}
+		if (isInBox(event, 704, 336, 758, 396)) {
+			if (secondPlayerInfo.GetColor() != red && firstPlayerInfo.GetColor() != red) {
+				secondPlayerInfo.SetColor(red);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+			}
+		}
+		if (isInBox(event, 758, 336, 812, 396)) {
+			if (secondPlayerInfo.GetColor() != orange && firstPlayerInfo.GetColor() != orange) {
+				secondPlayerInfo.SetColor(orange);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+			}
+		}
+		if (isInBox(event, 812, 336, 866, 396)) {
+			if (secondPlayerInfo.GetColor() != yellow && firstPlayerInfo.GetColor() != yellow) {
+				secondPlayerInfo.SetColor(yellow);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+			}
+		}
+		if (isInBox(event, 866, 336, 920, 396)) {
+			if (secondPlayerInfo.GetColor() != lime && firstPlayerInfo.GetColor() != lime) {
+				secondPlayerInfo.SetColor(lime);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+			}
+		}
+		if (isInBox(event, 704, 396, 758, 456)) {
+			if (secondPlayerInfo.GetColor() != cyan && firstPlayerInfo.GetColor() != cyan) {
+				secondPlayerInfo.SetColor(cyan);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+			}
+		}
+		if (isInBox(event, 758, 396, 812, 456)) {
+			if (secondPlayerInfo.GetColor() != purple && firstPlayerInfo.GetColor() != purple) {
+				secondPlayerInfo.SetColor(purple);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+			}
+		}
+		if (isInBox(event, 812, 396, 866, 456)) {
+			if (secondPlayerInfo.GetColor() != magenta && firstPlayerInfo.GetColor() != magenta) {
+				secondPlayerInfo.SetColor(magenta);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+			}
+		}
+		if (isInBox(event, 866, 396, 920, 456)) {
+			if (secondPlayerInfo.GetColor() != white && firstPlayerInfo.GetColor() != white) {
+				secondPlayerInfo.SetColor(white);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+			}
+		}
+
+		gameInfo.SetFieldInUse("");
 		return;
 	}
 
+	// Если пользователь нажал клавишу на клавиатуре.
+	if (sf::Keyboard::Key pressedKey = GetPressedKey()) {
+
+		// Определяется изменяемое поле.
+		std::string fieldInUse = gameInfo.GetFieldInUse();
+
+		// Если клавиша не используется в управлении, то она меняет нужное управление.
+		if (keyIsntUsed(gameInfo, pressedKey)) {
+			if (fieldInUse == "P1-Up") {
+				PlayerInfo firstPlayerInfo = gameInfo.GetFirstPlayerInfo();
+				firstPlayerInfo.SetUpKey(pressedKey);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+				// Сбрасывается используемое поле.
+				gameInfo.SetFieldInUse("");
+			}
+			if (fieldInUse == "P1-Right") {
+				PlayerInfo firstPlayerInfo = gameInfo.GetFirstPlayerInfo();
+				firstPlayerInfo.SetRightKey(pressedKey);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+				// Сбрасывается используемое поле.
+				gameInfo.SetFieldInUse("");
+			}
+			if (fieldInUse == "P1-Left") {
+				PlayerInfo firstPlayerInfo = gameInfo.GetFirstPlayerInfo();
+				firstPlayerInfo.SetLeftKey(pressedKey);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+				// Сбрасывается используемое поле.
+				gameInfo.SetFieldInUse("");
+			}
+			if (fieldInUse == "P1-Down") {
+				PlayerInfo firstPlayerInfo = gameInfo.GetFirstPlayerInfo();
+				firstPlayerInfo.SetDownKey(pressedKey);
+				gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+				// Сбрасывается используемое поле.
+				gameInfo.SetFieldInUse("");
+			}
+			if (fieldInUse == "P2-Up") {
+				PlayerInfo secondPlayerInfo = gameInfo.GetSecondPlayerInfo();
+				secondPlayerInfo.SetUpKey(pressedKey);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+				// Сбрасывается используемое поле.
+				gameInfo.SetFieldInUse("");
+			}
+			if (fieldInUse == "P2-Right") {
+				PlayerInfo secondPlayerInfo = gameInfo.GetSecondPlayerInfo();
+				secondPlayerInfo.SetRightKey(pressedKey);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+				// Сбрасывается используемое поле.
+				gameInfo.SetFieldInUse("");
+			}
+			if (fieldInUse == "P2-Left") {
+				PlayerInfo secondPlayerInfo = gameInfo.GetSecondPlayerInfo();
+				secondPlayerInfo.SetLeftKey(pressedKey);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+				// Сбрасывается используемое поле.
+				gameInfo.SetFieldInUse("");
+			}
+			if (fieldInUse == "P2-Down") {
+				PlayerInfo secondPlayerInfo = gameInfo.GetSecondPlayerInfo();
+				secondPlayerInfo.SetDownKey(pressedKey);
+				gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+				// Сбрасывается используемое поле.
+				gameInfo.SetFieldInUse("");
+			}
+		}
+
+		// Если изменяются имена игроков.
+		if (fieldInUse == "P1-Name") {
+			PlayerInfo firstPlayerInfo = gameInfo.GetFirstPlayerInfo();
+
+			// Имя меняется в соответствии с нажатой клавишей.
+			std::string playerName = firstPlayerInfo.GetName();
+			if (playerName.size() > 0 && pressedKey == sf::Keyboard::BackSpace) {
+				playerName.pop_back();
+			}
+			if (playerName.size() < 10 && pressedKey != sf::Keyboard::BackSpace) {
+				playerName.append(GetKeyboardCharacter(pressedKey));
+			}
+			firstPlayerInfo.SetName(playerName);
+			gameInfo.SetFirstPlayerInfo(firstPlayerInfo);
+			std::this_thread::sleep_for(std::chrono::milliseconds(150));
+			
+		}
+		if (fieldInUse == "P2-Name") {
+			PlayerInfo secondPlayerInfo = gameInfo.GetSecondPlayerInfo();
+
+			// Имя меняется в соответствии с нажатой клавишей.
+			std::string playerName = secondPlayerInfo.GetName();
+			if (playerName.size() > 0 && pressedKey == sf::Keyboard::BackSpace) {
+				playerName.pop_back();
+			}
+			if (playerName.size() < 10 && pressedKey != sf::Keyboard::BackSpace) {
+				playerName.append(GetKeyboardCharacter(pressedKey));
+			}
+			secondPlayerInfo.SetName(playerName);
+			gameInfo.SetSecondPlayerInfo(secondPlayerInfo);
+			std::this_thread::sleep_for(std::chrono::milliseconds(150));
+		}
+	}
+
 	gameInfo.UnsetPressedButton();
+
+	// Экран закрашивается черным.
+	window.clear(sf::Color::Black);
+
+	// В вывод на экран заносится меню настроек.
+	DrawSettingsWindow(window, gameInfo);
+
+	// Записанное в вывод показывается пользователю.
+	window.display();
 }
 
 void ProcessActionInAuthorsMenu(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo) {
@@ -326,4 +628,218 @@ void ProcessEvent(sf::RenderWindow& window, sf::Event& event, GameInfo& gameInfo
 		ProcessActionInAuthorsMenu(window, event, gameInfo);
 		return;
 	}
+}
+
+// Функция возвращает строковую запись кнопки с клавиатуры.
+std::string GetKeyboardCharacter(sf::Keyboard::Key key) {
+	switch (key)
+	{
+		case sf::Keyboard::A: return "A";
+		case sf::Keyboard::B: return "B";
+		case sf::Keyboard::C: return "C";
+		case sf::Keyboard::D: return "D";
+		case sf::Keyboard::E: return "E";
+		case sf::Keyboard::F: return "F";
+		case sf::Keyboard::G: return "G";
+		case sf::Keyboard::H: return "H";
+		case sf::Keyboard::I: return "I";
+		case sf::Keyboard::J: return "J";
+		case sf::Keyboard::K: return "K";
+		case sf::Keyboard::L: return "L";
+		case sf::Keyboard::M: return "M";
+		case sf::Keyboard::N: return "N";
+		case sf::Keyboard::O: return "O";
+		case sf::Keyboard::P: return "P";
+		case sf::Keyboard::Q: return "Q";
+		case sf::Keyboard::R: return "R";
+		case sf::Keyboard::S: return "S";
+		case sf::Keyboard::T: return "T";
+		case sf::Keyboard::U: return "U";
+		case sf::Keyboard::V: return "V";
+		case sf::Keyboard::W: return "W";
+		case sf::Keyboard::X: return "X";
+		case sf::Keyboard::Y: return "Y";
+		case sf::Keyboard::Z: return "Z";
+		case sf::Keyboard::Num0: return "0";
+		case sf::Keyboard::Num1: return "1";
+		case sf::Keyboard::Num2: return "2";
+		case sf::Keyboard::Num3: return "3";
+		case sf::Keyboard::Num4: return "4";
+		case sf::Keyboard::Num5: return "5";
+		case sf::Keyboard::Num6: return "6";
+		case sf::Keyboard::Num7: return "7";
+		case sf::Keyboard::Num8: return "8";
+		case sf::Keyboard::Num9: return "9";
+		case sf::Keyboard::Up: return "^";
+		case sf::Keyboard::Down: return "v";
+		case sf::Keyboard::Left: return "<";
+		case sf::Keyboard::Right: return ">";
+		case sf::Keyboard::Comma: return ",";
+		case sf::Keyboard::Backspace: return "<-";
+		default: return "";
+	}
+}
+
+// Функция возвращает нажатую кнопку клавиатуры.
+sf::Keyboard::Key GetPressedKey() {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		return sf::Keyboard::A;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
+		return sf::Keyboard::B;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+		return sf::Keyboard::C;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		return sf::Keyboard::D;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E)) {
+		return sf::Keyboard::E;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::F)) {
+		return sf::Keyboard::F;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
+		return sf::Keyboard::G;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::H)) {
+		return sf::Keyboard::H;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::I)) {
+		return sf::Keyboard::I;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::J)) {
+		return sf::Keyboard::J;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::K)) {
+		return sf::Keyboard::K;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
+		return sf::Keyboard::L;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::M)) {
+		return sf::Keyboard::M;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::N)) {
+		return sf::Keyboard::N;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::O)) {
+		return sf::Keyboard::O;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) {
+		return sf::Keyboard::P;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q)) {
+		return sf::Keyboard::Q;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+		return sf::Keyboard::R;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		return sf::Keyboard::S;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::T)) {
+		return sf::Keyboard::T;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::U)) {
+		return sf::Keyboard::U;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::V)) {
+		return sf::Keyboard::V;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		return sf::Keyboard::W;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+		return sf::Keyboard::X;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Y)) {
+		return sf::Keyboard::Y;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+		return sf::Keyboard::Z;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0)) {
+		return sf::Keyboard::Num0;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+		return sf::Keyboard::Num1;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+		return sf::Keyboard::Num2;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+		return sf::Keyboard::Num3;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
+		return sf::Keyboard::Num4;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5)) {
+		return sf::Keyboard::Num5;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num6)) {
+		return sf::Keyboard::Num6;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num7)) {
+		return sf::Keyboard::Num7;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num8)) {
+		return sf::Keyboard::Num8;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num9)) {
+		return sf::Keyboard::Num9;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		return sf::Keyboard::Up;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		return sf::Keyboard::Down;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		return sf::Keyboard::Right;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		return sf::Keyboard::Left;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Comma)) {
+		return sf::Keyboard::Comma;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace)) {
+		return sf::Keyboard::BackSpace;
+	}
+}
+
+// Функция проверяет, что клавиша не используется в управлении.
+bool keyIsntUsed(GameInfo& gameInfo, sf::Keyboard::Key keyToUse) {
+
+	// Получается информация об игроках.
+	PlayerInfo firstPlayerInfo = gameInfo.GetFirstPlayerInfo();
+	PlayerInfo secondPlayerInfo = gameInfo.GetSecondPlayerInfo();
+	// Для каждой из используемых в управлении клавиш проверяется, что новая клавиша с ней не совпадает.
+	if (firstPlayerInfo.GetUpKey() == keyToUse) {
+		return false;
+	}
+	if (firstPlayerInfo.GetRightKey() == keyToUse) {
+		return false;
+	}
+	if (firstPlayerInfo.GetLeftKey() == keyToUse) {
+		return false;
+	}
+	if (firstPlayerInfo.GetDownKey() == keyToUse) {
+		return false;
+	}
+	if (secondPlayerInfo.GetUpKey() == keyToUse) {
+		return false;
+	}
+	if (secondPlayerInfo.GetRightKey() == keyToUse) {
+		return false;
+	}
+	if (secondPlayerInfo.GetLeftKey() == keyToUse) {
+		return false;
+	}
+	if (secondPlayerInfo.GetDownKey() == keyToUse) {
+		return false;
+	}
+	return true;
 }

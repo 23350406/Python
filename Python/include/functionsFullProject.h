@@ -16,18 +16,79 @@
 using std::vector;
 using std::string;
 
+class PlayerInfo {
+private:
+	std::string _playerName;
+	sf::Keyboard::Key _up;
+	sf::Keyboard::Key _left;
+	sf::Keyboard::Key _right;
+	sf::Keyboard::Key _down;
+	sf::Color _playerColor;
+public:
+	// Функция задает имя игрока.
+	void SetName(std::string newName);
+
+	// Функция возвращает имя игрока.
+	std::string GetName();
+
+	// Функция задает значение клавиши для движения вверх.
+	void SetUpKey(sf::Keyboard::Key newUp);
+
+	// Функция возвращает значение клавиши для движения вверх.
+	sf::Keyboard::Key GetUpKey();
+
+	// Функция задает значение клавиши для движения вниз.
+	void SetDownKey(sf::Keyboard::Key newDown);
+
+	// Функция возвращает значение клавиши для движения вниз.
+	sf::Keyboard::Key GetDownKey();
+
+	// Функция задает значение клавиши для движения вправо.
+	void SetRightKey(sf::Keyboard::Key newRight);
+
+	// Функция возвращает значение клавиши для движения вправо.
+	sf::Keyboard::Key GetRightKey();
+
+	// Функция задает значение клавиши для движения влево.
+	void SetLeftKey(sf::Keyboard::Key newLeft);
+
+	// Функция возвращает значение клавиши для движения влево.
+	sf::Keyboard::Key GetLeftKey();
+
+	// Функция задает значение цвета игрока.
+	void SetColor(sf::Color newColor);
+
+	// Функция возвращает значение цвета игрока.
+	sf::Color GetColor();
+};
+
 class GameInfo {
 private:
 	int _numberOfRounds;
 	int _numberOfBots;
 	std::string _mapSize;
+	bool _isSolo;
 
 	bool _somethingIsPressed;
 	std::string _currentWindowName;
+
+	PlayerInfo _firstPlayerInfo;
+	PlayerInfo _secondPlayerInfo;
+
+	std::string _fieldInUse;
 public:
 
 	// Конструктор по умолчанию.
 	GameInfo();
+
+	// Функция устанавливает значение на игру для двоих.
+	void SetDuo();
+
+	// Функция устанавливает значение на игру для одного.
+	void SetSolo();
+
+	// Функция возвращает: сколько человек играет.
+	bool GetIsSolo();
 
 	// Функция возвращает количество раундов в игре.
 	int GetNumberOfRounds();
@@ -47,13 +108,13 @@ public:
 	// Функция уменьшает количетсов ботов в игре.
 	void DecreaseNumberOfBots();
 
-    // Функция вернёт карту игры
+    // Функция возвращает размер игрового поля.
 	std::string GetMapSize();
 
-    // Функция для того, чтобы сменить карту игры на большую
+    // Функция для того, чтобы сменить карту игры на большую.
 	void IncreaseMapSize();
 
-    // Функция для того, чтобы сменить карту игры на меньшую
+    // Функция для того, чтобы сменить карту игры на меньшую.
 	void DecreaseMapSize();
 
     // Функция, отлавливающая нажатаю кнопку
@@ -70,87 +131,33 @@ public:
 
     // Функция устанавливает название текущего экрана.
 	void SetCurrentWindowName(std::string newWindowName);
+
+	// Функция возвращает информацию о первом игроке.
+	PlayerInfo GetFirstPlayerInfo();
+
+	// Функция устанавливает информацию о первом игроке.
+	void SetFirstPlayerInfo(PlayerInfo newInfo);
+
+	// Функция возвращает информацию о втором игроке.
+	PlayerInfo GetSecondPlayerInfo();
+
+	// Функция устанавливает информацию о втором игроке.
+	void SetSecondPlayerInfo(PlayerInfo newInfo);
+
+	// Функция возвращает название изменяемого поля.
+	std::string GetFieldInUse();
+
+	// Функция устанавливает название изменяемого поля.
+	void SetFieldInUse(std::string fieldName);
 };
 
-class Cell
-{
-   string _typeCell;
 
-public:
-   string GetType();
-   void   SetType(string type);
-};
+// Функция создает первого игрока.
+PlayerInfo CreateFirstPlayer();
 
-class Player
-{
-    sf::Color _color;
-    string _username;
-    bool _isPlayer;
-    char _up    = 'w';
-    char _down  = 's';
-    char _left  = 'a';
-    char _right = 'd';
-public:
-    bool Check_isPlayer();
-    string GetUsername();
-    sf::Color GetColor();
-    char GetMove(string moveName);
+// Функция создает второго игрока.
+PlayerInfo CreateSecondPlayer();
 
-	void SetUsername(string username);
-	void SetColor(int r, int g, int b);
-	void SetMove(string moveName, char letterMove);
-	
-};
-
-class Field
-{
-    int _height;
-    int _width;
-    vector<Cell*> _field;
-    int _countPlayers;
-    int _countBots;
-    vector<Player> _players;
-public:
-    int GetHeight();
-    int GetWidth();
-	vector<Cell*> GetField();
-    vector<Player> GetTeam();
-
-	void SetHeight(int height);
-	void SetWidth(int width);
-	void SetLine(vector<Cell*> line);
-    void SetTeam(vector<Player> team);
-
-};
-
-class Snake
-{
-    int _head_x;
-    int _head_y;
-    int _tail_x;
-    int _tail_y;
-    string _direction;
-    vector<std::pair<int, int>> _body; //pair хранит 2 типа как 1 с ключами first, second  порядок важен
-public:
-    Snake(int startX, int startY, string direction);
-
-    int GetxHead();
-    int GetyHead();
-    int GetxTail();
-    int GetyTail();
-    string GetDirection();
-    vector<std::pair<int, int>> GetBody();
-
-	void SetxHead(int head_x);
-	void SetyHead(int head_y);
-	void SetxTail(int tail_x);
-	void SetyTail(int tail_y);
-    void SetDirection(string newDirection);
-
-    void MoveSnake();
-    void Grow();
-    
-};
 
 // Функция определяет: является ли действие нажатием на левую кнопку мыши.
 bool isLMC(sf::Event& event, GameInfo& gameInfo);
@@ -236,5 +243,14 @@ void MoveWindowFromMainToAuthors(sf::RenderWindow& window);
 
 // Функция осуществляет переход с экрана авторов игры на экран главного меню.
 void MoveWindowFromAuthorsToMain(sf::RenderWindow& window);
+
+// Функция возвращает строковую запись кнопки с клавиатуры.
+std::string GetKeyboardCharacter(sf::Keyboard::Key key);
+
+// Функция возвращает нажатую кнопку клавиатуры.
+sf::Keyboard::Key GetPressedKey();
+
+// Функция проверяет, что клавиша не используется в управлении.
+bool keyIsntUsed(GameInfo& gameInfo, sf::Keyboard::Key keyToUse);
 
 #endif // FULL_H
