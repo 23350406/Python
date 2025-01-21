@@ -119,4 +119,3 @@ void Field::UpdateMap(const Snake &snake) {
     }
   }
 }
-
