@@ -80,9 +80,6 @@ public:
   // Конструктор по умолчанию.
   GameInfo();
 
-  // Функция возвращает количество раундов в игре.
-  int GetNumberOfRounds();
-
   // Функция увеличивает количество раундов в игре.
   void IncreaseNumberOfRounds();
 
@@ -98,6 +95,18 @@ public:
 	// Функция возвращает количество раундов в игре.
 	int GetNumberOfRounds();
 
+    PlayerInfo GetFirstPlayerInfo();
+
+    void SetFirstPlayerInfo(PlayerInfo newInfo);
+
+    PlayerInfo GetSecondPlayerInfo();
+
+    void SetSecondPlayerInfo(PlayerInfo newInfo);
+
+    std::string GetFieldInUse();
+
+    void SetFieldInUse(std::string fieldName);
+
   // Функция уменьшает количство раундов в игре.
   void DecreaseNumberOfRounds();
 
@@ -109,9 +118,6 @@ public:
 
   // Функция уменьшает количетсов ботов в игре.
   void DecreaseNumberOfBots();
-
-  // Функция вернёт карту игры
-  std::string GetMapSize();
 
   // Функция, отлавливающая нажатаю кнопку
   bool GetPressedButton();

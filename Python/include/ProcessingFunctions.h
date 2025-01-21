@@ -732,7 +732,7 @@ void ProcessEvent(sf::RenderWindow &window, sf::Event &event,
   }
 
   if (gameInfo.GetCurrentWindowName() == "Game") {
-    ProcessActionInGame(window, event, gameInfo);
+    // ProcessActionInGame(window, event, gameInfo);
     return;
   }
 }
