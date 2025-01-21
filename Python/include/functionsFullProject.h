@@ -8,8 +8,13 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
+#include <vector>
+#include <list>
 #include <chrono>
 #include <thread>
+
+using std::vector;
+using std::string;
 
 class PlayerInfo {
 private:
@@ -146,11 +151,13 @@ public:
 	void SetFieldInUse(std::string fieldName);
 };
 
+
 // Функция создает первого игрока.
 PlayerInfo CreateFirstPlayer();
 
 // Функция создает второго игрока.
 PlayerInfo CreateSecondPlayer();
+
 
 // Функция определяет: является ли действие нажатием на левую кнопку мыши.
 bool isLMC(sf::Event& event, GameInfo& gameInfo);

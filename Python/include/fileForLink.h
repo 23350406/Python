@@ -3,3 +3,7 @@
 #include "GameInfo.h"
 #include "DrawingFunctions.h"
 #include "PlayerInfo.h"
+#include "CellClass.h"
+#include "FieldClass.h"
+#include "PlayerClass.h"
+#include "SnakeClass.h"
