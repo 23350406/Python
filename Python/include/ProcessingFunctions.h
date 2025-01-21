@@ -41,24 +41,77 @@ void ChangeWindowToStartGameWindow(sf::RenderWindow &window,
 
 void ChangeWindowToGameWindow(sf::RenderWindow &window, GameInfo &gameInfo,
                               Field &field) {
-  // Записывается название экрана игры, на который перешел пользователь.
+  // Записываем название экрана игры
   gameInfo.SetCurrentWindowName("Game");
 
-  // Экран закрашивается черным.
+  // Экран закрашиваем черным
   window.clear(sf::Color::Black);
 
-  // Инициализируем змейку с произвольной начальной позицией (например, в центре
-  // поля)
+  // Инициализируем змейку с произвольной начальной позицией (например, в центре)
   int startX = field.GetWidth() / 2;
   int startY = field.GetHeight() / 2;
-  Snake snake(startX, startY);
 
-  // Запускаем игровой цикл, передавая окно, информацию об игре, поле и змейку
-  GameLoop(window, gameInfo, field, snake);
+  // Количество ботов из gameInfo
+  int botCount = gameInfo.GetNumberOfBots();
 
-  // Записанное в вывод показывается пользователю.
+  // Создаем вектор змей (первый элемент - игрок, остальные - боты)
+  std::vector<Snake> snakes;
+  snakes.push_back(Snake(startX, startY)); // Игрок
+
+  // Инициализация случайного генератора для спавна
+  srand(time(0));  // Используем текущее время как начальное значение для генератора случайных чисел
+
+  // Создаем змейки для ботов, случайным образом размещаем их
+for (int i = 0; i < botCount; ++i) {
+  bool validPosition = false;
+  int offsetX = 0, offsetY = 0;
+
+  while (!validPosition) {
+    // Генерируем случайные координаты для бота
+    offsetX = rand() % field.GetWidth();
+    offsetY = rand() % field.GetHeight();
+
+    // Проверяем, что ячейка не занята змейкой, едой или препятствием
+    validPosition = true;
+    
+    // Проверяем клетки с телами змей
+    for (const auto &snake : snakes) {
+      for (const auto &bodyPart : snake.GetBody()) {
+        if (bodyPart.first == offsetX && bodyPart.second == offsetY) {
+          validPosition = false;  // Позиция занята змеей
+          break;
+        }
+      }
+      if (!validPosition)
+        break;  // Если позиция занята змеей, выходим из внешнего цикла
+    }
+
+    // Проверяем, что ячейка не занята едой или препятствием
+    if (validPosition) {
+      if (field.GetField()[offsetY][offsetX].GetType() == CellType::FOOD ||
+          field.GetField()[offsetY][offsetX].GetType() == CellType::OBSTACLE) {
+        validPosition = false;  // Позиция занята едой или препятствием
+      }
+    }
+  }
+
+  // Добавляем бота в список змей
+  snakes.push_back(Snake(offsetX, offsetY)); // Размещаем бота на этой позиции
+}
+
+
+  // Если нет ботов, запускаем игру для одного игрока
+  if (snakes.size() == 1) {
+    GameLoop(window, gameInfo, field, snakes[0]); // Игра для одного игрока
+  } else {
+    // Запускаем игровой цикл с несколькими змеями (включая ботов)
+    GameLoop(window, gameInfo, field, snakes);
+  }
+
+  // Показываем результат
   window.display();
 }
+
 
 void ChangeWindowToMainMenuWindow(sf::RenderWindow &window,
                                   GameInfo &gameInfo) {

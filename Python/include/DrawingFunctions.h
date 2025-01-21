@@ -97,6 +97,14 @@ void DrawMap(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
     texturesLoaded = true;
   }
 
+  // Определим размер карты
+  int mapWidth = field.GetWidth() * 20; // Каждая ячейка 20x20
+  int mapHeight = field.GetHeight() * 20;
+
+  // Вычисляем смещение, чтобы карта была по центру
+  int offsetX = (window.getSize().x - mapWidth) / 2;
+  int offsetY = (window.getSize().y - mapHeight) / 2;
+
   // Отрисовка карты
   for (int y = 0; y < field.GetHeight(); ++y) {
     for (int x = 0; x < field.GetWidth(); ++x) {
@@ -126,7 +134,7 @@ void DrawMap(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
         break;
       }
 
-      currentCell.setPosition(x * 20, y * 20); // Каждая ячейка 20x20
+      currentCell.setPosition(x * 20 + offsetX, y * 20 + offsetY); // Добавляем смещение
       window.draw(currentCell);
     }
   }
