@@ -362,6 +362,7 @@ void ProcessActionInStartGameMenu(sf::RenderWindow &window, sf::Event &event,
         vector<int> temp = DefineParametersForField(gameInfo);
         Field fieldInfo(temp[0], temp[1]);
 
+        gameInfo.SetCurrentRound(i + 1);
         ChangeWindowToGameWindow(window, gameInfo, fieldInfo);
       }
     }

@@ -68,6 +68,7 @@ private:
 	int _numberOfBots;
 	std::string _mapSize;
 	bool _isSolo;
+  int _currentRound;
 
 	bool _somethingIsPressed;
 	std::string _currentWindowName;
@@ -91,6 +92,12 @@ public:
 
 	// Функция возвращает: сколько человек играет.
 	bool GetIsSolo();
+
+  // Функция вернёт текущий раунд
+  int GetCurrentRound();
+
+  // Функция установит текущий раунд
+  int SetCurrentRound(int currentRound);
 
 	// Функция возвращает количество раундов в игре.
 	int GetNumberOfRounds();
@@ -197,7 +204,7 @@ private:
   std::vector<std::pair<int, int>>
       _body; // тело змейки, список пар координат (x, y)
   sf::Clock _clock;        // Часы для контроля времени
-  float _moveSpeed = 0.12f; // Скорость движения змейки
+  float _moveSpeed = 0.15f; // Скорость движения змейки
   bool _grew = false; // Флаг для отслеживания, выросла ли змейка
   std::pair<int, int> _direction; // Направление движения змейки
 
