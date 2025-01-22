@@ -5,13 +5,13 @@
 #include "functionsFullProject.h"
 
 // Конструктор по умолчанию.
-GameInfo::GameInfo()
-{
-  _numberOfRounds = 1;
-  _numberOfBots = 0;
-  _mapSize = "medium";
-  _somethingIsPressed = false;
-  _isSolo = true;
+GameInfo::GameInfo() {
+	_numberOfRounds = 1;
+	_numberOfBots = 0;
+	_mapSize = "medium";
+	_somethingIsPressed = false;
+	_isSolo = true;
+  _currentRound = 1;
 
   // Задается название открытого сейчас окна.
   _currentWindowName = "MainMenu";
@@ -213,6 +213,15 @@ std::string GameInfo::GetFieldInUse()
 void GameInfo::SetFieldInUse(std::string fieldName)
 {
   _fieldInUse = fieldName;
+}
+
+// Функция вернёт текущий раунд
+int GameInfo::GetCurrentRound() {
+  return _currentRound;
+}
+
+int GameInfo::SetCurrentRound(int currentRound) {
+  _currentRound = currentRound;
 }
 
 #endif // GAMEINFO_HPP

@@ -175,5 +175,3 @@ void Field::UpdateMap(const Snake &snake1, const Snake &snake2) {
     _field[snake2.GetBody().back().second][snake2.GetBody().back().first].SetIsBusy(true);
   }
 }
-
-

@@ -62,8 +62,39 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
       if (field.GetField()[head.second][head.first].GetType() ==
           CellType::OBSTACLE) {
         window.clear();
-        window.draw(GOSprite);
+
+        if (gameInfo.GetCurrentRound() != gameInfo.GetNumberOfRounds()) {
+          sf::Texture endRounds;
+          sf::Sprite endRoundsSprite;
+
+          endRounds.loadFromFile("../images/FonEndRound.png");
+          endRoundsSprite.setTexture(endRounds);
+
+          sf::Font font;
+          font.loadFromFile("../fonts/Consolas.ttf");
+
+          sf::Text textLose;
+          textLose.setFont(font);
+          textLose.setCharacterSize(95);           // Размер шрифта
+          textLose.setFillColor(sf::Color::White); // Цвет текста
+          textLose.setPosition(140, 250); // Позиция текста на экране
+          textLose.setString(gameInfo.GetFirstPlayerInfo().GetName() +
+                             " LOOOOSER");
+
+          window.draw(endRoundsSprite);
+          window.draw(textLose);
+          window.display();
+
+          // Задержка на 3 секунды
+          sf::sleep(sf::seconds(3));
+        }
+        
+        else {
+          window.draw(GOSprite);
+        }
+        
         window.display();
+
         gameInfo.SetCurrentWindowName(
             "Game Over"); // Устанавливаем сообщение об окончании игры
         return;
@@ -74,7 +105,37 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
         for (const auto &bodyPart : bot.GetSnake().GetBody()) {
           if (head == bodyPart) {
             window.clear();
-            window.draw(GOSprite);
+
+            if (gameInfo.GetCurrentRound() != gameInfo.GetNumberOfRounds()) {
+              sf::Texture endRounds;
+              sf::Sprite endRoundsSprite;
+
+              endRounds.loadFromFile("../images/FonEndRound.png");
+              endRoundsSprite.setTexture(endRounds);
+
+              sf::Font font;
+              font.loadFromFile("../fonts/Consolas.ttf");
+
+              sf::Text textLose;
+              textLose.setFont(font);
+              textLose.setCharacterSize(95); // Размер шрифта
+              textLose.setFillColor(sf::Color::White); // Цвет текста
+              textLose.setPosition(140, 250); // Позиция текста на экране
+              textLose.setString(gameInfo.GetFirstPlayerInfo().GetName() +
+                                 " LOOOOSER");
+
+              window.draw(endRoundsSprite);
+              window.draw(textLose);
+              window.display();
+
+              // Задержка на 3 секунды
+              sf::sleep(sf::seconds(3));
+            }
+            
+            else {
+              window.draw(GOSprite);
+            }
+
             window.display();
             gameInfo.SetCurrentWindowName("Game Over");
             return;
@@ -85,10 +146,41 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
 
       // Проверка на столкновение змеи самой с собой
       for (size_t i = 1; i < playerSnake.GetBody().size(); ++i) {
-        if (head == playerSnake.GetBody()[i] && playerSnake.GetBody().size() != 3) {
+        if (head == playerSnake.GetBody()[i] &&
+            playerSnake.GetBody().size() != 3) {
           // Змейка столкнулась с собой
-          window.clear();   // Очистка экрана
-          window.draw(GOSprite);
+          window.clear();
+
+          if (gameInfo.GetCurrentRound() != gameInfo.GetNumberOfRounds()) {
+            sf::Texture endRounds;
+            sf::Sprite endRoundsSprite;
+
+            endRounds.loadFromFile("../images/FonEndRound.png");
+            endRoundsSprite.setTexture(endRounds);
+
+            sf::Font font;
+            font.loadFromFile("../fonts/Consolas.ttf");
+
+            sf::Text textLose;
+            textLose.setFont(font);
+            textLose.setCharacterSize(95); // Размер шрифта
+            textLose.setFillColor(sf::Color::White); // Цвет текста
+            textLose.setPosition(140, 250); // Позиция текста на экране
+            textLose.setString(gameInfo.GetFirstPlayerInfo().GetName() +
+                               " LOOOOSER");
+
+            window.draw(endRoundsSprite);
+            window.draw(textLose);
+            window.display();
+
+            // Задержка на 3 секунды
+            sf::sleep(sf::seconds(3));
+          }
+
+          else {
+             window.draw(GOSprite);
+          }
+          
           window.display(); // Обновление окна
           gameInfo.SetCurrentWindowName(
               "Game Over"); // Сообщение об окончании игры
@@ -177,6 +269,38 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
       botClocks.erase(botClocks.begin() + botsToRemove[i]);
     }
 
+    // Если все боты умерли, то раунд окончен
+    if (botsArr.empty() && gameInfo.GetNumberOfBots() != 0) {
+      window.clear();
+      if (gameInfo.GetCurrentRound() != gameInfo.GetNumberOfRounds()) {
+        sf::Texture endRounds;
+        sf::Sprite endRoundsSprite;
+
+        endRounds.loadFromFile("../images/FonEndRound.png");
+        endRoundsSprite.setTexture(endRounds);
+
+        sf::Font font;
+        font.loadFromFile("../fonts/Consolas.ttf");
+
+        sf::Text textLose;
+        textLose.setFont(font);
+        textLose.setCharacterSize(95);           // Размер шрифта
+        textLose.setFillColor(sf::Color::White); // Цвет текста
+        textLose.setPosition(140, 250); // Позиция текста на экране
+        textLose.setString("BOTS LOOOOSER");
+
+        window.draw(endRoundsSprite);
+        window.draw(textLose);
+        window.display();
+
+        // Задержка на 3 секунды
+        sf::sleep(sf::seconds(3));
+      }
+      // СЮДА И В ПОХОЖИЕ МЕСТА ПОСЛЕ УСЛОВИЯ ВСТАНЕТ ОБРАБОТКА КРАЙНЕГО ОКНА. СЮДА ПОСТАВИТЬ ОБРАБОТКУ КНОПОК RESET и MENU
+      window.display();
+      return;
+    }
+
     botsToRemove.clear();
 
     // Обновление карты с учетом всех змей
@@ -203,184 +327,8 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
   }
 }
 
-// void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
-//               Snake &snake)
-// {
-//   sf::Clock clock;
-//   int countFlood = 0;
-//   while (window.isOpen())
-//   {
-//     sf::Event event;
-//     while (window.pollEvent(event))
-//     {
-//       if (event.type == sf::Event::Closed)
-//         window.close();
-//     }
 
-//     // Движение змейки по времени (с постоянным интервалом)
-//     if (clock.getElapsedTime().asSeconds() >= snake.GetMoveSpeed())
-//     {
-//       snake.MoveSnake(field.GetWidth(),
-//                       field.GetHeight()); // Автоматическое движение змейки
-//       clock.restart();                    // Перезапускаем таймер
-//     }
-
-//     // Обработка нажатий клавиш для управления направлением змейки
-//     if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetUpKey()))
-//     {
-//       snake.ChangeDirection({0, -1}); // вверх
-//     } else if (sf::Keyboard::isKeyPressed(
-//                    gameInfo.GetFirstPlayerInfo().GetDownKey())) {
-//       snake.ChangeDirection({0, 1}); // вниз
-//     } else if (sf::Keyboard::isKeyPressed(
-//                    gameInfo.GetFirstPlayerInfo().GetLeftKey())) {
-//       snake.ChangeDirection({-1, 0}); // влево
-//     } else if (sf::Keyboard::isKeyPressed(
-//                    gameInfo.GetFirstPlayerInfo().GetRightKey())) {
-
-//       snake.ChangeDirection({1, 0}); // вправо
-//     }
-
-//     // Проверка на столкновение с границей (перемещение на противоположную
-//     // сторону)
-//     auto head = snake.GetBody()[0];
-//     if (head.first < 0)
-//     {
-//       // Змейка вылезла за левую границу, появится с правой
-//       snake.GetBody()[0].first = field.GetWidth() - 1;
-//     }
-//     else if (head.first >= field.GetWidth())
-//     {
-//       // Змейка вылезла за правую границу, появится с левой
-//       snake.GetBody()[0].first = 0;
-//     }
-//     else if (head.second < 0)
-//     {
-//       // Змейка вылезла за верхнюю границу, появится снизу
-//       snake.GetBody()[0].second = field.GetHeight() - 1;
-//     }
-//     else if (head.second >= field.GetHeight())
-//     {
-//       // Змейка вылезла за нижнюю границу, появится сверху
-//       snake.GetBody()[0].second = 0;
-//     }
-
-//     // Проверка на столкновение с телом змейки
-//     for (size_t i = 1; i < snake.GetBody().size(); ++i)
-//     {
-//       if (head == snake.GetBody()[i])
-//       {
-//         window.clear();   // Очистить экран
-//         window.display(); // Показать обновленное окно
-//         return;           // Выход из игры при столкновении с собой
-//       }
-//     }
-
-//     // Проверка на столкновение с препятствием
-//     if (field.GetField()[head.second][head.first].GetType() ==
-//         CellType::OBSTACLE)
-//     {
-//       window.clear();   // Очистить экран
-//       window.display(); // Показать обновленное окно
-//       // Завершение игры или изменение состояния
-//       break;
-//     }
-
-//     // Если змейка съела еду
-//     if (field.GetField()[head.second][head.first].GetType() == CellType::FOOD)
-//     {
-//       snake.Grow(); // Увеличиваем змейку
-//       ++countFlood; // Увеличиваем счётчик
-//       // Размещаем еду в новом случайном месте, но проверяем, что в новом месте
-//       // нет змейки
-//       do
-//       {
-//         field.PlaceFood();
-//       } while (field.GetField()[head.second][head.first].GetType() ==
-//                    CellType::SNAKE_BODY ||
-//                field.GetField()[head.second][head.first].GetType() ==
-//                    CellType::SNAKE_HEAD);
-//     }
-
-//     // Обновляем карту с текущим состоянием змейки
-//     field.UpdateMap(snake);
-
-//     // Отрисовка
-//     // window.clear(); // Очистить экран
-
-//     // Добавим фоновое изображение
-//     static sf::Texture fonTexture;
-//     fonTexture.loadFromFile("../images/menu2.png");
-
-//     //----------------------------------------------------------------------
-//     sf::Font font;
-//     font.loadFromFile("../fonts/Consolas.ttf");
-
-//     sf::Text p1;
-//     p1.setFont(font);
-//     p1.setCharacterSize(24);           // Размер шрифта
-//     p1.setFillColor(sf::Color::White); // Цвет текста
-//     p1.setPosition(940, 80); // Позиция текста на экране
-//     p1.setString(gameInfo.GetFirstPlayerInfo().GetName());
-//     if (gameInfo.GetIsSolo()) {
-//       sf::Text p2;
-//       p2.setFont(font);
-//       p2.setCharacterSize(24);           // Размер шрифта
-//       p2.setFillColor(sf::Color::White); // Цвет текста
-//       p2.setPosition(940, 150);          // Позиция текста на экране
-//       p2.setString("None");
-//       window.draw(p2); // Рисуем текст
-      
-//     } else {
-//       sf::Text p2;
-//       p2.setFont(font);
-//       p2.setCharacterSize(24);           // Размер шрифта
-//       p2.setFillColor(sf::Color::White); // Цвет текста
-//       p2.setPosition(940, 150);          // Позиция текста на экране
-//       p2.setString(gameInfo.GetSecondPlayerInfo().GetName());
-//       window.draw(p2); // Рисуем текст
-//     }
-
-//     sf::Text Round;
-//     std::string roundInfo = "Rounds: ";
-//     Round.setFont(font);
-//     Round.setCharacterSize(24);           // Размер шрифта
-//     Round.setFillColor(sf::Color::White); // Цвет текста
-//     Round.setPosition(940, 220);          // Позиция текста на экране
-//     Round.setString(roundInfo + std::to_string(gameInfo.GetNumberOfRounds()));
-
-//     sf::Text Bots;
-//     std::string botsInfo = "Round: ";
-//       Bots.setFont(font);
-//       Bots.setCharacterSize(24); // Размер шрифта
-//       Bots.setFillColor(sf::Color::White); // Цвет текста
-//       Bots.setPosition(940, 290); // Позиция текста на экране
-//       Bots.setString(botsInfo + std::to_string(gameInfo.GetNumberOfBots()));
-
-//     sf::Text Score;
-//     std::string scoreInfo = "Score: ";
-//     Score.setFont(font);
-//     Score.setCharacterSize(24);           // Размер шрифта
-//     Score.setFillColor(sf::Color::White); // Цвет текста
-//     Score.setPosition(940, 360); // Позиция текста на экране
-//     Score.setString(scoreInfo + std::to_string(countFlood));
-
-//     window.draw(p1);
-//     window.draw(Round); // Рисуем текст
-//     window.draw(Bots);  // Рисуем текст
-//     window.draw(Score); // Рисуем текст
-//     window.display();
-//     //----------------------------------------------------------------------
-//     // Спрайт для фонового изображения
-//     static sf::Sprite fon_sprite;
-//     fon_sprite.setTexture(fonTexture);
-//     window.draw(fon_sprite);
-
-//     DrawMap(window, gameInfo, field); // Отрисовать карту
-//   }
-// }
-
-void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake &snake1, Snake &snake2){
+void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake &snake1, Snake &snake2)
 {
   sf::Clock clock;
   int countFlood1 = 0;
@@ -461,26 +409,92 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
     }
 
     // Проверка на столкновение змейки с собственным телом
+    bool flag = false;
     for (auto &snake : {std::ref(snake1), std::ref(snake2)}) {
+
       auto head = snake.get().GetBody()[0];
       for (size_t i = 1; i < snake.get().GetBody().size(); ++i) {
         if (head == snake.get().GetBody()[i] &&
             snake.get().GetBody().size() != 3) {
           // Змейка столкнулась с собой
-          window.clear(sf::Color::Black); // Закрашиваем экран в черный
-          window.draw(GOSprite);
-          window.display();               // Показываем экран
-          return;                         // Завершаем функцию
+          window.clear();
+
+          if (gameInfo.GetCurrentRound() != gameInfo.GetNumberOfRounds()) {
+            sf::Texture endRounds;
+            sf::Sprite endRoundsSprite;
+
+            endRounds.loadFromFile("../images/FonEndRound.png");
+            endRoundsSprite.setTexture(endRounds);
+
+            sf::Font font;
+            font.loadFromFile("../fonts/Consolas.ttf");
+
+            sf::Text textLose;
+            textLose.setFont(font);
+            textLose.setCharacterSize(95); // Размер шрифта
+            textLose.setFillColor(sf::Color::White); // Цвет текста
+            textLose.setPosition(140, 250); // Позиция текста на экране
+            textLose.setString(gameInfo.GetFirstPlayerInfo().GetName() +
+                               " LOOOOSER");
+            if (flag) {
+              textLose.setString(gameInfo.GetSecondPlayerInfo().GetName() +
+                                 " LOOOOSER");
+              flag = false;
+            }
+
+            window.draw(endRoundsSprite);
+            window.draw(textLose);
+            window.display();
+
+            // Задержка на 3 секунды
+            sf::sleep(sf::seconds(3));
+          }
+          else {
+            window.draw(GOSprite);
+          }
+          window.display();
+          return; // Завершаем функцию
+
         }
       }
+      flag = true;
     }
 
     // Проверка на столкновение с телом каждой змеи
     if (!snake1.GetBody().empty()) {
       for (auto &segment : snake2.GetBody()) {
         if (snake1.GetBody()[0] == segment) {
-          window.clear(sf::Color::Black);
-          window.draw(GOSprite);
+          window.clear();
+
+          if (gameInfo.GetCurrentRound() != gameInfo.GetNumberOfRounds()) {
+            sf::Texture endRounds;
+            sf::Sprite endRoundsSprite;
+
+            endRounds.loadFromFile("../images/FonEndRound.png");
+            endRoundsSprite.setTexture(endRounds);
+
+            sf::Font font;
+            font.loadFromFile("../fonts/Consolas.ttf");
+
+            sf::Text textLose;
+            textLose.setFont(font);
+            textLose.setCharacterSize(95); // Размер шрифта
+            textLose.setFillColor(sf::Color::White); // Цвет текста
+            textLose.setPosition(140, 250); // Позиция текста на экране
+            textLose.setString(gameInfo.GetSecondPlayerInfo().GetName() +
+                               " LOOOOSER");
+
+            window.draw(endRoundsSprite);
+            window.draw(textLose);
+            window.display();
+
+            // Задержка на 3 секунды
+            sf::sleep(sf::seconds(3));
+          }
+          else {
+             window.draw(GOSprite);
+          }
+          
           window.display();
           return;
         }
@@ -490,9 +504,37 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
     if (!snake2.GetBody().empty()) {
       for (auto &segment : snake1.GetBody()) {
         if (snake2.GetBody()[0] == segment) {
-          window.clear(sf::Color::Black);
+          window.clear();
 
-          window.draw(GOSprite);
+          if (gameInfo.GetCurrentRound() != gameInfo.GetNumberOfRounds()) {
+            sf::Texture endRounds;
+            sf::Sprite endRoundsSprite;
+
+            endRounds.loadFromFile("../images/FonEndRound.png");
+            endRoundsSprite.setTexture(endRounds);
+
+            sf::Font font;
+            font.loadFromFile("../fonts/Consolas.ttf");
+
+            sf::Text textLose;
+            textLose.setFont(font);
+            textLose.setCharacterSize(95); // Размер шрифта
+            textLose.setFillColor(sf::Color::White); // Цвет текста
+            textLose.setPosition(140, 250); // Позиция текста на экране
+            textLose.setString(gameInfo.GetSecondPlayerInfo().GetName() +
+                               " LOOOOSER");
+
+            window.draw(endRoundsSprite);
+            window.draw(textLose);
+            window.display();
+
+            // Задержка на 3 секунды
+            sf::sleep(sf::seconds(3));
+          }
+          else {
+            window.draw(GOSprite);
+          }
+
           window.display();
           return;
         }
@@ -500,18 +542,51 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
     }
 
     // Проверка на столкновение с препятствиями и еду
-    for (auto &snake : {std::ref(snake1), std::ref(snake2)})
-    {
+    for (auto &snake : {std::ref(snake1), std::ref(snake2)}) {
       auto head = snake.get().GetBody()[0];
 
       // Столкновение с препятствием
       if (field.GetField()[head.second][head.first].GetType() ==
           CellType::OBSTACLE) {
-        window.clear(sf::Color::Black); // Закрашиваем экран в черный цвет
-        window.draw(GOSprite);
-        window.display(); // Обновляем окно, чтобы показать черный экран
+        window.clear();
+
+        if (gameInfo.GetCurrentRound() != gameInfo.GetNumberOfRounds()) {
+          sf::Texture endRounds;
+          sf::Sprite endRoundsSprite;
+
+          endRounds.loadFromFile("../images/FonEndRound.png");
+          endRoundsSprite.setTexture(endRounds);
+
+          sf::Font font;
+          font.loadFromFile("../fonts/Consolas.ttf");
+
+          sf::Text textLose;
+          textLose.setFont(font);
+          textLose.setCharacterSize(95);           // Размер шрифта
+          textLose.setFillColor(sf::Color::White); // Цвет текста
+          textLose.setPosition(140, 250); // Позиция текста на экране
+          textLose.setString(gameInfo.GetFirstPlayerInfo().GetName() +
+                             " LOOOOSER");
+          if (flag) {
+            textLose.setString(gameInfo.GetSecondPlayerInfo().GetName() +
+                               " LOOOOSER");
+            flag = false;
+          }
+
+          window.draw(endRoundsSprite);
+          window.draw(textLose);
+          window.display();
+
+          // Задержка на 3 секунды
+          sf::sleep(sf::seconds(3));
+        }
+        else {
+          window.draw(GOSprite);
+        }
+        window.display();
         return; // Завершаем функцию, чтобы остановить игровой цикл
       }
+      flag = true;
 
       // Змейка съела еду
       if (field.GetField()[head.second][head.first].GetType() ==
@@ -575,9 +650,8 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
     Round.setFont(font);
     Round.setCharacterSize(24);           // Размер шрифта
     Round.setFillColor(sf::Color::White); // Цвет текста
-
-    Round.setPosition(940, 220);          // Позиция текста на экране
-    Round.setString(roundInfo + std::to_string(gameInfo.GetNumberOfRounds()));
+    Round.setPosition(940, 220); // Позиция текста на экране
+    Round.setString(roundInfo + std::to_string(gameInfo.GetCurrentRound()));
 
     sf::Text Score1;
     std::string score1Info = "Score 1: ";

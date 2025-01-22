@@ -72,13 +72,11 @@ public:
 class GameInfo
 {
 private:
-    int _numberOfRounds;
-    int _numberOfBots;
-    std::string _mapSize;
-    bool _isSolo;
-
-    bool _somethingIsPressed;
-    std::string _currentWindowName;
+	int _numberOfRounds;
+	int _numberOfBots;
+	std::string _mapSize;
+	bool _isSolo;
+  int _currentRound;
 
     PlayerInfo _firstPlayerInfo;
     PlayerInfo _secondPlayerInfo;
@@ -101,8 +99,14 @@ public:
     // Функция возвращает: сколько человек играет.
     bool GetIsSolo();
 
-    // Функция возвращает количество раундов в игре.
-    int GetNumberOfRounds();
+  // Функция вернёт текущий раунд
+  int GetCurrentRound();
+
+  // Функция установит текущий раунд
+  int SetCurrentRound(int currentRound);
+
+	// Функция возвращает количество раундов в игре.
+	int GetNumberOfRounds();
 
     PlayerInfo GetFirstPlayerInfo();
 
@@ -210,12 +214,12 @@ public:
 
 class Snake {
 private:
-    std::vector<std::pair<int, int>>
-        _body;                      // тело змейки, список пар координат (x, y)
-    sf::Clock _clock;               // Часы для контроля времени
-    float _moveSpeed = 0.12f;       // Скорость движения змейки
-    bool _grew = false;             // Флаг для отслеживания, выросла ли змейка
-    std::pair<int, int> _direction; // Направление движения змейки
+  std::vector<std::pair<int, int>>
+      _body; // тело змейки, список пар координат (x, y)
+  sf::Clock _clock;        // Часы для контроля времени
+  float _moveSpeed = 0.16f; // Скорость движения змейки
+  bool _grew = false; // Флаг для отслеживания, выросла ли змейка
+  std::pair<int, int> _direction; // Направление движения змейки
 
 public:
     Snake(int startX, int startY);
