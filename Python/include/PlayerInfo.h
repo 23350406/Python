@@ -37,6 +37,32 @@ std::string PlayerInfo::GetName() {
     return _playerName;
 }
 
+// Загрузка и сохранение информации о игроке
+void PlayerInfo::LoadFromFile(std::ifstream &inFile) {
+    std::getline(inFile, _playerName);
+    int up, left, right, down;
+    inFile >> up >> left >> right >> down;
+    _up = static_cast<sf::Keyboard::Key>(up);
+    _left = static_cast<sf::Keyboard::Key>(left);
+    _right = static_cast<sf::Keyboard::Key>(right);
+    _down = static_cast<sf::Keyboard::Key>(down);
+    int r, g, b;
+    inFile >> r >> g >> b;
+    _playerColor = sf::Color(r, g, b);
+    inFile.ignore(); // Игнорируем символ новой строки
+}
+
+void PlayerInfo::SaveToFile(std::ofstream &outFile) const {
+    outFile << _playerName << std::endl;
+    outFile << static_cast<int>(_up) << std::endl;
+    outFile << static_cast<int>(_left) << std::endl;
+    outFile << static_cast<int>(_right) << std::endl;
+    outFile << static_cast<int>(_down) << std::endl;
+    outFile << static_cast<int>(_playerColor.r) << " "
+            << static_cast<int>(_playerColor.g) << " "
+            << static_cast<int>(_playerColor.b) << std::endl;
+}
+
 // Функция задает значение клавиши для движения вверх.
 void PlayerInfo::SetUpKey(sf::Keyboard::Key newUp) {
     _up = newUp;
