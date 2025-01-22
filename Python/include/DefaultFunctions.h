@@ -248,7 +248,7 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     }
 
     // Если все боты умерли, то раунд окончен
-    if (botsArr.empty()) {
+    if (botsArr.empty() && gameInfo.GetNumberOfBots() != 0) {
       window.clear();
       if (gameInfo.GetCurrentRound() != gameInfo.GetNumberOfRounds()) {
         sf::Texture endRounds;
