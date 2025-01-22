@@ -50,7 +50,7 @@ void ChangeWindowToGameWindow(sf::RenderWindow &window, GameInfo &gameInfo, Fiel
 {
   // Устанавливаем текущий экран игры
   gameInfo.SetCurrentWindowName("Game");
-
+  gameInfo.SaveToFile("conf.txt");
   // Очищаем экран
   window.clear(sf::Color::Black);
 
@@ -229,8 +229,7 @@ void ProcessActionInMainMenu(sf::RenderWindow &window, sf::Event &event,
     if (isInBox(event, 126, 320, 426, 499))
     {
 
-      // Функция осуществляет переход с экрана главного меню на экран настроек
-      // игры.
+      // Функция осуществляет переход с экрана главного меню на экран настроек игры.
       MoveWindowFromMainToSettings(window);
       ChangeWindowToSettingsWindow(window, gameInfo);
     }
@@ -250,6 +249,45 @@ void ProcessActionInMainMenu(sf::RenderWindow &window, sf::Event &event,
 
   gameInfo.UnsetPressedButton();
 }
+
+void ProccessActionGameOver(sf::RenderWindow &window, sf::Event &event,
+                             GameInfo &gameInfo)
+{
+  
+  // Если пользователь нажал ЛКМ.
+  if (isLMC(event, gameInfo))
+  {
+
+    if (gameInfo.GetPressedButton())
+    {
+      return;
+    }
+
+    gameInfo.SetPressedButton();
+    // Пользователь нажал ЛКМ на кнопку назад -> переход на страницу главного меню игры.
+//Menu
+    if (isInBox(event, 430, 500, 730, 572))
+    {
+      // Переход между главным меню и меню начала игры.
+      // MoveWindowFromStartToMain(window);
+      ChangeWindowToMainMenuWindow(window, gameInfo);
+    }
+  //Restart
+    if (isInBox(event, 430, 390, 730, 465))
+    {
+      gameInfo.LoadFromFile("conf.txt");
+      vector<int> temp = DefineParametersForField(gameInfo);
+      Field fieldInfo(temp[0], temp[1]);
+
+      ChangeWindowToGameWindow(window, gameInfo, fieldInfo);
+    }
+
+    return;
+  }
+
+  gameInfo.UnsetPressedButton();
+}
+
 
 void ProcessActionInStartGameMenu(sf::RenderWindow &window, sf::Event &event,
                                   GameInfo &gameInfo)
@@ -852,27 +890,37 @@ void ProcessActionInAuthorsMenu(sf::RenderWindow &window, sf::Event &event,
 void ProcessEvent(sf::RenderWindow &window, sf::Event &event,
                   GameInfo &gameInfo)
 {
+  std::string filename = "conf.txt";
   if (gameInfo.GetCurrentWindowName() == "MainMenu")
   {
     ProcessActionInMainMenu(window, event, gameInfo);
+    gameInfo.SaveToFile(filename);
     return;
   }
 
   if (gameInfo.GetCurrentWindowName() == "StartGame")
   {
     ProcessActionInStartGameMenu(window, event, gameInfo);
+    gameInfo.SaveToFile(filename);
     return;
   }
-
+  if(gameInfo.GetCurrentWindowName() == "GameOver")
+  {
+    gameInfo.LoadFromFile(filename);
+  
+    return;
+  }
   if (gameInfo.GetCurrentWindowName() == "LeaveGame")
   {
     ProcessActionInLeaveGameMenu(window, event, gameInfo);
+    gameInfo.SaveToFile(filename);
     return;
   }
 
   if (gameInfo.GetCurrentWindowName() == "Settings")
   {
     ProcessActionInSettingsMenu(window, event, gameInfo);
+    gameInfo.SaveToFile(filename);
     return;
   }
 
