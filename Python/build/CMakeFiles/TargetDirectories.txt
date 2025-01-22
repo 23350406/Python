@@ -1,3 +1,0 @@
-/home/frozen/Python/Python/build/CMakeFiles/Python.dir
-/home/frozen/Python/Python/build/CMakeFiles/edit_cache.dir
-/home/frozen/Python/Python/build/CMakeFiles/rebuild_cache.dir
