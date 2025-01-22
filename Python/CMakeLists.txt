@@ -17,8 +17,9 @@ include/GameInfo.h
 include/ProcessingFunctions.h
 include/CellClass.h
 include/FieldClass.h
-include/PlayerClass.h
 include/SnakeClass.h
+include/PlayerInfo.h
+include/BotClass.h
 )
 
 # Линковка с SFML

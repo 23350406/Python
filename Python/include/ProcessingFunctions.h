@@ -45,6 +45,7 @@ void ChangeWindowToStartGameWindow(sf::RenderWindow &window,
   window.display();
 }
 
+
 void ChangeWindowToGameWindow(sf::RenderWindow &window, GameInfo &gameInfo, Field &field)
 {
   // Устанавливаем текущий экран игры
@@ -57,15 +58,24 @@ void ChangeWindowToGameWindow(sf::RenderWindow &window, GameInfo &gameInfo, Fiel
   srand(static_cast<unsigned>(time(0)));
 
   // Генерация начальных координат змей
-  auto GenerateValidPosition = [&](Field &field) -> std::pair<int, int>
+  auto GenerateValidPositionForSnake = [&](Field &field) -> std::vector<std::pair<int, int>>
   {
-    int x, y;
+    std::vector<std::pair<int, int>> positions;
     do
     {
-      x = rand() % field.GetWidth();
-      y = rand() % field.GetHeight();
-    } while (field.GetField()[y][x].GetType() != CellType::EMPTY);
-    return {x, y};
+      positions.clear();
+      for (int i = 0; i < 3; ++i)
+      {
+        int x = rand() % field.GetWidth();
+        int y = rand() % field.GetHeight();
+        if (field.GetField()[y][x].GetType() == CellType::EMPTY)
+          positions.emplace_back(x, y);
+        else
+          break;  // break if the cell is not empty
+      }
+    } while (positions.size() < 3);
+
+    return positions;
   };
 
   if (gameInfo.GetIsSolo())
@@ -74,33 +84,46 @@ void ChangeWindowToGameWindow(sf::RenderWindow &window, GameInfo &gameInfo, Fiel
     std::vector<Snake> snakes;
 
     // Добавляем игрока
-    auto playerSnakePos = GenerateValidPosition(field);
-    snakes.emplace_back(playerSnakePos.first, playerSnakePos.second);
+    auto playerSnakePos = GenerateValidPositionForSnake(field);
+    Snake snakePlayer(playerSnakePos[0].first, playerSnakePos[1].second);
+    snakePlayer.Grow();  // Первое увеличение змеи
+    snakePlayer.Grow();  // Второе увеличение змеи
 
     // Добавляем змей для ботов
     for (int i = 0; i < gameInfo.GetNumberOfBots(); ++i)
     {
-      auto botSnakePos = GenerateValidPosition(field);
-      snakes.emplace_back(botSnakePos.first, botSnakePos.second);
+      auto botSnakePos = GenerateValidPositionForSnake(field);
+      Snake botSnake(botSnakePos[0].first, botSnakePos[0].second);
+      botSnake.Grow();  // Змейка растёт
+      botSnake.Grow();  // Еще одна клетка для бота
+      snakes.emplace_back(botSnake);
     }
 
     // Многопользовательский игровой цикл
-    GameLoop(window, gameInfo, field, snakes);
+    GameLoop(window, gameInfo, field, snakePlayer, snakes);
   }
 
   // Если многопользовательская игра
   if (!gameInfo.GetIsSolo())
   {
-    auto firstSnakePos = GenerateValidPosition(field);
-    auto secondSnakePos = GenerateValidPosition(field);
+    auto firstSnakePos = GenerateValidPositionForSnake(field);
+    auto secondSnakePos = GenerateValidPositionForSnake(field);
 
-    Snake firstSnake(firstSnakePos.first, firstSnakePos.second);
-    Snake secondSnake(secondSnakePos.first, secondSnakePos.second);
+    Snake firstSnake(firstSnakePos[0].first, firstSnakePos[0].second);
+    Snake secondSnake(secondSnakePos[0].first, secondSnakePos[0].second);
 
+    firstSnake.Grow();  // Змейка первой игрока растёт
+    firstSnake.Grow();  // Две клетки
+
+    secondSnake.Grow();  // Змейка второй игрока растёт
+    secondSnake.Grow();  // Две клетки
+
+    // Игровой цикл для двух игроков
     GameLoop(window, gameInfo, field, firstSnake, secondSnake);
-    return;
   }
 }
+
+
 
 void ChangeWindowToMainMenuWindow(sf::RenderWindow &window,
                                   GameInfo &gameInfo)

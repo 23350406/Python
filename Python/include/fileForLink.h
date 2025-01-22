@@ -5,6 +5,6 @@
 #include "PlayerInfo.h"
 #include "CellClass.h"
 #include "FieldClass.h"
-#include "PlayerClass.h"
 #include "SnakeClass.h"
+#include "BotClass.h"
 #include "DefaultFunctions.h"
