@@ -1,30 +1,44 @@
 #include "functionsFullProject.h"
 
-bool Player::Check_isPlayer() { return this->_isPlayer; }
-
-string Player::GetUsername() { return this->_username; }
-
-sf::Color Player::GetColor() { return this->_color; }
-
-char Player::GetMove(string moveName)
-{
-    if(moveName == "up")    {return this->_up;}
-    if(moveName == "down")  {return this->_down;}
-    if(moveName == "left")  {return this->_left;}
-    if(moveName == "right") {return this->_right;}
-    return '0';
+Player::Player(sf::Color color, string username, bool isPlayer) {
+  _color = color;
+  _username = username;
+  _isPlayer = isPlayer;
 }
 
-void Player::SetUsername(string username) { this->_username = username; }
+bool Player::Check_isPlayer() { return _isPlayer; }
 
-void Player::SetColor(int r, int g, int b) {
-    _color = sf::Color(r,g,b);
+string Player::GetUsername() { return _username; }
+
+sf::Color Player::GetColor() { return _color; }
+
+char Player::GetMove(string moveName) {
+  if (moveName == "up") {
+    return _up;
+  }
+  if (moveName == "down") {
+    return _down;
+  }
+  if (moveName == "left") {
+    return _left;
+  }
+  if (moveName == "right") {
+    return _right;
+  }
+  return '0';
 }
 
-void Player::SetMove(string moveName, char letterMove) //movename - какое движение будет перезаписываться, letterMove - кнопка записи
+void Player::SetUsername(string username) { _username = username; }
+
+void Player::SetColor(int r, int g, int b) { _color = sf::Color(r, g, b); }
+
+void Player::SetMove(
+    string moveName,
+    char letterMove) // movename - какое движение будет перезаписываться,
+                     // letterMove - кнопка записи
 {
-    this->_up    = (moveName == "up") ? letterMove : this->_up;
-    this->_down  = (moveName == "down") ? letterMove : this->_down;
-    this->_left  = (moveName == "left") ? letterMove : this->_left;
-    this->_right = (moveName == "right") ? letterMove : this->_right;
+  _up = (moveName == "up") ? letterMove : _up;
+  _down = (moveName == "down") ? letterMove : _down;
+  _left = (moveName == "left") ? letterMove : _left;
+  _right = (moveName == "right") ? letterMove : _right;
 }

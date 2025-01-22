@@ -39,42 +39,39 @@ bool GameInfo::GetIsSolo() {
 }
 
 // Функция возвращает количество раундов в игре.
-int GameInfo::GetNumberOfRounds() {
-	return _numberOfRounds;
-}
+int GameInfo::GetNumberOfRounds() { return _numberOfRounds; }
 
 // Функция увеличивает количество раундов в игре.
 void GameInfo::IncreaseNumberOfRounds() {
-	if (_numberOfRounds < 9) {
-		++_numberOfRounds;
-	}
+  if (_numberOfRounds < 9) {
+    ++_numberOfRounds;
+  }
 }
 
 // Функция уменьшает количство раундов в игре.
 void GameInfo::DecreaseNumberOfRounds() {
-	if (_numberOfRounds > 1) {
-		--_numberOfRounds;
-	}
+  if (_numberOfRounds > 1) {
+    --_numberOfRounds;
+  }
 }
 
 // Функция возвращает количество ботов в игре.
-int GameInfo::GetNumberOfBots() {
-	return _numberOfBots;
-}
+int GameInfo::GetNumberOfBots() { return _numberOfBots; }
 
 // Функция увеличивает количество ботов в игре.
 void GameInfo::IncreaseNumberOfBots() {
-	if (_numberOfBots < 3) {
-		++_numberOfBots;
-	}
+  if (_numberOfBots < 3) {
+    ++_numberOfBots;
+  }
 }
 
 // Функция уменьшает количетсов ботов в игре.
 void GameInfo::DecreaseNumberOfBots() {
-	if (_numberOfBots > 0) {
-		--_numberOfBots;
-	}
+  if (_numberOfBots > 0) {
+    --_numberOfBots;
+  }
 }
+
 
 // Функция возвращает размер игрового поля.
 std::string GameInfo::GetMapSize() {
@@ -83,47 +80,36 @@ std::string GameInfo::GetMapSize() {
 
 // Функция для того, чтобы сменить карту игры на большую.
 void GameInfo::IncreaseMapSize() {
-	if (_mapSize == "medium") {
-		_mapSize = "large";
-	}
-	if (_mapSize == "small") {
-		_mapSize = "medium";
-	}
+  if (_mapSize == "medium") {
+    _mapSize = "large";
+  }
+  if (_mapSize == "small") {
+    _mapSize = "medium";
+  }
 }
 
 // Функция для того, чтобы сменить карту игры на меньшую.
 void GameInfo::DecreaseMapSize() {
-	if (_mapSize == "medium") {
-		_mapSize = "small";
-	}
-	if (_mapSize == "large") {
-		_mapSize = "medium";
-	}
+  if (_mapSize == "medium") {
+    _mapSize = "small";
+  }
+  if (_mapSize == "large") {
+    _mapSize = "medium";
+  }
 }
 
-// Функция, отлавливающая нажатаю кнопку
-bool GameInfo::GetPressedButton() {
-	return _somethingIsPressed;
-}
 
-// Функция, устанавливающая кнопку по умолчанию
-void GameInfo::SetPressedButton() {
-	_somethingIsPressed = true;
-}
+bool GameInfo::GetPressedButton() { return _somethingIsPressed; }
 
-// Функция отжимает кнопку в классе.
-void GameInfo::UnsetPressedButton() {
-	_somethingIsPressed = false;
-}
+void GameInfo::SetPressedButton() { _somethingIsPressed = true; }
 
-// Функция возвращает название текущего экрана.
-std::string GameInfo::GetCurrentWindowName() {
-	return _currentWindowName;
-}
+void GameInfo::UnsetPressedButton() { _somethingIsPressed = false; }
+
+std::string GameInfo::GetCurrentWindowName() { return _currentWindowName; }
 
 // Функция устанавливает название текущего экрана.
 void GameInfo::SetCurrentWindowName(std::string newWindowName) {
-	_currentWindowName = newWindowName;
+  _currentWindowName = newWindowName;
 }
 
 // Функция возвращает информацию о первом игроке.
