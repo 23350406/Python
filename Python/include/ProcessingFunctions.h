@@ -352,12 +352,13 @@ void ProcessActionInStartGameMenu(sf::RenderWindow &window, sf::Event &event,
       window.display();
     }
 
-    if (isInBox(event, 432, 466, 722, 645))
-    {
-      vector<int> temp = DefineParametersForField(gameInfo);
-      Field fieldInfo(temp[0], temp[1]);
+    if (isInBox(event, 432, 466, 722, 645)) {
+      for (int i = 0; i < gameInfo.GetNumberOfRounds(); ++i) {
+        vector<int> temp = DefineParametersForField(gameInfo);
+        Field fieldInfo(temp[0], temp[1]);
 
-      ChangeWindowToGameWindow(window, gameInfo, fieldInfo);
+        ChangeWindowToGameWindow(window, gameInfo, fieldInfo);
+      }
     }
 
     return;
