@@ -315,12 +315,17 @@ void ProcessActionInStartGameMenu(sf::RenderWindow &window, sf::Event &event,
       if (!gameInfo.GetIsSolo())
       {
         gameInfo.SetSolo();
-        soloTexture.loadFromFile("../images/Solo.jpg");
+        window.clear(); // Старое окно стирается.
+        DrawStartGameWindow(window, gameInfo); // Окно начала игры перерисовывается и выводится на экран.
       }
       else
       {
         gameInfo.SetDuo();
-        soloTexture.loadFromFile("../images/Duo.jpg");
+        gameInfo.DecreaseNumberOfBots(); // Для многопользовательской игры выставляется значение ботов на 0.
+        gameInfo.DecreaseNumberOfBots();
+        gameInfo.DecreaseNumberOfBots();
+        window.clear(); // Старое окно стирается.
+        DrawStartGameWindow(window, gameInfo); // Окно начала игры перерисовывается и выводится на экран.
       }
       // Режим игры выводится на экран
       sf::Sprite soloSprite(soloTexture);
