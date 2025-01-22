@@ -60,7 +60,7 @@ int GameInfo::GetNumberOfBots() { return _numberOfBots; }
 
 // Функция увеличивает количество ботов в игре.
 void GameInfo::IncreaseNumberOfBots() {
-  if (_numberOfBots < 3) {
+  if (_numberOfBots < 3 && this->GetIsSolo()) { // Если ботов меньше трех и выбран режим для одного игрока, то количество ботов увеличивается.
     ++_numberOfBots;
   }
 }
