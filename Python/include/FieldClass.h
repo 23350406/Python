@@ -72,16 +72,16 @@ void Field::UpdateMap(const std::vector<Snake> &snakes) {
     for (const auto &snake : snakes) {
         if (!snake.GetBody().empty()) {
             // Голова змейки
-            _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetType(CellType::SNAKE_HEAD);
+            _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetType(CellType::SNAKE_HEAD_1);
 
             // Тело змейки
             for (size_t i = 1; i < snake.GetBody().size() - 1; ++i) {
-                _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetType(CellType::SNAKE_BODY);
+                _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetType(CellType::SNAKE_BODY_1);
             }
 
             // Хвост змейки
             if (snake.GetBody().size() > 1) {
-                _field[snake.GetBody().back().second][snake.GetBody().back().first].SetType(CellType::SNAKE_TAIL);
+                _field[snake.GetBody().back().second][snake.GetBody().back().first].SetType(CellType::SNAKE_TAIL_1);
             }
         }
     }
@@ -104,18 +104,18 @@ void Field::UpdateMap(const Snake &snake) {
   if (!snake.GetBody().empty()) {
     // Голова змейки
     _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetType(
-        CellType::SNAKE_HEAD);
+        CellType::SNAKE_HEAD_1);
 
     // Тело змейки
     for (size_t i = 1; i < snake.GetBody().size() - 1; ++i) {
       _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetType(
-          CellType::SNAKE_BODY);
+          CellType::SNAKE_BODY_1);
     }
 
     // Хвост змейки
     if (snake.GetBody().size() > 1) {
       _field[snake.GetBody().back().second][snake.GetBody().back().first]
-          .SetType(CellType::SNAKE_TAIL);
+          .SetType(CellType::SNAKE_TAIL_1);
     }
   }
 }
