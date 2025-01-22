@@ -229,8 +229,7 @@ void ProcessActionInMainMenu(sf::RenderWindow &window, sf::Event &event,
     if (isInBox(event, 126, 320, 426, 499))
     {
 
-      // Функция осуществляет переход с экрана главного меню на экран настроек
-      // игры.
+      // Функция осуществляет переход с экрана главного меню на экран настроек игры.
       MoveWindowFromMainToSettings(window);
       ChangeWindowToSettingsWindow(window, gameInfo);
     }
@@ -850,27 +849,37 @@ void ProcessActionInAuthorsMenu(sf::RenderWindow &window, sf::Event &event,
 void ProcessEvent(sf::RenderWindow &window, sf::Event &event,
                   GameInfo &gameInfo)
 {
+  std::string filename = "conf.txt";
   if (gameInfo.GetCurrentWindowName() == "MainMenu")
   {
     ProcessActionInMainMenu(window, event, gameInfo);
+    gameInfo.SaveToFile(filename);
     return;
   }
 
   if (gameInfo.GetCurrentWindowName() == "StartGame")
   {
     ProcessActionInStartGameMenu(window, event, gameInfo);
+    gameInfo.SaveToFile(filename);
     return;
   }
-
+  if(gameInfo.GetCurrentWindowName() == "GameOver")
+  {
+    gameInfo.LoadFromFile(filename);
+  
+    return;
+  }
   if (gameInfo.GetCurrentWindowName() == "LeaveGame")
   {
     ProcessActionInLeaveGameMenu(window, event, gameInfo);
+    gameInfo.SaveToFile(filename);
     return;
   }
 
   if (gameInfo.GetCurrentWindowName() == "Settings")
   {
     ProcessActionInSettingsMenu(window, event, gameInfo);
+    gameInfo.SaveToFile(filename);
     return;
   }
 
