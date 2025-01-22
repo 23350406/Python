@@ -204,7 +204,7 @@ private:
   std::vector<std::pair<int, int>>
       _body; // тело змейки, список пар координат (x, y)
   sf::Clock _clock;        // Часы для контроля времени
-  float _moveSpeed = 0.12f; // Скорость движения змейки
+  float _moveSpeed = 0.16f; // Скорость движения змейки
   bool _grew = false; // Флаг для отслеживания, выросла ли змейка
   std::pair<int, int> _direction; // Направление движения змейки
 
