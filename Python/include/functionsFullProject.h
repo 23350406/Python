@@ -192,28 +192,6 @@ public:
   void SetImage(const sf::Image &img);
 };
 
-class Player {
-  sf::Color _color;
-  string _username;
-  bool _isPlayer;
-  char _up = 'w';
-  char _down = 's';
-  char _left = 'a';
-  char _right = 'd';
-
-public:
-  Player(sf::Color color, string username, bool isPlayer);
-
-  bool Check_isPlayer();
-  string GetUsername();
-  sf::Color GetColor();
-  char GetMove(string moveName);
-
-  void SetUsername(string username);
-  void SetColor(int r, int g, int b);
-  void SetMove(string moveName, char letterMove);
-};
-
 class Snake {
 private:
   std::vector<std::pair<int, int>>
@@ -291,64 +269,22 @@ bool FindApple(Field &field, int &appleX, int &appleY);
 class Bot {
 public:
     // Конструктор перемещения
-    Bot(Bot&& other) noexcept
-        : _snake(other._snake)   // Просто копируем указатель (не нужно std::move для указателя)
-        , _field(other._field) { // Копируем ссылку на поле
-        // Обнуляем указатель у исходного объекта (чтобы избежать двойного удаления)
-        other._snake = nullptr;
-    }
+    Bot(Bot&& other) noexcept;
 
     // Оператор присваивания перемещением
-    Bot& operator=(Bot&& other) noexcept {
-        if (this != &other) {
-            _snake = other._snake;  // Просто копируем указатель
-            _field = other._field;  // Копируем ссылку на поле
-
-            // Обнуляем указатель у исходного объекта (чтобы избежать двойного удаления)
-            other._snake = nullptr;
-        }
-        return *this;
-    }
+    Bot& operator=(Bot&& other) noexcept;
 
     // Конструктор
     Bot(Snake &snake, Field &field) : _snake(&snake), _field(field) {}
 
     // Движение бота
-    void Move() {
-    // Получаем координаты головы змеи
-    auto snakeHead = GetSnake().GetBody()[0];
-    int snakeHeadX = snakeHead.first;
-    int snakeHeadY = snakeHead.second;
-
-    // Получаем координаты яблока
-    int appleX, appleY;
-    if (FindApple(_field, appleX, appleY)) {  // Предполагаем, что у нас есть функция поиска яблока
-        // Определяем направление по оси X
-        if (appleX < snakeHeadX) {
-            GetSnake().ChangeDirection({-1, 0}); // Влево
-        } else if (appleX > snakeHeadX) {
-            GetSnake().ChangeDirection({1, 0});  // Вправо
-        }
-        // Определяем направление по оси Y
-        else if (appleY < snakeHeadY) {
-            GetSnake().ChangeDirection({0, -1}); // Вверх
-        } else if (appleY > snakeHeadY) {
-            GetSnake().ChangeDirection({0, 1});  // Вниз
-        }
-    }
-
-    // Перемещаем змейку
-    _snake->MoveSnake(_field.GetWidth(), _field.GetHeight());
-}
-
+    void Move();
 
     // Получение позиции головы змейки
-    std::pair<int, int> GetHeadPosition() const {
-        return _snake->GetBody().front(); // Голова — это первый элемент тела змеи
-    }
+    std::pair<int, int> GetHeadPosition() const ;
 
     // Геттер для змеи
-    Snake& GetSnake() { return *_snake;}
+    Snake& GetSnake() const { return *_snake;}
 
     // Геттер для поля
     Field& GetField() { return _field;}
@@ -358,51 +294,10 @@ private:
     Field& _field;  // Ссылка на объект поля
 
     // Ищем ближайшую еду
-    std::pair<int, int> FindNearestFood(const std::pair<int, int>& head) {
-        std::pair<int, int> bestMove = head;
-        int minDistance = std::numeric_limits<int>::max();
-
-        // Ищем ближайшую еду
-        for (int y = 0; y < _field.GetHeight(); ++y) {
-            for (int x = 0; x < _field.GetWidth(); ++x) {
-                if (_field.GetField()[y][x].GetType() == CellType::FOOD) {
-                    int distance = std::abs(x - head.first) + std::abs(y - head.second);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        bestMove = {x, y};
-                    }
-                }
-            }
-        }
-
-        return bestMove;
-    }
+    std::pair<int, int> FindNearestFood(const std::pair<int, int>& head);
 
     // Двигаем бота случайным образом, если нет еды
-    void MoveRandomly() {
-        // Получаем голову змейки
-        auto head = _snake->GetBody()[0];
-
-        // Сгенерируем случайное направление
-        int randomDirection = rand() % 4;
-        switch (randomDirection) {
-            case 0:
-                _snake->ChangeDirection({1, 0}); // Вправо
-                break;
-            case 1:
-                _snake->ChangeDirection({-1, 0}); // Влево
-                break;
-            case 2:
-                _snake->ChangeDirection({0, 1}); // Вниз
-                break;
-            case 3:
-                _snake->ChangeDirection({0, -1}); // Вверх
-                break;
-        }
-
-        // Перемещаем змейку
-        _snake->MoveSnake(_field.GetWidth(), _field.GetHeight());
-    }
+    void MoveRandomly();
 };
 
     // Функция устанавливает название текущего экрана.
@@ -539,7 +434,8 @@ vector<int> DefineParametersForField(GameInfo &gameInfo);
 vector<int> GenerateRandomValues(int maxSize);
 
 // Функция реализует игровой процесс
-void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, std::vector<Snake> &snakes);
+void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
+              Snake &playerSnake, std::vector<Snake> &bots);
 
 // Игровой процесс без ботов
 void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake &snake);

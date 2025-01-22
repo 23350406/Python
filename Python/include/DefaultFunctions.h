@@ -1,177 +1,180 @@
 #include "functionsFullProject.h"
 
 void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
-              std::vector<Snake> &snakes) {
-  sf::Clock playerClock; // Таймер для игрока
-  std::vector<sf::Clock> botClocks(snakes.size() -
-                                   1); // Таймеры для ботов (если они есть)
+              Snake &playerSnake, std::vector<Snake> &bots) {
+  // Таймер для игрока
+  sf::Clock playerClock;
 
-  // Инициализация ботов (вне игрового цикла)
-  std::vector<Bot> bots;
-  for (size_t i = 1; i < snakes.size(); ++i) {
-    bots.push_back(Bot(snakes[i], field)); // Инициализация всех ботов
+  // Таймеры для всех ботов
+  std::vector<sf::Clock> botClocks(bots.size());
+
+  // Создание объектов Bot на основе данных о змей ботов
+  std::vector<Bot> botsArr;
+  for (auto &botSnake : bots) {
+    botsArr.emplace_back(
+        botSnake, field); // Инициализация бота с помощью его змеи и карты
   }
 
   while (window.isOpen()) {
     sf::Event event;
+
+    // Обработка событий
     while (window.pollEvent(event)) {
-      if (event.type == sf::Event::Closed)
-        window.close();
+      if (event.type == sf::Event::Closed) {
+        window.close(); // Закрытие окна при нажатии на крестик
+      }
     }
 
-    // Движение игрока (первая змейка в векторе)
-    if (playerClock.getElapsedTime().asSeconds() >= snakes[0].GetMoveSpeed()) {
-      // Обработка нажатий клавиш для управления направлением змейки игрока
-      if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetUpKey())) {
-        snakes[0].ChangeDirection({0, -1}); // вверх
-      } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetDownKey())) {
-        snakes[0].ChangeDirection({0, 1}); // вниз
-      } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetLeftKey())) {
-        snakes[0].ChangeDirection({-1, 0}); // влево
-      } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetRightKey())) {
-        snakes[0].ChangeDirection({1, 0}); // вправо
+    // Движение игрока
+    if (playerClock.getElapsedTime().asSeconds() >=
+        playerSnake.GetMoveSpeed()) {
+
+      // Проверка на нажатие стрелок для изменения направления игрока
+      if (sf::Keyboard::isKeyPressed(
+              gameInfo.GetFirstPlayerInfo().GetUpKey())) {
+        playerSnake.ChangeDirection({0, -1});
+      } else if (sf::Keyboard::isKeyPressed(
+                     gameInfo.GetFirstPlayerInfo().GetDownKey())) {
+        playerSnake.ChangeDirection({0, 1});
+      } else if (sf::Keyboard::isKeyPressed(
+                     gameInfo.GetFirstPlayerInfo().GetLeftKey())) {
+        playerSnake.ChangeDirection({-1, 0});
+      } else if (sf::Keyboard::isKeyPressed(
+                     gameInfo.GetFirstPlayerInfo().GetRightKey())) {
+        playerSnake.ChangeDirection({1, 0});
       }
 
-      snakes[0].MoveSnake(field.GetWidth(),
-                          field.GetHeight()); // Двигаем змейку игрока
+      // Движение игрока по карте
+      playerSnake.MoveSnake(field.GetWidth(), field.GetHeight());
 
-      // Проверка на столкновение с границей (стеной)
-      auto head = snakes[0].GetBody()[0];
+      auto head = playerSnake.GetBody()[0];
+
+      // Проверка на столкновение с препятствием
       if (field.GetField()[head.second][head.first].GetType() ==
           CellType::OBSTACLE) {
-        window.clear();   // Очистить экран
-        window.display(); // Показать обновленный экран
+        window.clear();
+        window.display();
         gameInfo.SetCurrentWindowName(
-            "Game Over"); // Обновляем экран с результатами
-        return;           // Завершаем игровой цикл
+            "Game Over"); // Устанавливаем сообщение об окончании игры
+        return;
       }
 
-      // Проверка на столкновение с телом змейки
-      for (size_t i = 1; i < snakes.size(); ++i) {
-        for (const auto &bodyPart : snakes[i].GetBody()) {
+      // Проверка столкновений между игроком и ботами
+      for (const auto &bot : botsArr) {
+        for (const auto &bodyPart : bot.GetSnake().GetBody()) {
           if (head == bodyPart) {
-            // Столкновение с телом другой змейки
-            window.clear(); // Очистить экран
-            window.display(); // Показать обновленный экран
-            gameInfo.SetCurrentWindowName(
-                "Game Over"); // Обновляем экран с результатами
-            return;           // Завершаем игровой цикл
+            window.clear();
+            window.display();
+            gameInfo.SetCurrentWindowName("Game Over");
+            return;
           }
         }
       }
 
-      // Если змейка съела еду
+      // Проверка на съедание еды
       if (field.GetField()[head.second][head.first].GetType() ==
           CellType::FOOD) {
-        snakes[0].Grow(); // Увеличиваем змейку
-        // Размещаем еду в новом случайном месте, но проверяем, что в новом
-        // месте нет змейки
+        playerSnake.Grow(); // Увеличение длины змеи
         do {
-          field.PlaceFood();
+          field.PlaceFood(); // Расположение новой еды на карте
         } while (field.GetField()[head.second][head.first].GetType() ==
                      CellType::SNAKE_BODY ||
                  field.GetField()[head.second][head.first].GetType() ==
                      CellType::SNAKE_HEAD);
       }
 
-      playerClock.restart(); // Перезапускаем таймер игрока
+      playerClock.restart(); // Перезапуск таймера для игрока
     }
 
-    // Вектор для хранения индексов ботов, которых нужно удалить
+    // Движение ботов
     std::vector<size_t> botsToRemove;
+    for (size_t i = 0; i < botsArr.size(); ++i) {
 
-    // Движение каждого из ботов
-    for (size_t i = 0; i < bots.size();
-         ++i) { // Итерируем с начала (индекс i для бота)
+      // Если прошло достаточное время с последнего движения бота
       if (botClocks[i].getElapsedTime().asSeconds() >=
-          snakes[i + 1].GetMoveSpeed()) {
-        Bot &currentBot = bots[i];
+          botsArr[i].GetSnake().GetMoveSpeed()) {
+        botsArr[i].Move(); // Движение бота
 
-        // Перемещение бота
-        currentBot.Move(); // Перемещаем бота
+        auto botHead = botsArr[i].GetSnake().GetBody()[0];
 
-        // Получаем позицию головы бота
-        auto botHead = currentBot.GetSnake().GetBody()[0];
-
-        // Проверяем, не съел ли бот еду
+        // Проверка на съедание еды
         if (field.GetField()[botHead.second][botHead.first].GetType() ==
             CellType::FOOD) {
-          currentBot.GetSnake().Grow(); // Увеличиваем размер бота
-
-          // Размещаем еду в новом случайном месте
+          botsArr[i].GetSnake().Grow(); // Увеличение длины змеи бота
           do {
-            field.PlaceFood();
+            field.PlaceFood(); // Расположение новой еды на карте
           } while (field.GetField()[botHead.second][botHead.first].GetType() ==
                        CellType::SNAKE_BODY ||
                    field.GetField()[botHead.second][botHead.first].GetType() ==
                        CellType::SNAKE_HEAD);
         }
 
-        // Проверка на столкновение с препятствием
+        // Проверка столкновения с препятствием
         if (field.GetField()[botHead.second][botHead.first].GetType() ==
             CellType::OBSTACLE) {
-          // Столкновение с препятствием - бот "умирает"
-          botsToRemove.push_back(i); // Отметим бота для удаления
-          botClocks.erase(botClocks.begin() + i); // Удаляем таймер бота
+          botsToRemove.push_back(i); // Добавляем бота в список на удаление
+          continue;
         }
 
-        // Проверка столкновения с телом игрока
-        for (const auto &bodyPart : snakes[0].GetBody()) {
+        // Проверка столкновения с игроком
+        for (const auto &bodyPart : playerSnake.GetBody()) {
           if (botHead == bodyPart) {
-            // Столкновение с телом игрока - бот "умирает"
-            botsToRemove.push_back(i); // Отметим бота для удаления
-            break; // Выход из цикла, так как бот умер
+            botsToRemove.push_back(
+                i); // Удаляем бота если столкновение с игроком
+            break;
           }
         }
 
-        // Проверка столкновения с другими ботами
-        for (size_t j = 0; j < bots.size(); ++j) {
-          if (i != j) { // Не проверяем столкновение с самим собой
-            auto otherBotHead =
-                bots[j].GetSnake().GetBody()[0]; // Получаем голову другого бота
-
-            // Если головы двух ботов совпадают, то происходит столкновение
-            if (botHead == otherBotHead) {
-              // Столкновение с другим ботом - оба бота "умирают"
-              botsToRemove.push_back(i); // Отметим бота для удаления
-              botsToRemove.push_back(j); // Отметим второго бота для удаления
-            }
+        // Проверка столкновений между ботами
+        for (size_t j = 0; j < botsArr.size(); ++j) {
+          if (i != j && botHead == botsArr[j].GetSnake().GetBody()[0]) {
+            botsToRemove.push_back(i);
+            break;
           }
         }
 
-        // Перезапускаем таймер бота, если он не столкнулся с препятствием
-        botClocks[i].restart();
+        // Проверка столкновения с самим собой
+        const auto &botBody = botsArr[i].GetSnake().GetBody();
+        for (size_t partIdx = 1; partIdx < botBody.size(); ++partIdx) {
+          if (botHead == botBody[partIdx]) {
+            botsToRemove.push_back(i);
+            break;
+          }
+        }
+
+        botClocks[i].restart(); // Перезапуск таймера для бота
       }
     }
 
-    // Удаляем ботов, которые должны были "умереть"
-for (size_t i = botsToRemove.size(); i-- > 0;) {
-  size_t index = botsToRemove[i];
-  // Удаляем бот и соответствующую змейку
-  bots.erase(bots.begin() + index); // Удаляем бота
-  snakes.erase(snakes.begin() + index + 1); // Удаляем змейку (нумерация с 1 для ботов)
-}
+    // Удаление "мертвых" ботов
+    for (size_t i = botsToRemove.size(); i-- > 0;) {
+      botsArr.erase(botsArr.begin() + botsToRemove[i]);
+      botClocks.erase(botClocks.begin() + botsToRemove[i]);
+    }
 
-// Очистим список индексов для удаления
-botsToRemove.clear();
-    // Обновляем карту с текущим состоянием всех змей
-    field.UpdateMap(snakes);
+    botsToRemove.clear();
 
-    // Отрисовка
-    window.clear(); // Очистить экран
+    // Обновление карты с учетом всех змей
+    std::vector<Snake> allSnakes;
+    allSnakes.push_back(playerSnake); // Добавляем игрока
+    for (const auto &bot : botsArr) {
+      allSnakes.push_back(bot.GetSnake()); // Добавляем змеи ботов
+    }
+    field.UpdateMap(allSnakes); // Обновление карты
 
-    // Добавим фоновое изображение
+    // Отрисовка игры
+    window.clear(); // Очистка окна от предыдущего кадра
+
     static sf::Texture fonTexture;
-    fonTexture.loadFromFile("../images/fon.jpg");
+    fonTexture.loadFromFile("../images/fon.jpg"); // Загрузка фона
 
-    // Спрайт для фонового изображения
     static sf::Sprite fon_sprite;
     fon_sprite.setTexture(fonTexture);
-    window.draw(fon_sprite);
+    window.draw(fon_sprite); // Отрисовка фона
 
-    DrawMap(window, gameInfo, field); // Отрисовать карту
+    DrawMap(window, gameInfo, field); // Отрисовка карты
 
-    window.display(); // Показать обновленное окно
+    window.display(); // Отображение на экране
   }
 }
 
@@ -196,11 +199,14 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     // Обработка нажатий клавиш для управления направлением змейки
     if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetUpKey())) {
       snake.ChangeDirection({0, -1}); // вверх
-    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetDownKey())) {
+    } else if (sf::Keyboard::isKeyPressed(
+                   gameInfo.GetFirstPlayerInfo().GetDownKey())) {
       snake.ChangeDirection({0, 1}); // вниз
-    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetLeftKey())) {
+    } else if (sf::Keyboard::isKeyPressed(
+                   gameInfo.GetFirstPlayerInfo().GetLeftKey())) {
       snake.ChangeDirection({-1, 0}); // влево
-    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetRightKey())) {
+    } else if (sf::Keyboard::isKeyPressed(
+                   gameInfo.GetFirstPlayerInfo().GetRightKey())) {
       snake.ChangeDirection({1, 0}); // вправо
     }
 
@@ -263,67 +269,64 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     static sf::Texture fonTexture;
     fonTexture.loadFromFile("../images/menu2.png");
 
-//----------------------------------------------------------------------
+    //----------------------------------------------------------------------
     sf::Font font;
     font.loadFromFile("../fonts/Consolas.ttf");
 
     sf::Text p1;
-      p1.setFont(font);
-      p1.setCharacterSize(24); // Размер шрифта
-      p1.setFillColor(sf::Color::White); // Цвет текста
-      p1.setPosition(940, 80); // Позиция текста на экране
-      p1.setString(gameInfo.GetFirstPlayerInfo().GetName());
-	  if (gameInfo.GetIsSolo())
-	  {
-       sf::Text p2;
+    p1.setFont(font);
+    p1.setCharacterSize(24);           // Размер шрифта
+    p1.setFillColor(sf::Color::White); // Цвет текста
+    p1.setPosition(940, 80); // Позиция текста на экране
+    p1.setString(gameInfo.GetFirstPlayerInfo().GetName());
+    if (gameInfo.GetIsSolo()) {
+      sf::Text p2;
       p2.setFont(font);
-      p2.setCharacterSize(24); // Размер шрифта
+      p2.setCharacterSize(24);           // Размер шрифта
       p2.setFillColor(sf::Color::White); // Цвет текста
       p2.setPosition(940, 150); // Позиция текста на экране
       p2.setString("None");
-      window.draw(p2);     // Рисуем текст
-    }
-    else
-    {
+      window.draw(p2); // Рисуем текст
+    } else {
       sf::Text p2;
       p2.setFont(font);
-      p2.setCharacterSize(24); // Размер шрифта
+      p2.setCharacterSize(24);           // Размер шрифта
       p2.setFillColor(sf::Color::White); // Цвет текста
       p2.setPosition(940, 150); // Позиция текста на экране
       p2.setString(gameInfo.GetSecondPlayerInfo().GetName());
-      window.draw(p2);     // Рисуем текст
+      window.draw(p2); // Рисуем текст
     }
 
     sf::Text Round;
     std::string roundInfo = "Round: ";
-      Round.setFont(font);
-      Round.setCharacterSize(24); // Размер шрифта
-      Round.setFillColor(sf::Color::White); // Цвет текста
-      Round.setPosition(940, 220); // Позиция текста на экране
-      Round.setString(roundInfo + std::to_string(gameInfo.GetNumberOfRounds()));
+    Round.setFont(font);
+    Round.setCharacterSize(24);           // Размер шрифта
+    Round.setFillColor(sf::Color::White); // Цвет текста
+    Round.setPosition(940, 220); // Позиция текста на экране
+    Round.setString(roundInfo + std::to_string(gameInfo.GetNumberOfRounds()));
 
     sf::Text Bots;
     std::string botsInfo = "Bots: ";
-      Bots.setFont(font);
-      Bots.setCharacterSize(24); // Размер шрифта
-      Bots.setFillColor(sf::Color::White); // Цвет текста
-      Bots.setPosition(940, 290); // Позиция текста на экране
-      Bots.setString(botsInfo + std::to_string(gameInfo.GetNumberOfBots()));
+    Bots.setFont(font);
+    Bots.setCharacterSize(24);           // Размер шрифта
+    Bots.setFillColor(sf::Color::White); // Цвет текста
+    Bots.setPosition(940, 290); // Позиция текста на экране
+    Bots.setString(botsInfo + std::to_string(gameInfo.GetNumberOfBots()));
 
     sf::Text Score;
     std::string scoreInfo = "Score: ";
-      Score.setFont(font);
-      Score.setCharacterSize(24); // Размер шрифта
-      Score.setFillColor(sf::Color::White); // Цвет текста
-      Score.setPosition(940, 360); // Позиция текста на экране
-      Score.setString(scoreInfo + std::to_string(countFlood));
+    Score.setFont(font);
+    Score.setCharacterSize(24);           // Размер шрифта
+    Score.setFillColor(sf::Color::White); // Цвет текста
+    Score.setPosition(940, 360); // Позиция текста на экране
+    Score.setString(scoreInfo + std::to_string(countFlood));
 
     window.draw(p1);
-    window.draw(Round);     // Рисуем текст
-    window.draw(Bots);     // Рисуем текст
-    window.draw(Score);     // Рисуем текст
+    window.draw(Round); // Рисуем текст
+    window.draw(Bots);  // Рисуем текст
+    window.draw(Score); // Рисуем текст
     window.display();
-//----------------------------------------------------------------------
+    //----------------------------------------------------------------------
     // Спрайт для фонового изображения
     static sf::Sprite fon_sprite;
     fon_sprite.setTexture(fonTexture);
@@ -355,26 +358,33 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     // Обработка нажатий клавиш для управления первой змейкой
     if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetUpKey())) {
       snake1.ChangeDirection({0, -1}); // вверх
-    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetDownKey())) {
+    } else if (sf::Keyboard::isKeyPressed(
+                   gameInfo.GetFirstPlayerInfo().GetDownKey())) {
       snake1.ChangeDirection({0, 1}); // вниз
-    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetLeftKey())) {
+    } else if (sf::Keyboard::isKeyPressed(
+                   gameInfo.GetFirstPlayerInfo().GetLeftKey())) {
       snake1.ChangeDirection({-1, 0}); // влево
-    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetFirstPlayerInfo().GetRightKey())) {
+    } else if (sf::Keyboard::isKeyPressed(
+                   gameInfo.GetFirstPlayerInfo().GetRightKey())) {
       snake1.ChangeDirection({1, 0}); // вправо
     }
 
     // Обработка нажатий клавиш для управления второй змейкой
     if (sf::Keyboard::isKeyPressed(gameInfo.GetSecondPlayerInfo().GetUpKey())) {
       snake2.ChangeDirection({0, -1}); // вверх
-    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetSecondPlayerInfo().GetDownKey())) {
+    } else if (sf::Keyboard::isKeyPressed(
+                   gameInfo.GetSecondPlayerInfo().GetDownKey())) {
       snake2.ChangeDirection({0, 1}); // вниз
-    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetSecondPlayerInfo().GetLeftKey())) {
+    } else if (sf::Keyboard::isKeyPressed(
+                   gameInfo.GetSecondPlayerInfo().GetLeftKey())) {
       snake2.ChangeDirection({-1, 0}); // влево
-    } else if (sf::Keyboard::isKeyPressed(gameInfo.GetSecondPlayerInfo().GetRightKey())) {
+    } else if (sf::Keyboard::isKeyPressed(
+                   gameInfo.GetSecondPlayerInfo().GetRightKey())) {
       snake2.ChangeDirection({1, 0}); // вправо
     }
 
-    // Проверка на столкновение змей с границами и их перенос на противоположную сторону
+    // Проверка на столкновение змей с границами и их перенос на противоположную
+    // сторону
     for (auto &snake : {std::ref(snake1), std::ref(snake2)}) {
       auto head = snake.get().GetBody()[0];
       if (head.first < 0) {
@@ -388,72 +398,64 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
       }
     }
 
-    // Проверка на столкновение с телом каждой змеи
+    // Проверка на столкновение змейки с собственным телом
     for (auto &snake : {std::ref(snake1), std::ref(snake2)}) {
       auto head = snake.get().GetBody()[0];
       for (size_t i = 1; i < snake.get().GetBody().size(); ++i) {
-        if (head == snake.get().GetBody()[i]) {
-          window.clear();
-          window.display();
-          return; // Выход из игры при столкновении с собой
+        if (head == snake.get().GetBody()[i] &&
+            snake.get().GetBody().size() != 3) {
+          // Змейка столкнулась с собой
+          window.clear(sf::Color::Black); // Закрашиваем экран в черный
+          window.display();               // Показываем экран
+          return;                         // Завершаем функцию
         }
       }
     }
 
+    // Проверка на столкновение с телом каждой змеи
     if (!snake1.GetBody().empty()) {
-  for (auto &segment : snake2.GetBody()) {
-    if (snake1.GetBody()[0] == segment) {
-      window.clear();
-      sf::Texture gameOverTexture;
-      gameOverTexture.loadFromFile("../images/gameOver.jpg");
-      
-      sf::Sprite GOSprite;
-      GOSprite.setTexture(gameOverTexture);
-      window.draw(GOSprite);
-
-      window.display();
-      return;
+      for (auto &segment : snake2.GetBody()) {
+        if (snake1.GetBody()[0] == segment) {
+          window.clear(sf::Color::Black);
+          window.display();
+          return;
+        }
+      }
     }
-  }
-}
 
-if (!snake2.GetBody().empty()) {
-  for (auto &segment : snake1.GetBody()) {
-    if (snake2.GetBody()[0] == segment) {
-      window.clear();
-      sf::Texture gameOverTexture;
-      gameOverTexture.loadFromFile("../images/gameOver.jpg");
-      
-      sf::Sprite GOSprite;
-      GOSprite.setTexture(gameOverTexture);
-      window.draw(GOSprite);
-
-      window.display();
-      return;
+    if (!snake2.GetBody().empty()) {
+      for (auto &segment : snake1.GetBody()) {
+        if (snake2.GetBody()[0] == segment) {
+          window.clear(sf::Color::Black);
+          window.display();
+          return;
+        }
+      }
     }
-  }
-}
-
 
     // Проверка на столкновение с препятствиями и еду
     for (auto &snake : {std::ref(snake1), std::ref(snake2)}) {
       auto head = snake.get().GetBody()[0];
 
       // Столкновение с препятствием
-      if (field.GetField()[head.second][head.first].GetType() == CellType::OBSTACLE) {
-        window.clear();
-        window.display();
-        return;
+      if (field.GetField()[head.second][head.first].GetType() ==
+          CellType::OBSTACLE) {
+        window.clear(sf::Color::Black); // Закрашиваем экран в черный цвет
+        window.display(); // Обновляем окно, чтобы показать черный экран
+        return; // Завершаем функцию, чтобы остановить игровой цикл
       }
 
       // Змейка съела еду
-      if (field.GetField()[head.second][head.first].GetType() == CellType::FOOD) {
+      if (field.GetField()[head.second][head.first].GetType() ==
+          CellType::FOOD) {
         ++countFlood;
         snake.get().Grow();
         do {
           field.PlaceFood();
-        } while (field.GetField()[head.second][head.first].GetType() == CellType::SNAKE_BODY ||
-                 field.GetField()[head.second][head.first].GetType() == CellType::SNAKE_HEAD);
+        } while (field.GetField()[head.second][head.first].GetType() ==
+                     CellType::SNAKE_BODY ||
+                 field.GetField()[head.second][head.first].GetType() ==
+                     CellType::SNAKE_HEAD);
       }
     }
 
@@ -468,79 +470,75 @@ if (!snake2.GetBody().empty()) {
     // fonTexture.loadFromFile("../images/fon.jpg");
 
     fonTexture.loadFromFile("../images/menu2.png");
-//----------------------------------------------------------------------
+    //----------------------------------------------------------------------
     sf::Font font;
     font.loadFromFile("../fonts/Consolas.ttf");
 
     sf::Text p1;
-      p1.setFont(font);
-      p1.setCharacterSize(24); // Размер шрифта
-      p1.setFillColor(sf::Color::White); // Цвет текста
-      p1.setPosition(940, 80); // Позиция текста на экране
-      p1.setString(gameInfo.GetFirstPlayerInfo().GetName());
-      // p1.setString("Player 1");
-           // Рисуем текст
-	  if (gameInfo.GetIsSolo())
-	  {
-       sf::Text p2;
+    p1.setFont(font);
+    p1.setCharacterSize(24);           // Размер шрифта
+    p1.setFillColor(sf::Color::White); // Цвет текста
+    p1.setPosition(940, 80); // Позиция текста на экране
+    p1.setString(gameInfo.GetFirstPlayerInfo().GetName());
+    // p1.setString("Player 1");
+    // Рисуем текст
+    if (gameInfo.GetIsSolo()) {
+      sf::Text p2;
       p2.setFont(font);
-      p2.setCharacterSize(24); // Размер шрифта
+      p2.setCharacterSize(24);           // Размер шрифта
       p2.setFillColor(sf::Color::White); // Цвет текста
       p2.setPosition(940, 150); // Позиция текста на экране
       p2.setString("None");
-      window.draw(p2);     // Рисуем текст
-    }
-    else
-    {
+      window.draw(p2); // Рисуем текст
+    } else {
       sf::Text p2;
       p2.setFont(font);
-      p2.setCharacterSize(24); // Размер шрифта
+      p2.setCharacterSize(24);           // Размер шрифта
       p2.setFillColor(sf::Color::White); // Цвет текста
       p2.setPosition(940, 150); // Позиция текста на экране
       p2.setString(gameInfo.GetSecondPlayerInfo().GetName());
-      window.draw(p2);     // Рисуем текст
+      window.draw(p2); // Рисуем текст
     }
 
     sf::Text Round;
     std::string roundInfo = "Round: ";
-      Round.setFont(font);
-      Round.setCharacterSize(24); // Размер шрифта
-      Round.setFillColor(sf::Color::White); // Цвет текста
-      Round.setPosition(940, 220); // Позиция текста на экране
-      Round.setString(roundInfo + std::to_string(gameInfo.GetNumberOfRounds()));
+    Round.setFont(font);
+    Round.setCharacterSize(24);           // Размер шрифта
+    Round.setFillColor(sf::Color::White); // Цвет текста
+    Round.setPosition(940, 220); // Позиция текста на экране
+    Round.setString(roundInfo + std::to_string(gameInfo.GetNumberOfRounds()));
 
     sf::Text Bots;
     std::string botsInfo = "Bots: ";
-      Bots.setFont(font);
-      Bots.setCharacterSize(24); // Размер шрифта
-      Bots.setFillColor(sf::Color::White); // Цвет текста
-      Bots.setPosition(940, 290); // Позиция текста на экране
-      Bots.setString(botsInfo + std::to_string(gameInfo.GetNumberOfBots()));
+    Bots.setFont(font);
+    Bots.setCharacterSize(24);           // Размер шрифта
+    Bots.setFillColor(sf::Color::White); // Цвет текста
+    Bots.setPosition(940, 290); // Позиция текста на экране
+    Bots.setString(botsInfo + std::to_string(gameInfo.GetNumberOfBots()));
 
     sf::Text Score;
     std::string scoreInfo = "Score: ";
-      Score.setFont(font);
-      Score.setCharacterSize(24); // Размер шрифта
-      Score.setFillColor(sf::Color::White); // Цвет текста
-      Score.setPosition(940, 360); // Позиция текста на экране
-      Score.setString(scoreInfo + std::to_string(countFlood));
+    Score.setFont(font);
+    Score.setCharacterSize(24);           // Размер шрифта
+    Score.setFillColor(sf::Color::White); // Цвет текста
+    Score.setPosition(940, 360); // Позиция текста на экране
+    Score.setString(scoreInfo + std::to_string(countFlood));
 
     window.draw(p1);
-    window.draw(Round);     // Рисуем текст
-    window.draw(Bots);     // Рисуем текст
-    window.draw(Score);     // Рисуем текст
-    window.display();
-//----------------------------------------------------------------------
+    window.draw(Round); // Рисуем текст
+    window.draw(Bots);  // Рисуем текст
+    window.draw(Score); // Рисуем текст
+    //----------------------------------------------------------------------
     // Спрайт для фонового изображения
+    window.display();
     static sf::Sprite fon_sprite;
     fon_sprite.setTexture(fonTexture);
     window.draw(fon_sprite);
 
     DrawMap(window, gameInfo, field); // Отрисовать карту
-    //window.display(); // Показать обновленное окно
+    window.display(); // Показать обновленное окно
   }
 }
-
 
 int DefineMapSize(string size) {
 
@@ -606,42 +604,34 @@ bool FindApple(Field &field, int &appleX, int &appleY) {
 }
 
 std::string ChoiceSelection(sf::Color color) {
-  if (color == sf::Color(255, 0, 0))
-  {
+  if (color == sf::Color(255, 0, 0)) {
     return "../images/Red.png";
   }
 
-  if (color == sf::Color(0, 255, 234))
-  {
+  if (color == sf::Color(0, 255, 234)) {
     return "../images/Aqua.png";
   }
 
-  if (color == sf::Color(233, 148, 0))
-  {
+  if (color == sf::Color(233, 148, 0)) {
     return "../images/Orange.png";
   }
 
-  if (color == sf::Color(255, 246, 0))
-  {
+  if (color == sf::Color(255, 246, 0)) {
     return "../images/Yellow.png";
   }
-  if (color == sf::Color(84, 255, 0))
-  {
+  if (color == sf::Color(84, 255, 0)) {
     return "../images/Lime.png";
   }
 
-  if (color == sf::Color(120, 0, 255))
-  {
+  if (color == sf::Color(120, 0, 255)) {
     return "../images/Purple.png";
   }
 
-  if (color == sf::Color(255, 0, 162))
-  {
+  if (color == sf::Color(255, 0, 162)) {
     return "../images/Magenta.png";
   }
 
-  if (color == sf::Color(255, 255, 229))
-  {
+  if (color == sf::Color(255, 255, 229)) {
     return "../images/White.png";
   }
 }

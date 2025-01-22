@@ -1,12 +1,11 @@
 #include "functionsFullProject.h"
 
 Snake::Snake(int startX, int startY) {
-  // Инициализация змейки (размещение в 3 клетки)
-  _body.push_back({startX, startY});    // Голова
-  _body.push_back({startX - 1, startY}); // Тело
-  _body.push_back({startX - 2, startY}); // Хвост
-  _direction = {1, 0}; // Начальное направление - вправо
+  _body.emplace_back(startX, startY);  // Инициализация головы змеи
+  _direction = {0, 0};  // Начальное направление движения
+  _grew = false;  // Змейка ещё не выросла
 }
+
 
 std::vector<std::pair<int, int>> Snake::GetBody() const { return _body; }
 
@@ -16,7 +15,6 @@ void Snake::Grow() {
   std::pair<int, int> newTail =
       _body.back(); // Координаты последней части змейки
   _body.push_back(newTail); // Добавляем эту координату как новый сегмент
-  _grew = true;             // Устанавливаем флаг роста
 }
 
 void Snake::MoveSnake(int fieldWidth, int fieldHeight) {
@@ -37,14 +35,7 @@ void Snake::MoveSnake(int fieldWidth, int fieldHeight) {
 
   // Добавляем новую голову
   _body.insert(_body.begin(), newHead);
-
-  // Если змея должна вырасти, пропускаем удаление хвоста
-  if (!_grew) {
-    _body.pop_back(); // Удаляем хвост
-  } else {
-    // Лог роста завершен, сбрасываем флаг
-    _grew = false;
-  }
+  _body.pop_back(); // Удаляем хвост
 }
 
 
@@ -84,12 +75,7 @@ void Snake::MoveBot(int fieldWidth, int fieldHeight) {
     // Добавляем новую голову
     _body.insert(_body.begin(), newHead);
 
-    // Если бот не съел еду, то удаляем хвост
-    if (!_grew) {
-        _body.pop_back();
-    } else {
-        _grew = false; // Сбрасываем флаг роста после того, как змейка "переваривает" еду
-    }
+    _body.pop_back();
 }
 
 

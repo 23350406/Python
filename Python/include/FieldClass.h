@@ -13,14 +13,14 @@ Field::Field(int height, int width) : _height(height), _width(width) {
   PlaceFood();
   int countObstacles = 3;
   switch(height) {
-    case 20: 
-      countObstacles = 5;
-      break;
-    case 25: 
+    case 15: 
       countObstacles = 8;
       break;
-    case 30: 
-      countObstacles = 15;
+    case 20: 
+      countObstacles = 13;
+      break;
+    case 25: 
+      countObstacles = 20;
       break;
   }
   PlaceObstacles(countObstacles);
@@ -39,8 +39,10 @@ void Field::PlaceObstacles(int numberOfObstacles) {
 
     // Размещение препятствия
     _field[obstacleY][obstacleX].SetType(CellType::OBSTACLE);
+    _field[obstacleY][obstacleX].SetIsBusy(true);
   }
 }
+
 
 void Field::PlaceFood() {
   std::srand(std::time(nullptr));
@@ -64,6 +66,7 @@ void Field::UpdateMap(const std::vector<Snake> &snakes) {
             if (_field[y][x].GetType() != CellType::FOOD &&
                 _field[y][x].GetType() != CellType::OBSTACLE) {
                 _field[y][x].SetType(CellType::EMPTY);
+                _field[y][x].SetIsBusy(false);
             }
         }
     }
@@ -71,21 +74,30 @@ void Field::UpdateMap(const std::vector<Snake> &snakes) {
     // Обновляем карту для каждой змейки
     for (const auto &snake : snakes) {
         if (!snake.GetBody().empty()) {
-            // Голова змейки
-            _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetType(CellType::SNAKE_HEAD_1);
-
-            // Тело змейки
-            for (size_t i = 1; i < snake.GetBody().size() - 1; ++i) {
-                _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetType(CellType::SNAKE_BODY_1);
-            }
-
-            // Хвост змейки
-            if (snake.GetBody().size() > 1) {
-                _field[snake.GetBody().back().second][snake.GetBody().back().first].SetType(CellType::SNAKE_TAIL_1);
+            if (&snake == &snakes.front()) {
+                // Если змея первая в массиве
+                _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetType(CellType::SNAKE_HEAD_1);  // Голова первой змеи
+                _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetIsBusy(true);
+                for (size_t i = 1; i < snake.GetBody().size() - 1; ++i) {
+                    _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetType(CellType::SNAKE_BODY_1);
+                    _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetIsBusy(true);
+                }
+                _field[snake.GetBody().back().second][snake.GetBody().back().first].SetType(CellType::SNAKE_TAIL_1);  // Хвост первой змеи
+                _field[snake.GetBody().back().second][snake.GetBody().back().first].SetIsBusy(true);
+            } else {
+                _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetType(CellType::SNAKE_HEAD_2);  // Голова остальных змей
+                _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetIsBusy(true);
+                for (size_t i = 1; i < snake.GetBody().size() - 1; ++i) {
+                    _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetType(CellType::SNAKE_BODY_2);
+                    _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetIsBusy(true);
+                }
+                _field[snake.GetBody().back().second][snake.GetBody().back().first].SetType(CellType::SNAKE_TAIL_2);  // Хвост остальных змей
+                _field[snake.GetBody().back().second][snake.GetBody().back().first].SetIsBusy(true);
             }
         }
     }
 }
+
 
 
 void Field::UpdateMap(const Snake &snake) {
@@ -96,6 +108,7 @@ void Field::UpdateMap(const Snake &snake) {
       if (_field[y][x].GetType() != CellType::FOOD &&
           _field[y][x].GetType() != CellType::OBSTACLE) {
         _field[y][x].SetType(CellType::EMPTY);
+        _field[y][x].SetIsBusy(false);
       }
     }
   }
@@ -105,17 +118,23 @@ void Field::UpdateMap(const Snake &snake) {
     // Голова змейки
     _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetType(
         CellType::SNAKE_HEAD_1);
+        _field[snake.GetBody()[0].second][snake.GetBody()[0].first].SetIsBusy(
+        true);
 
     // Тело змейки
     for (size_t i = 1; i < snake.GetBody().size() - 1; ++i) {
       _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetType(
           CellType::SNAKE_BODY_1);
+          _field[snake.GetBody()[i].second][snake.GetBody()[i].first].SetIsBusy(
+          true);
     }
 
     // Хвост змейки
     if (snake.GetBody().size() > 1) {
       _field[snake.GetBody().back().second][snake.GetBody().back().first]
           .SetType(CellType::SNAKE_TAIL_1);
+          _field[snake.GetBody().back().second][snake.GetBody().back().first]
+          .SetIsBusy(true);
     }
   }
 }
@@ -127,6 +146,7 @@ void Field::UpdateMap(const Snake &snake1, const Snake &snake2) {
       if (_field[y][x].GetType() != CellType::FOOD &&
           _field[y][x].GetType() != CellType::OBSTACLE) {
         _field[y][x].SetType(CellType::EMPTY);
+        _field[y][x].SetIsBusy(false);
       }
     }
   }
@@ -134,19 +154,25 @@ void Field::UpdateMap(const Snake &snake1, const Snake &snake2) {
   // Обновляем карту для первой змеи
   if (!snake1.GetBody().empty()) {
     _field[snake1.GetBody()[0].second][snake1.GetBody()[0].first].SetType(CellType::SNAKE_HEAD_1);
+    _field[snake1.GetBody()[0].second][snake1.GetBody()[0].first].SetIsBusy(true);
     for (size_t i = 1; i < snake1.GetBody().size() - 1; ++i) {
       _field[snake1.GetBody()[i].second][snake1.GetBody()[i].first].SetType(CellType::SNAKE_BODY_1);
+      _field[snake1.GetBody()[i].second][snake1.GetBody()[i].first].SetIsBusy(true);
     }
     _field[snake1.GetBody().back().second][snake1.GetBody().back().first].SetType(CellType::SNAKE_TAIL_1);
+    _field[snake1.GetBody().back().second][snake1.GetBody().back().first].SetIsBusy(true);
   }
 
   // Обновляем карту для второй змеи
   if (!snake2.GetBody().empty()) {
     _field[snake2.GetBody()[0].second][snake2.GetBody()[0].first].SetType(CellType::SNAKE_HEAD_2);
+    _field[snake2.GetBody()[0].second][snake2.GetBody()[0].first].SetIsBusy(true);
     for (size_t i = 1; i < snake2.GetBody().size() - 1; ++i) {
       _field[snake2.GetBody()[i].second][snake2.GetBody()[i].first].SetType(CellType::SNAKE_BODY_2);
+      _field[snake2.GetBody()[i].second][snake2.GetBody()[i].first].SetIsBusy(true);
     }
     _field[snake2.GetBody().back().second][snake2.GetBody().back().first].SetType(CellType::SNAKE_TAIL_2);
+    _field[snake2.GetBody().back().second][snake2.GetBody().back().first].SetIsBusy(true);
   }
 }
 
