@@ -71,6 +71,18 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
         }
       }
 
+      // Проверка на столкновение змеи самой с собой
+      for (size_t i = 1; i < playerSnake.GetBody().size(); ++i) {
+        if (head == playerSnake.GetBody()[i] && playerSnake.GetBody().size() != 3) {
+          // Змейка столкнулась с собой
+          window.clear();   // Очистка экрана
+          window.display(); // Обновление окна
+          gameInfo.SetCurrentWindowName(
+              "Game Over"); // Сообщение об окончании игры
+          return;           // Завершение игрового цикла
+        }
+      }
+
       // Проверка на съедание еды
       if (field.GetField()[head.second][head.first].GetType() ==
           CellType::FOOD) {

@@ -2,7 +2,6 @@
 #include "functionsFullProject.h"
 #include <time.h>
 
-
 // Функция выводит на экран количество раундов.
 void DrawNumberOfRounds(sf::RenderWindow &window, GameInfo &gameInfo) {
   sf::Font consolas;
@@ -85,18 +84,18 @@ void DrawMap(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
 
   if (!texturesLoaded) {
     // Загрузка текстур для первой змеи
-    std::string colorFirstPlayer = ChoiceSelection(gameInfo.GetFirstPlayerInfo().GetColor());
+    std::string colorFirstPlayer =
+        ChoiceSelection(gameInfo.GetFirstPlayerInfo().GetColor());
     headTexture1.loadFromFile(colorFirstPlayer);
     tailTexture1.loadFromFile(colorFirstPlayer);
     bodyTexture1.loadFromFile(colorFirstPlayer);
 
-    // Загрузка текстур для второй змеи
-    if (!gameInfo.GetIsSolo()) {
-      std::string colorSecondPlayer = ChoiceSelection(gameInfo.GetSecondPlayerInfo().GetColor());
-      headTexture2.loadFromFile(colorSecondPlayer);
-      tailTexture2.loadFromFile(colorSecondPlayer);
-      bodyTexture2.loadFromFile(colorSecondPlayer);
-    }
+    // Загрузка текстур для второй змеи или ботов
+    std::string colorSecondPlayer =
+        ChoiceSelection(gameInfo.GetSecondPlayerInfo().GetColor());
+    headTexture2.loadFromFile(colorSecondPlayer);
+    tailTexture2.loadFromFile(colorSecondPlayer);
+    bodyTexture2.loadFromFile(colorSecondPlayer);
 
     // Загрузка общих текстур
     cellTexture.loadFromFile("../images/cell.png");
@@ -118,35 +117,35 @@ void DrawMap(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
   for (int y = 0; y < field.GetHeight(); ++y) {
     for (int x = 0; x < field.GetWidth(); ++x) {
       switch (field.GetField()[y][x].GetType()) {
-        case CellType::EMPTY:
-          currentCell.setTexture(cellTexture);
-          break;
-        case CellType::FOOD:
-          currentCell.setTexture(foodTexture);
-          break;
-        case CellType::OBSTACLE:
-          currentCell.setTexture(obstacleTexture);
-          break;
-        case CellType::SNAKE_HEAD_1:
-          currentCell.setTexture(headTexture1);
-          break;
-        case CellType::SNAKE_BODY_1:
-          currentCell.setTexture(bodyTexture1);
-          break;
-        case CellType::SNAKE_TAIL_1:
-          currentCell.setTexture(tailTexture1);
-          break;
-        case CellType::SNAKE_HEAD_2:
-          currentCell.setTexture(headTexture2);
-          break;
-        case CellType::SNAKE_BODY_2:
-          currentCell.setTexture(bodyTexture2);
-          break;
-        case CellType::SNAKE_TAIL_2:
-          currentCell.setTexture(tailTexture2);
-          break;
-        default:
-          break;
+      case CellType::EMPTY:
+        currentCell.setTexture(cellTexture);
+        break;
+      case CellType::FOOD:
+        currentCell.setTexture(foodTexture);
+        break;
+      case CellType::OBSTACLE:
+        currentCell.setTexture(obstacleTexture);
+        break;
+      case CellType::SNAKE_HEAD_1:
+        currentCell.setTexture(headTexture1);
+        break;
+      case CellType::SNAKE_BODY_1:
+        currentCell.setTexture(bodyTexture1);
+        break;
+      case CellType::SNAKE_TAIL_1:
+        currentCell.setTexture(tailTexture1);
+        break;
+      case CellType::SNAKE_HEAD_2:
+        currentCell.setTexture(headTexture2);
+        break;
+      case CellType::SNAKE_BODY_2:
+        currentCell.setTexture(bodyTexture2);
+        break;
+      case CellType::SNAKE_TAIL_2:
+        currentCell.setTexture(tailTexture2);
+        break;
+      default:
+        break;
       }
 
       currentCell.setPosition(x * 20 + offsetX, y * 20 + offsetY);
@@ -155,33 +154,31 @@ void DrawMap(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
   }
 }
 
-
 // Функция выводит экран настроек старта игры.
 
-void DrawStartGameWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
-	// На экран выводится фон.
-	sf::Texture texture;
-	texture.loadFromFile("../images/Start.jpg");
-	sf::Sprite sprite(texture);
-	sprite.setPosition(0, 0);
-	window.draw(sprite);
+void DrawStartGameWindow(sf::RenderWindow &window, GameInfo &gameInfo) {
+  // На экран выводится фон.
+  sf::Texture texture;
+  texture.loadFromFile("../images/Start.jpg");
+  sf::Sprite sprite(texture);
+  sprite.setPosition(0, 0);
+  window.draw(sprite);
 
-	// На экран выводится режим (одиночный или мультиплеер).
-	sf::Texture soloTexture;
-	if (gameInfo.GetIsSolo()) {
-		soloTexture.loadFromFile("../images/Solo.jpg");
-	}
-	else {
-		soloTexture.loadFromFile("../images/Duo.jpg");
-	}
-	sf::Sprite soloSprite(soloTexture);
-	soloSprite.setPosition(960, 200);
-	window.draw(soloSprite);
+  // На экран выводится режим (одиночный или мультиплеер).
+  sf::Texture soloTexture;
+  if (gameInfo.GetIsSolo()) {
+    soloTexture.loadFromFile("../images/Solo.jpg");
+  } else {
+    soloTexture.loadFromFile("../images/Duo.jpg");
+  }
+  sf::Sprite soloSprite(soloTexture);
+  soloSprite.setPosition(960, 200);
+  window.draw(soloSprite);
 
-	// На экран выводится информация о выбранных значениях счетчиков.
-	DrawNumberOfRounds(window, gameInfo);
-	DrawNumberOfBots(window, gameInfo);
-	DrawMapSize(window, gameInfo);
+  // На экран выводится информация о выбранных значениях счетчиков.
+  DrawNumberOfRounds(window, gameInfo);
+  DrawNumberOfBots(window, gameInfo);
+  DrawMapSize(window, gameInfo);
 }
 
 // Функция выводит экран выхода из игры.
@@ -193,104 +190,132 @@ void DrawLeaveGameWindow(sf::RenderWindow &window) {
   window.draw(sprite);
 }
 
-void DrawSettingsWindow(sf::RenderWindow& window, GameInfo& gameInfo) {
+void DrawSettingsWindow(sf::RenderWindow &window, GameInfo &gameInfo) {
 
-	// На экран выводится фон.
-	sf::Texture texture;
-	texture.loadFromFile("../images/Settings.png");
-	sf::Sprite sprite(texture);
-	sprite.setPosition(0, 0);
-	window.draw(sprite);
+  // На экран выводится фон.
+  sf::Texture texture;
+  texture.loadFromFile("../images/Settings.png");
+  sf::Sprite sprite(texture);
+  sprite.setPosition(0, 0);
+  window.draw(sprite);
 
-	// Из файла достается шрифт.
-	sf::Font consolas;
-	consolas.loadFromFile("../fonts/Consolas.ttf");
+  // Из файла достается шрифт.
+  sf::Font consolas;
+  consolas.loadFromFile("../fonts/Consolas.ttf");
 
-	// На экран выводятся текущие имена игроков.
-	sf::Text firstPlayerName(gameInfo.GetFirstPlayerInfo().GetName(), consolas, 24);
-	firstPlayerName.setFillColor(sf::Color(35, 35, 35));
+  // На экран выводятся текущие имена игроков.
+  sf::Text firstPlayerName(gameInfo.GetFirstPlayerInfo().GetName(), consolas,
+                           24);
+  firstPlayerName.setFillColor(sf::Color(35, 35, 35));
   if (gameInfo.GetFieldInUse() == "P1-Name") {
-    firstPlayerName.setFillColor(sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
+    firstPlayerName.setFillColor(
+        sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
   }
-	firstPlayerName.setPosition(450, 165);
-	window.draw(firstPlayerName);
-	sf::Text secondPlayerName(gameInfo.GetSecondPlayerInfo().GetName(), consolas, 24);
-	secondPlayerName.setFillColor(sf::Color(35, 35, 35));
+  firstPlayerName.setPosition(450, 165);
+  window.draw(firstPlayerName);
+  sf::Text secondPlayerName(gameInfo.GetSecondPlayerInfo().GetName(), consolas,
+                            24);
+  secondPlayerName.setFillColor(sf::Color(35, 35, 35));
   if (gameInfo.GetFieldInUse() == "P2-Name") {
-    secondPlayerName.setFillColor(sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
+    secondPlayerName.setFillColor(
+        sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
   }
-	secondPlayerName.setPosition(450, 400);
-	window.draw(secondPlayerName);
+  secondPlayerName.setPosition(450, 400);
+  window.draw(secondPlayerName);
 
-	// На экран выводятся цвета игроков.
-	sf::RectangleShape firstColorBox(sf::Vector2f(40, 40));
-	firstColorBox.setFillColor(gameInfo.GetFirstPlayerInfo().GetColor());
-	firstColorBox.move(850, 225);
-	window.draw(firstColorBox);
-	sf::RectangleShape secondColorBox(sf::Vector2f(40, 40));
-	secondColorBox.setFillColor(gameInfo.GetSecondPlayerInfo().GetColor());
-	secondColorBox.move(850, 460);
-	window.draw(secondColorBox);
+  // На экран выводятся цвета игроков.
+  sf::RectangleShape firstColorBox(sf::Vector2f(40, 40));
+  firstColorBox.setFillColor(gameInfo.GetFirstPlayerInfo().GetColor());
+  firstColorBox.move(850, 225);
+  window.draw(firstColorBox);
+  sf::RectangleShape secondColorBox(sf::Vector2f(40, 40));
+  secondColorBox.setFillColor(gameInfo.GetSecondPlayerInfo().GetColor());
+  secondColorBox.move(850, 460);
+  window.draw(secondColorBox);
 
-	// На экран выводятся кнопки первого игрока.
-	sf::Text firstPlayerUp(GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetUpKey()), consolas, 32);
-	firstPlayerUp.setFillColor(sf::Color(35, 35, 35));
+  // На экран выводятся кнопки первого игрока.
+  sf::Text firstPlayerUp(
+      GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetUpKey()), consolas,
+      32);
+  firstPlayerUp.setFillColor(sf::Color(35, 35, 35));
   if (gameInfo.GetFieldInUse() == "P1-Up") {
-    firstPlayerUp.setFillColor(sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
+    firstPlayerUp.setFillColor(
+        sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
   }
-	firstPlayerUp.setPosition(220, 110);
-	window.draw(firstPlayerUp);
-	sf::Text firstPlayerRight(GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetRightKey()), consolas, 32);
-	firstPlayerRight.setFillColor(sf::Color(35, 35, 35));
+  firstPlayerUp.setPosition(220, 110);
+  window.draw(firstPlayerUp);
+  sf::Text firstPlayerRight(
+      GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetRightKey()),
+      consolas, 32);
+  firstPlayerRight.setFillColor(sf::Color(35, 35, 35));
   if (gameInfo.GetFieldInUse() == "P1-Right") {
-    firstPlayerRight.setFillColor(sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
+    firstPlayerRight.setFillColor(
+        sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
   }
-	firstPlayerRight.setPosition(280, 170);
-	window.draw(firstPlayerRight);
-	sf::Text firstPlayerDown(GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetDownKey()), consolas, 32);
-	firstPlayerDown.setFillColor(sf::Color(35, 35, 35));
+  firstPlayerRight.setPosition(280, 170);
+  window.draw(firstPlayerRight);
+  sf::Text firstPlayerDown(
+      GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetDownKey()),
+      consolas, 32);
+  firstPlayerDown.setFillColor(sf::Color(35, 35, 35));
   if (gameInfo.GetFieldInUse() == "P1-Down") {
-    firstPlayerDown.setFillColor(sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
+    firstPlayerDown.setFillColor(
+        sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
   }
-	firstPlayerDown.setPosition(220, 170);
-	window.draw(firstPlayerDown);
-	sf::Text firstPlayerLeft(GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetLeftKey()), consolas, 32);
-	firstPlayerLeft.setFillColor(sf::Color(35, 35, 35));
+  firstPlayerDown.setPosition(220, 170);
+  window.draw(firstPlayerDown);
+  sf::Text firstPlayerLeft(
+      GetKeyboardCharacter(gameInfo.GetFirstPlayerInfo().GetLeftKey()),
+      consolas, 32);
+  firstPlayerLeft.setFillColor(sf::Color(35, 35, 35));
   if (gameInfo.GetFieldInUse() == "P1-Left") {
-    firstPlayerLeft.setFillColor(sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
+    firstPlayerLeft.setFillColor(
+        sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
   }
-	firstPlayerLeft.setPosition(160, 170);
-	window.draw(firstPlayerLeft);
+  firstPlayerLeft.setPosition(160, 170);
+  window.draw(firstPlayerLeft);
 
-	// На экран выводятся кнопки второго игрока.
-	sf::Text secondPlayerUp(GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetUpKey()), consolas, 32);
-	secondPlayerUp.setFillColor(sf::Color(35, 35, 35));
+  // На экран выводятся кнопки второго игрока.
+  sf::Text secondPlayerUp(
+      GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetUpKey()), consolas,
+      32);
+  secondPlayerUp.setFillColor(sf::Color(35, 35, 35));
   if (gameInfo.GetFieldInUse() == "P2-Up") {
-    secondPlayerUp.setFillColor(sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
+    secondPlayerUp.setFillColor(
+        sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
   }
-	secondPlayerUp.setPosition(220, 345);
-	window.draw(secondPlayerUp);
-	sf::Text secondPlayerRight(GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetRightKey()), consolas, 32);
-	secondPlayerRight.setFillColor(sf::Color(35, 35, 35));
+  secondPlayerUp.setPosition(220, 345);
+  window.draw(secondPlayerUp);
+  sf::Text secondPlayerRight(
+      GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetRightKey()),
+      consolas, 32);
+  secondPlayerRight.setFillColor(sf::Color(35, 35, 35));
   if (gameInfo.GetFieldInUse() == "P2-Right") {
-    secondPlayerRight.setFillColor(sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
+    secondPlayerRight.setFillColor(
+        sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
   }
-	secondPlayerRight.setPosition(280, 405);
-	window.draw(secondPlayerRight);
-	sf::Text secondPlayerDown(GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetDownKey()), consolas, 32);
-	secondPlayerDown.setFillColor(sf::Color(35, 35, 35));
+  secondPlayerRight.setPosition(280, 405);
+  window.draw(secondPlayerRight);
+  sf::Text secondPlayerDown(
+      GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetDownKey()),
+      consolas, 32);
+  secondPlayerDown.setFillColor(sf::Color(35, 35, 35));
   if (gameInfo.GetFieldInUse() == "P2-Down") {
-    secondPlayerDown.setFillColor(sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
+    secondPlayerDown.setFillColor(
+        sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
   }
-	secondPlayerDown.setPosition(220, 405);
-	window.draw(secondPlayerDown);
-	sf::Text secondPlayerLeft(GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetLeftKey()), consolas, 32);
-	secondPlayerLeft.setFillColor(sf::Color(35, 35, 35));
+  secondPlayerDown.setPosition(220, 405);
+  window.draw(secondPlayerDown);
+  sf::Text secondPlayerLeft(
+      GetKeyboardCharacter(gameInfo.GetSecondPlayerInfo().GetLeftKey()),
+      consolas, 32);
+  secondPlayerLeft.setFillColor(sf::Color(35, 35, 35));
   if (gameInfo.GetFieldInUse() == "P2-Left") {
-    secondPlayerLeft.setFillColor(sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
+    secondPlayerLeft.setFillColor(
+        sf::Color(200, 200, 200)); // Если поле изменяемо - его цвет меняется.
   }
-	secondPlayerLeft.setPosition(160, 405);
-	window.draw(secondPlayerLeft);
+  secondPlayerLeft.setPosition(160, 405);
+  window.draw(secondPlayerLeft);
 }
 
 // Функция выводит экран настроек.
@@ -303,73 +328,81 @@ void DrawAuthorsWindow(sf::RenderWindow &window) {
 }
 
 // Функция осуществляет переход с экрана главного меню на экран начала игры.
-void MoveWindowFromMainToStart(sf::RenderWindow& window) {
+void MoveWindowFromMainToStart(sf::RenderWindow &window) {
 
-	// Создается камера.
-	sf::View view(sf::FloatRect(0, 648, 1152, 648));
+  // Создается камера.
+  sf::View view(sf::FloatRect(0, 648, 1152, 648));
 
-	// На экран выводится изображение, связывающее главное меню и меню начала игры.
-	sf::Texture texture;
-	texture.loadFromFile("../images/Menu-Start.png");
-	sf::Sprite sprite(texture);
-	sprite.setPosition(0, 0);
-	window.clear();
-	window.draw(sprite);	
-	view.setCenter(1152 / 2, 648 / 2 + 648);
+  // На экран выводится изображение, связывающее главное меню и меню начала
+  // игры.
+  sf::Texture texture;
+  texture.loadFromFile("../images/Menu-Start.png");
+  sf::Sprite sprite(texture);
+  sprite.setPosition(0, 0);
+  window.clear();
+  window.draw(sprite);
+  view.setCenter(1152 / 2, 648 / 2 + 648);
 
-	// Задаются часы.
-	sf::Clock clock;
-	sf::Time startTime = clock.getElapsedTime();
+  // Задаются часы.
+  sf::Clock clock;
+  sf::Time startTime = clock.getElapsedTime();
 
-	// Камера двигается относительно изображения.
-	while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
-		view.setCenter(1152 / 2, (int)(648 / 2 + 648 - ((clock.getElapsedTime() - startTime) / sf::seconds(3.24)) * 648));
-		window.clear();
-		window.setView(view);
-		window.draw(sprite);
-		window.display();
-	}
+  // Камера двигается относительно изображения.
+  while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
+    view.setCenter(1152 / 2, (int)(648 / 2 + 648 -
+                                   ((clock.getElapsedTime() - startTime) /
+                                    sf::seconds(3.24)) *
+                                       648));
+    window.clear();
+    window.setView(view);
+    window.draw(sprite);
+    window.display();
+  }
 
-	// Камера возвращается в исходное положение.
-	view.setCenter(1152 / 2, 648 / 2);
-	window.clear();
-	window.setView(view);
-	window.display();
+  // Камера возвращается в исходное положение.
+  view.setCenter(1152 / 2, 648 / 2);
+  window.clear();
+  window.setView(view);
+  window.display();
 }
 
 // Функция осуществляет переход с экрана главного меню на экран начала игры.
-void MoveWindowFromStartToMain(sf::RenderWindow& window) {
+void MoveWindowFromStartToMain(sf::RenderWindow &window) {
 
-	// Создается камера.
-	sf::View view(sf::FloatRect(0, 648, 1152, 648));
+  // Создается камера.
+  sf::View view(sf::FloatRect(0, 648, 1152, 648));
 
-	// На экран выводится изображение, связывающее главное меню и меню начала игры.
-	sf::Texture texture;
-	texture.loadFromFile("../images/Menu-Start.png");
-	sf::Sprite sprite(texture);
-	sprite.setPosition(0, 0);
-	window.clear();
-	window.draw(sprite);	
-	view.setCenter(1152 / 2, 648 / 2);
+  // На экран выводится изображение, связывающее главное меню и меню начала
+  // игры.
+  sf::Texture texture;
+  texture.loadFromFile("../images/Menu-Start.png");
+  sf::Sprite sprite(texture);
+  sprite.setPosition(0, 0);
+  window.clear();
+  window.draw(sprite);
+  view.setCenter(1152 / 2, 648 / 2);
 
-	// Задаются часы.
-	sf::Clock clock;
-	sf::Time startTime = clock.getElapsedTime();
+  // Задаются часы.
+  sf::Clock clock;
+  sf::Time startTime = clock.getElapsedTime();
 
-	// Камера двигается относительно изображения.
-	while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
-		view.setCenter((int)(1152 / 2), (int)(648 / 2 + ((clock.getElapsedTime() - startTime) / sf::seconds(3.24)) * 648));
-		window.clear();
-		window.setView(view);
-		window.draw(sprite);
-		window.display();
-	}
+  // Камера двигается относительно изображения.
+  while (clock.getElapsedTime() - startTime < sf::seconds(3.24)) {
+    view.setCenter((int)(1152 / 2),
+                   (int)(648 / 2 + ((clock.getElapsedTime() - startTime) /
+                                    sf::seconds(3.24)) *
+                                       648));
+    window.clear();
+    window.setView(view);
+    window.draw(sprite);
+    window.display();
+  }
 
-	// Камера возвращается в исходное положение.
-	view.setCenter(1152 / 2, 648 / 2);
-	window.clear();
-	window.setView(view);
-	window.display();
+  // Камера возвращается в исходное положение.
+  view.setCenter(1152 / 2, 648 / 2);
+  window.clear();
+  window.setView(view);
+  window.display();
 }
 
 // Функция осуществляет переход с экрана главного меню на экран выхода из игры.
