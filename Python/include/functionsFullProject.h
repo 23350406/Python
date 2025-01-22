@@ -1,3 +1,4 @@
+
 #ifndef FULL_H
 #define FULL_H
 
@@ -12,85 +13,100 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <fstream>
 
 using std::string;
 using std::vector;
 
-class PlayerInfo {
+class PlayerInfo
+{
 private:
-	std::string _playerName;
-	sf::Keyboard::Key _up;
-	sf::Keyboard::Key _left;
-	sf::Keyboard::Key _right;
-	sf::Keyboard::Key _down;
-	sf::Color _playerColor;
+    std::string _playerName;
+    sf::Keyboard::Key _up;
+    sf::Keyboard::Key _left;
+    sf::Keyboard::Key _right;
+    sf::Keyboard::Key _down;
+    sf::Color _playerColor;
+
 public:
-	// Функция задает имя игрока.
-	void SetName(std::string newName);
+    // Функция задает имя игрока.
+    void SetName(std::string newName);
 
-	// Функция возвращает имя игрока.
-	std::string GetName();
+    // Загрузка и сохранение информации о игроке
+    void LoadFromFile(std::ifstream &inFile);
+    void SaveToFile(std::ofstream &outFile) const;
 
-	// Функция задает значение клавиши для движения вверх.
-	void SetUpKey(sf::Keyboard::Key newUp);
+    // Функция возвращает имя игрока.
+    std::string GetName();
 
-	// Функция возвращает значение клавиши для движения вверх.
-	sf::Keyboard::Key GetUpKey();
+    // Функция задает значение клавиши для движения вверх.
+    void SetUpKey(sf::Keyboard::Key newUp);
 
-	// Функция задает значение клавиши для движения вниз.
-	void SetDownKey(sf::Keyboard::Key newDown);
+    // Функция возвращает значение клавиши для движения вверх.
+    sf::Keyboard::Key GetUpKey();
 
-	// Функция возвращает значение клавиши для движения вниз.
-	sf::Keyboard::Key GetDownKey();
+    // Функция задает значение клавиши для движения вниз.
+    void SetDownKey(sf::Keyboard::Key newDown);
 
-	// Функция задает значение клавиши для движения вправо.
-	void SetRightKey(sf::Keyboard::Key newRight);
+    // Функция возвращает значение клавиши для движения вниз.
+    sf::Keyboard::Key GetDownKey();
 
-	// Функция возвращает значение клавиши для движения вправо.
-	sf::Keyboard::Key GetRightKey();
+    // Функция задает значение клавиши для движения вправо.
+    void SetRightKey(sf::Keyboard::Key newRight);
 
-	// Функция задает значение клавиши для движения влево.
-	void SetLeftKey(sf::Keyboard::Key newLeft);
+    // Функция возвращает значение клавиши для движения вправо.
+    sf::Keyboard::Key GetRightKey();
 
-	// Функция возвращает значение клавиши для движения влево.
-	sf::Keyboard::Key GetLeftKey();
+    // Функция задает значение клавиши для движения влево.
+    void SetLeftKey(sf::Keyboard::Key newLeft);
 
-	// Функция задает значение цвета игрока.
-	void SetColor(sf::Color newColor);
+    // Функция возвращает значение клавиши для движения влево.
+    sf::Keyboard::Key GetLeftKey();
 
-	// Функция возвращает значение цвета игрока.
-	sf::Color GetColor();
+    // Функция задает значение цвета игрока.
+    void SetColor(sf::Color newColor);
+
+    // Функция возвращает значение цвета игрока.
+    sf::Color GetColor();
 };
 
-class GameInfo {
+class GameInfo
+{
 private:
 	int _numberOfRounds;
 	int _numberOfBots;
 	std::string _mapSize;
+  std::string _currentWindowName;
 	bool _isSolo;
+  bool _somethingIsPressed;
+  int _currentRound;
 
-	bool _somethingIsPressed;
-	std::string _currentWindowName;
+    PlayerInfo _firstPlayerInfo;
+    PlayerInfo _secondPlayerInfo;
 
-	PlayerInfo _firstPlayerInfo;
-	PlayerInfo _secondPlayerInfo;
+    std::string _fieldInUse;
 
-	std::string _fieldInUse;
 public:
-  // Конструктор по умолчанию.
-  GameInfo();
+    // Конструктор по умолчанию.
+    GameInfo();
 
-  // Функция увеличивает количество раундов в игре.
-  void IncreaseNumberOfRounds();
+    // Функция увеличивает количество раундов в игре.
+    void IncreaseNumberOfRounds();
 
-	// Функция устанавливает значение на игру для двоих.
-	void SetDuo();
+    // Функция устанавливает значение на игру для двоих.
+    void SetDuo();
 
-	// Функция устанавливает значение на игру для одного.
-	void SetSolo();
+    // Функция устанавливает значение на игру для одного.
+    void SetSolo();
 
-	// Функция возвращает: сколько человек играет.
-	bool GetIsSolo();
+    // Функция возвращает: сколько человек играет.
+    bool GetIsSolo();
+
+  // Функция вернёт текущий раунд
+  int GetCurrentRound();
+
+  // Функция установит текущий раунд
+  int SetCurrentRound(int currentRound);
 
 	// Функция возвращает количество раундов в игре.
 	int GetNumberOfRounds();
@@ -107,89 +123,96 @@ public:
 
     void SetFieldInUse(std::string fieldName);
 
-  // Функция уменьшает количство раундов в игре.
-  void DecreaseNumberOfRounds();
+    void LoadFromFile(const std::string &filename);
 
-  // Функция возвращает количество ботов в игре.
-  int GetNumberOfBots();
+    // Сохранение состояния в файл
+    void SaveToFile(const std::string &filename) const;
 
-  // Функция увеличивает количество ботов в игре.
-  void IncreaseNumberOfBots();
+    // Функция уменьшает количство раундов в игре.
+    void DecreaseNumberOfRounds();
 
-  // Функция уменьшает количетсов ботов в игре.
-  void DecreaseNumberOfBots();
+    // Функция возвращает количество ботов в игре.
+    int GetNumberOfBots();
 
-  // Функция, отлавливающая нажатаю кнопку
-  bool GetPressedButton();
-  
+    // Функция увеличивает количество ботов в игре.
+    void IncreaseNumberOfBots();
+
+    // Функция уменьшает количетсов ботов в игре.
+    void DecreaseNumberOfBots();
+
+    // Функция, отлавливающая нажатаю кнопку
+    bool GetPressedButton();
+
     // Функция возвращает размер игрового поля.
-	std::string GetMapSize();
+    std::string GetMapSize();
 
     // Функция для того, чтобы сменить карту игры на большую.
-	void IncreaseMapSize();
+    void IncreaseMapSize();
 
     // Функция для того, чтобы сменить карту игры на меньшую.
-	void DecreaseMapSize();
+    void DecreaseMapSize();
 
-  // Функция, устанавливающая кнопку по умолчанию
-  void SetPressedButton();
+    // Функция, устанавливающая кнопку по умолчанию
+    void SetPressedButton();
 
-  // Функция отжимает кнопку в классе.
-  void UnsetPressedButton();
+    // Функция отжимает кнопку в классе.
+    void UnsetPressedButton();
 
-  // Функция возвращает название текущего экрана.
-  std::string GetCurrentWindowName();
+    // Функция возвращает название текущего экрана.
+    std::string GetCurrentWindowName();
 
-  // Функция устанавливает название текущего экрана.
-  void SetCurrentWindowName(std::string newWindowName);
+    // Функция устанавливает название текущего экрана.
+    void SetCurrentWindowName(std::string newWindowName);
 };
 
 // Перечисление типов ячеек
-enum class CellType {
-  EMPTY,      // Пустая ячейка
-  SNAKE_HEAD, // Голова змейки
-  SNAKE_BODY, // Тело змейки
-  SNAKE_TAIL, // Хвост змейки
-  FOOD,       // Еда
-  OBSTACLE,    // Препятствие
-  SNAKE_HEAD_1,
-  SNAKE_BODY_1,
-  SNAKE_TAIL_1,
-  SNAKE_HEAD_2,
-  SNAKE_BODY_2,
-  SNAKE_TAIL_2
+enum class CellType
+{
+    EMPTY,      // Пустая ячейка
+    SNAKE_HEAD, // Голова змейки
+    SNAKE_BODY, // Тело змейки
+    SNAKE_TAIL, // Хвост змейки
+    FOOD,       // Еда
+    OBSTACLE,   // Препятствие
+    SNAKE_HEAD_1,
+    SNAKE_BODY_1,
+    SNAKE_TAIL_1,
+    SNAKE_HEAD_2,
+    SNAKE_BODY_2,
+    SNAKE_TAIL_2
 };
 
-class Cell {
+class Cell
+{
 private:
-  sf::Image _imageCell; // Картинка ячейки
-  bool _isBusy;         // Флаг занятости ячейки
-  CellType _type; // Тип ячейки (пустая, змейка, еда и т.д.)
+    sf::Image _imageCell; // Картинка ячейки
+    bool _isBusy;         // Флаг занятости ячейки
+    CellType _type;       // Тип ячейки (пустая, змейка, еда и т.д.)
 
 public:
-  // Конструктор по умолчанию
-  Cell();
+    // Конструктор по умолчанию
+    Cell();
 
-  // Конструктор с параметрами
-  Cell(sf::Image img, bool isBusy, CellType type = CellType::EMPTY);
+    // Конструктор с параметрами
+    Cell(sf::Image img, bool isBusy, CellType type = CellType::EMPTY);
 
-  // Получить тип ячейки
-  CellType GetType() const;
+    // Получить тип ячейки
+    CellType GetType() const;
 
-  // Установить тип ячейки
-  void SetType(CellType type);
+    // Установить тип ячейки
+    void SetType(CellType type);
 
-  // Получить изображение ячейки
-  sf::Image GetImage();
+    // Получить изображение ячейки
+    sf::Image GetImage();
 
-  // Проверка на занятость ячейки
-  bool GetIsBusy();
+    // Проверка на занятость ячейки
+    bool GetIsBusy();
 
-  // Установить занятость ячейки
-  void SetIsBusy(bool busy);
+    // Установить занятость ячейки
+    void SetIsBusy(bool busy);
 
-  // Установить изображение ячейки
-  void SetImage(const sf::Image &img);
+    // Установить изображение ячейки
+    void SetImage(const sf::Image &img);
 };
 
 class Snake {
@@ -197,76 +220,78 @@ private:
   std::vector<std::pair<int, int>>
       _body; // тело змейки, список пар координат (x, y)
   sf::Clock _clock;        // Часы для контроля времени
-  float _moveSpeed = 0.12f; // Скорость движения змейки
+  float _moveSpeed = 0.16f; // Скорость движения змейки
   bool _grew = false; // Флаг для отслеживания, выросла ли змейка
   std::pair<int, int> _direction; // Направление движения змейки
 
 public:
-  Snake(int startX, int startY);
+    Snake(int startX, int startY);
 
-  std::vector<std::pair<int, int>> GetBody() const;
+    std::vector<std::pair<int, int>> GetBody() const;
 
-  // Логика роста змейки
-  void Grow();
+    // Логика роста змейки
+    void Grow();
 
-  // Перемещение змейки
-  void MoveSnake(int fieldWidth, int fieldHeight);
+    // Перемещение змейки
+    void MoveSnake(int fieldWidth, int fieldHeight);
 
-  // Перемещение ботов
-  void MoveBot(int fieldWidth, int fieldHeight);
+    // Перемещение ботов
+    void MoveBot(int fieldWidth, int fieldHeight);
 
-  // Изменение направления змейки
-  void ChangeDirection(const std::pair<int, int> &newDirection);
+    // Изменение направления змейки
+    void ChangeDirection(const std::pair<int, int> &newDirection);
 
-  std::pair<int, int> GetDirection() const { return _direction; }
+    std::pair<int, int> GetDirection() const { return _direction; }
 
-  float GetMoveSpeed() { return _moveSpeed; }
+    float GetMoveSpeed() { return _moveSpeed; }
 };
 
-class Field {
+class Field
+{
 private:
-  int _height;
-  int _width;
-  std::vector<std::vector<Cell>> _field;
+    int _height;
+    int _width;
+    std::vector<std::vector<Cell>> _field;
 
 public:
-  Field(int height, int width);
+    Field(int height, int width);
 
-  int GetHeight() { return _height; }
+    int GetHeight() { return _height; }
 
-  int GetWidth() { return _width; }
+    int GetWidth() { return _width; }
 
-  std::vector<std::vector<Cell>> GetField() { return _field; }
+    std::vector<std::vector<Cell>> GetField() { return _field; }
 
-  // Установить тип ячейки по координатам
-  void SetCellType(int x, int y, CellType type) { _field[y][x].SetType(type); }
+    // Установить тип ячейки по координатам
+    void SetCellType(int x, int y, CellType type) { _field[y][x].SetType(type); }
 
-  // Установить еду на поле
-  void SetFood(int x, int y) { _field[y][x].SetType(CellType::FOOD); }
+    // Установить еду на поле
+    void SetFood(int x, int y) { _field[y][x].SetType(CellType::FOOD); }
 
-  // Размещение препятствий
-  void PlaceObstacles(int numberOfObstacles);
+    // Размещение препятствий
+    void PlaceObstacles(int numberOfObstacles);
 
-  // Размещение еды во время игры
-  void PlaceFood();
+    // Размещение еды во время игры
+    void PlaceFood();
 
-  // Размещение еды в начале игры
-  void PlaceFood(const std::vector<Snake> &snakes);
+    // Размещение еды в начале игры
+    void PlaceFood(const std::vector<Snake> &snakes);
 
-  // Движение с ботом
-  void UpdateMap(const std::vector<Snake> &snakes);
+    // Движение с ботом
+    void UpdateMap(const std::vector<Snake> &snakes);
 
-  // Движение без бота
-  void UpdateMap(const Snake &snake);
+    // Движение без бота
+    void UpdateMap(const Snake &snake);
 
-  // Движение в многопользовательской игре
-  void UpdateMap(const Snake &snake1, const Snake &snake2);
+    // Движение в многопользовательской игре
+    void UpdateMap(const Snake &snake1, const Snake &snake2);
 };
 
 // Функция ищет еду
 bool FindApple(Field &field, int &appleX, int &appleY);
 
-class Bot {
+class Bot
+{
 public:
     // Конструктор перемещения
     Bot(Bot&& other) noexcept;
@@ -287,11 +312,11 @@ public:
     Snake& GetSnake() const { return *_snake;}
 
     // Геттер для поля
-    Field& GetField() { return _field;}
+    Field &GetField() { return _field; }
 
 private:
-    Snake* _snake;  // Указатель на объект змеи
-    Field& _field;  // Ссылка на объект поля
+    Snake *_snake; // Указатель на объект змеи
+    Field &_field; // Ссылка на объект поля
 
     // Ищем ближайшую еду
     std::pair<int, int> FindNearestFood(const std::pair<int, int>& head);
@@ -300,27 +325,26 @@ private:
     void MoveRandomly();
 };
 
-    // Функция устанавливает название текущего экрана.
-	void SetCurrentWindowName(std::string newWindowName);
+// Функция устанавливает название текущего экрана.
+void SetCurrentWindowName(std::string newWindowName);
 
-	// Функция возвращает информацию о первом игроке.
-	PlayerInfo GetFirstPlayerInfo();
+// Функция возвращает информацию о первом игроке.
+PlayerInfo GetFirstPlayerInfo();
 
-	// Функция устанавливает информацию о первом игроке.
-	void SetFirstPlayerInfo(PlayerInfo newInfo);
+// Функция устанавливает информацию о первом игроке.
+void SetFirstPlayerInfo(PlayerInfo newInfo);
 
-	// Функция возвращает информацию о втором игроке.
-	PlayerInfo GetSecondPlayerInfo();
+// Функция возвращает информацию о втором игроке.
+PlayerInfo GetSecondPlayerInfo();
 
-	// Функция устанавливает информацию о втором игроке.
-	void SetSecondPlayerInfo(PlayerInfo newInfo);
+// Функция устанавливает информацию о втором игроке.
+void SetSecondPlayerInfo(PlayerInfo newInfo);
 
-	// Функция возвращает название изменяемого поля.
-	std::string GetFieldInUse();
+// Функция возвращает название изменяемого поля.
+std::string GetFieldInUse();
 
-	// Функция устанавливает название изменяемого поля.
-	void SetFieldInUse(std::string fieldName);
-
+// Функция устанавливает название изменяемого поля.
+void SetFieldInUse(std::string fieldName);
 
 // Функция создает первого игрока.
 PlayerInfo CreateFirstPlayer();
@@ -450,7 +474,7 @@ std::string GetKeyboardCharacter(sf::Keyboard::Key key);
 sf::Keyboard::Key GetPressedKey();
 
 // Функция проверяет, что клавиша не используется в управлении.
-bool keyIsntUsed(GameInfo& gameInfo, sf::Keyboard::Key keyToUse);
+bool keyIsntUsed(GameInfo &gameInfo, sf::Keyboard::Key keyToUse);
 
 // Функция вернёт цвет змейки
 std::string ChoiceSelection(sf::Color color);
