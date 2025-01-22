@@ -178,7 +178,7 @@ botsToRemove.clear();
 void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
               Snake &snake) {
   sf::Clock clock;
-
+  int countFlood = 0;
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -242,6 +242,7 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     // Если змейка съела еду
     if (field.GetField()[head.second][head.first].GetType() == CellType::FOOD) {
       snake.Grow(); // Увеличиваем змейку
+      ++countFlood; // Увеличиваем счётчик
       // Размещаем еду в новом случайном месте, но проверяем, что в новом месте
       // нет змейки
       do {
@@ -256,26 +257,87 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     field.UpdateMap(snake);
 
     // Отрисовка
-    window.clear(); // Очистить экран
+    // window.clear(); // Очистить экран
 
     // Добавим фоновое изображение
     static sf::Texture fonTexture;
-    fonTexture.loadFromFile("../images/fon.jpg");
+    fonTexture.loadFromFile("../images/menu2.png");
 
+//----------------------------------------------------------------------
+    sf::Font font;
+    font.loadFromFile("../fonts/Consolas.ttf");
+
+    sf::Text p1;
+      p1.setFont(font);
+      p1.setCharacterSize(24); // Размер шрифта
+      p1.setFillColor(sf::Color::White); // Цвет текста
+      p1.setPosition(940, 80); // Позиция текста на экране
+      p1.setString(gameInfo.GetFirstPlayerInfo().GetName());
+	  if (gameInfo.GetIsSolo())
+	  {
+       sf::Text p2;
+      p2.setFont(font);
+      p2.setCharacterSize(24); // Размер шрифта
+      p2.setFillColor(sf::Color::White); // Цвет текста
+      p2.setPosition(940, 150); // Позиция текста на экране
+      p2.setString("None");
+      window.draw(p2);     // Рисуем текст
+    }
+    else
+    {
+      sf::Text p2;
+      p2.setFont(font);
+      p2.setCharacterSize(24); // Размер шрифта
+      p2.setFillColor(sf::Color::White); // Цвет текста
+      p2.setPosition(940, 150); // Позиция текста на экране
+      p2.setString(gameInfo.GetSecondPlayerInfo().GetName());
+      window.draw(p2);     // Рисуем текст
+    }
+
+    sf::Text Round;
+    std::string roundInfo = "Round: ";
+      Round.setFont(font);
+      Round.setCharacterSize(24); // Размер шрифта
+      Round.setFillColor(sf::Color::White); // Цвет текста
+      Round.setPosition(940, 220); // Позиция текста на экране
+      Round.setString(roundInfo + std::to_string(gameInfo.GetNumberOfRounds()));
+
+    sf::Text Bots;
+    std::string botsInfo = "Bots: ";
+      Bots.setFont(font);
+      Bots.setCharacterSize(24); // Размер шрифта
+      Bots.setFillColor(sf::Color::White); // Цвет текста
+      Bots.setPosition(940, 290); // Позиция текста на экране
+      Bots.setString(botsInfo + std::to_string(gameInfo.GetNumberOfBots()));
+
+    sf::Text Score;
+    std::string scoreInfo = "Score: ";
+      Score.setFont(font);
+      Score.setCharacterSize(24); // Размер шрифта
+      Score.setFillColor(sf::Color::White); // Цвет текста
+      Score.setPosition(940, 360); // Позиция текста на экране
+      Score.setString(scoreInfo + std::to_string(countFlood));
+
+    window.draw(p1);
+    window.draw(Round);     // Рисуем текст
+    window.draw(Bots);     // Рисуем текст
+    window.draw(Score);     // Рисуем текст
+    window.display();
+//----------------------------------------------------------------------
     // Спрайт для фонового изображения
     static sf::Sprite fon_sprite;
     fon_sprite.setTexture(fonTexture);
     window.draw(fon_sprite);
 
     DrawMap(window, gameInfo, field); // Отрисовать карту
-    window.display(); // Показать обновленное окно
+    // window.display(); // Показать обновленное окно
   }
 }
 
 void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
               Snake &snake1, Snake &snake2) {
   sf::Clock clock;
-
+  int countFlood = 0;
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -386,6 +448,7 @@ if (!snake2.GetBody().empty()) {
 
       // Змейка съела еду
       if (field.GetField()[head.second][head.first].GetType() == CellType::FOOD) {
+        ++countFlood;
         snake.get().Grow();
         do {
           field.PlaceFood();
@@ -398,19 +461,83 @@ if (!snake2.GetBody().empty()) {
     field.UpdateMap(snake1, snake2);
 
     // Отрисовка
-    window.clear(); // Очистить экран
+    // window.clear(); // Очистить экран
 
     // Добавим фоновое изображение
     static sf::Texture fonTexture;
-    fonTexture.loadFromFile("../images/fon.jpg");
+    // fonTexture.loadFromFile("../images/fon.jpg");
 
+    fonTexture.loadFromFile("../images/menu2.png");
+//----------------------------------------------------------------------
+    sf::Font font;
+    font.loadFromFile("../fonts/Consolas.ttf");
+
+    sf::Text p1;
+      p1.setFont(font);
+      p1.setCharacterSize(24); // Размер шрифта
+      p1.setFillColor(sf::Color::White); // Цвет текста
+      p1.setPosition(940, 80); // Позиция текста на экране
+      p1.setString(gameInfo.GetFirstPlayerInfo().GetName());
+      // p1.setString("Player 1");
+           // Рисуем текст
+	  if (gameInfo.GetIsSolo())
+	  {
+       sf::Text p2;
+      p2.setFont(font);
+      p2.setCharacterSize(24); // Размер шрифта
+      p2.setFillColor(sf::Color::White); // Цвет текста
+      p2.setPosition(940, 150); // Позиция текста на экране
+      p2.setString("None");
+      window.draw(p2);     // Рисуем текст
+    }
+    else
+    {
+      sf::Text p2;
+      p2.setFont(font);
+      p2.setCharacterSize(24); // Размер шрифта
+      p2.setFillColor(sf::Color::White); // Цвет текста
+      p2.setPosition(940, 150); // Позиция текста на экране
+      p2.setString(gameInfo.GetSecondPlayerInfo().GetName());
+      window.draw(p2);     // Рисуем текст
+    }
+
+    sf::Text Round;
+    std::string roundInfo = "Round: ";
+      Round.setFont(font);
+      Round.setCharacterSize(24); // Размер шрифта
+      Round.setFillColor(sf::Color::White); // Цвет текста
+      Round.setPosition(940, 220); // Позиция текста на экране
+      Round.setString(roundInfo + std::to_string(gameInfo.GetNumberOfRounds()));
+
+    sf::Text Bots;
+    std::string botsInfo = "Bots: ";
+      Bots.setFont(font);
+      Bots.setCharacterSize(24); // Размер шрифта
+      Bots.setFillColor(sf::Color::White); // Цвет текста
+      Bots.setPosition(940, 290); // Позиция текста на экране
+      Bots.setString(botsInfo + std::to_string(gameInfo.GetNumberOfBots()));
+
+    sf::Text Score;
+    std::string scoreInfo = "Score: ";
+      Score.setFont(font);
+      Score.setCharacterSize(24); // Размер шрифта
+      Score.setFillColor(sf::Color::White); // Цвет текста
+      Score.setPosition(940, 360); // Позиция текста на экране
+      Score.setString(scoreInfo + std::to_string(countFlood));
+
+    window.draw(p1);
+    window.draw(Round);     // Рисуем текст
+    window.draw(Bots);     // Рисуем текст
+    window.draw(Score);     // Рисуем текст
+    window.display();
+//----------------------------------------------------------------------
     // Спрайт для фонового изображения
     static sf::Sprite fon_sprite;
     fon_sprite.setTexture(fonTexture);
     window.draw(fon_sprite);
 
     DrawMap(window, gameInfo, field); // Отрисовать карту
-    window.display(); // Показать обновленное окно
+    //window.display(); // Показать обновленное окно
   }
 }
 
