@@ -17,7 +17,7 @@ int main() {
 
   // Создается массив с информацией об игре.
   GameInfo gameInfo;
-
+  // gameInfo.LoadFromFile("conf.txt");
   // Постоянное обновление картинки
   while (window.isOpen()) {
     sf::Event event;
