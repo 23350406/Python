@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/andrew/Документы/tpro/Python/Python/build",
-  "command": "/usr/bin/g++   -g -std=gnu++14 -o CMakeFiles/Python.dir/src/Python.cpp.o -c /home/andrew/Документы/tpro/Python/Python/src/Python.cpp",
-  "file": "/home/andrew/Документы/tpro/Python/Python/src/Python.cpp"
-}
-]
