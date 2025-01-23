@@ -5,7 +5,7 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
               Snake &playerSnake, std::vector<Snake> &bots) {
   // Таймер для игрока
   sf::Clock playerClock;
-
+  int countFlood = 0;
   sf::Texture gameOverTexture;
   gameOverTexture.loadFromFile("../images/restart.png");
 
@@ -88,15 +88,17 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
           // Задержка на 3 секунды
           sf::sleep(sf::seconds(3));
         }
-        
         else {
           window.draw(GOSprite);
+          window.display();
+          gameInfo.SetCurrentWindowName("GameOver");
+          return;
         }
         
+        window.draw(GOSprite);
         window.display();
-
-        gameInfo.SetCurrentWindowName(
-            "Game Over"); // Устанавливаем сообщение об окончании игры
+        
+        gameInfo.SetCurrentWindowName("GameOver"); // Устанавливаем сообщение об окончании игры
         return;
       }
 
@@ -134,10 +136,14 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
             
             else {
               window.draw(GOSprite);
+          window.display();
+              gameInfo.SetCurrentWindowName("GameOver");
+              return;
             }
 
+            window.draw(GOSprite);
             window.display();
-            gameInfo.SetCurrentWindowName("Game Over");
+            gameInfo.SetCurrentWindowName("GameOver");
             return;
 
           }
@@ -179,11 +185,14 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
 
           else {
              window.draw(GOSprite);
+          window.display();
+             gameInfo.SetCurrentWindowName("GameOver");
+          return;
           }
-          
+          window.draw(GOSprite);
           window.display(); // Обновление окна
           gameInfo.SetCurrentWindowName(
-              "Game Over"); // Сообщение об окончании игры
+              "GameOver"); // Сообщение об окончании игры
           return;           // Завершение игрового цикла
         }
       }
@@ -191,6 +200,7 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
       // Проверка на съедание еды
       if (field.GetField()[head.second][head.first].GetType() ==
           CellType::FOOD) {
+            ++countFlood;
         playerSnake.Grow(); // Увеличение длины змеи
         do {
           field.PlaceFood(); // Расположение новой еды на карте
@@ -312,18 +322,94 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     field.UpdateMap(allSnakes); // Обновление карты
 
     // Отрисовка игры
-    window.clear(); // Очистка окна от предыдущего кадра
+    // window.clear(); // Очистка окна от предыдущего кадра
 
-    static sf::Texture fonTexture;
-    fonTexture.loadFromFile("../images/fon.jpg"); // Загрузка фона
+     static sf::Texture fonTexture;
+    fonTexture.loadFromFile("../images/menu2.png");
+    //----------------------------------------------------------------------
+    sf::Image image = fonTexture.copyToImage();
 
+    // Изменяем цвет определенных пикселей
+    for (unsigned int x = 879; x < 920; ++x) {
+        for (unsigned int y = 68; y < 109; ++y) {
+            image.setPixel(x, y, gameInfo.GetFirstPlayerInfo().GetColor()); // Устанавливаем красный цвет
+        }
+    }
+
+    for (unsigned int x = 879; x < 920; ++x) {
+        for (unsigned int y = 134; y < 175; ++y) {
+            image.setPixel(x, y, gameInfo.GetSecondPlayerInfo().GetColor()); // Устанавливаем красный цвет
+        }
+    }
+
+    fonTexture.loadFromImage(image);
+
+    sf::Font font;
+    font.loadFromFile("../fonts/Consolas.ttf");
+
+    sf::Text p1;
+    p1.setFont(font);
+    p1.setCharacterSize(24);           // Размер шрифта
+    p1.setFillColor(sf::Color::White); // Цвет текста
+    p1.setPosition(940, 80); // Позиция текста на экране
+    p1.setString(gameInfo.GetFirstPlayerInfo().GetName());
+    if (gameInfo.GetIsSolo()) {
+
+      sf::Text p2;
+      p2.setFont(font);
+      p2.setCharacterSize(24);           // Размер шрифта
+      p2.setFillColor(sf::Color::White); // Цвет текста
+      p2.setPosition(940, 150);          // Позиция текста на экране
+      p2.setString("None");
+      window.draw(p2); // Рисуем текст
+
+    } else {
+      sf::Text p2;
+      p2.setFont(font);
+      p2.setCharacterSize(24);           // Размер шрифта
+      p2.setFillColor(sf::Color::White); // Цвет текста
+      p2.setPosition(940, 150);          // Позиция текста на экране
+      p2.setString(gameInfo.GetSecondPlayerInfo().GetName());
+      window.draw(p2); // Рисуем текст
+    }
+
+    sf::Text Round;
+    std::string roundInfo = "Round: ";
+    Round.setFont(font);
+    Round.setCharacterSize(24);           // Размер шрифта
+    Round.setFillColor(sf::Color::White); // Цвет текста
+    Round.setPosition(940, 220); // Позиция текста на экране
+    Round.setString(roundInfo + std::to_string(gameInfo.GetCurrentRound()));
+
+    sf::Text bots;
+    std::string score1Info = "Bots: ";
+    bots.setFont(font);
+    bots.setCharacterSize(24);           // Размер шрифта
+    bots.setFillColor(sf::Color::White); // Цвет текста
+    bots.setPosition(940, 290);          // Позиция текста на экране
+    bots.setString(score1Info + std::to_string(gameInfo.GetNumberOfBots()));
+
+    sf::Text Score;
+    std::string score2Info = "Score: ";
+    Score.setFont(font);
+    Score.setCharacterSize(24);           // Размер шрифта
+    Score.setFillColor(sf::Color::White); // Цвет текста
+    Score.setPosition(940, 360);          // Позиция текста на экране
+    Score.setString(score2Info + std::to_string(countFlood));
+
+    window.draw(p1);
+    window.draw(Round); // Рисуем текст
+    window.draw(Score);  // Рисуем текст
+    window.draw(bots); // Рисуем текст
+    window.display();  
+    
     static sf::Sprite fon_sprite;
     fon_sprite.setTexture(fonTexture);
-    window.draw(fon_sprite); // Отрисовка фона
+    window.draw(fon_sprite);
 
     DrawMap(window, gameInfo, field); // Отрисовка карты
 
-    window.display(); // Отображение на экране
+    //window.display(); // Отображение на экране
   }
 }
 
@@ -334,7 +420,7 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
   int countFlood1 = 0;
   int countFlood2 = 0;
   sf::Texture gameOverTexture;
-  //gameOverTexture.loadFromFile("../images/restart.png");
+  gameOverTexture.loadFromFile("../images/restart.png");
 
   sf::Sprite GOSprite;
   GOSprite.setTexture(gameOverTexture);
@@ -451,8 +537,12 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
           }
           else {
             window.draw(GOSprite);
+            gameInfo.SetCurrentWindowName("GameOver");
+          return;
           }
+          window.draw(GOSprite);
           window.display();
+          gameInfo.SetCurrentWindowName("GameOver");
           return; // Завершаем функцию
 
         }
@@ -493,9 +583,13 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
           }
           else {
              window.draw(GOSprite);
+             gameInfo.SetCurrentWindowName("GameOver");
+          return;
           }
           
+          window.draw(GOSprite);
           window.display();
+          gameInfo.SetCurrentWindowName("GameOver");
           return;
         }
       }
@@ -533,9 +627,12 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
           }
           else {
             window.draw(GOSprite);
+            gameInfo.SetCurrentWindowName("GameOver");
+          return;
           }
-
+          window.draw(GOSprite);
           window.display();
+          gameInfo.SetCurrentWindowName("GameOver");
           return;
         }
       }
@@ -583,8 +680,12 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
         }
         else {
           window.draw(GOSprite);
+          gameInfo.SetCurrentWindowName("GameOver");
+          return;
         }
+        window.draw(GOSprite);
         window.display();
+        gameInfo.SetCurrentWindowName("GameOver");
         return; // Завершаем функцию, чтобы остановить игровой цикл
       }
       flag2 = true;
@@ -613,10 +714,26 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
 
     // Добавим фоновое изображение
     static sf::Texture fonTexture;
-    // fonTexture.loadFromFile("../images/fon.jpg");
-
     fonTexture.loadFromFile("../images/menu2.png");
     //----------------------------------------------------------------------
+
+    sf::Image image = fonTexture.copyToImage();
+
+    // Изменяем цвет определенных пикселей
+    for (unsigned int x = 879; x < 920; ++x) {
+        for (unsigned int y = 68; y < 109; ++y) {
+            image.setPixel(x, y, gameInfo.GetFirstPlayerInfo().GetColor()); // Устанавливаем красный цвет
+        }
+    }
+
+    for (unsigned int x = 879; x < 920; ++x) {
+        for (unsigned int y = 134; y < 175; ++y) {
+            image.setPixel(x, y, gameInfo.GetSecondPlayerInfo().GetColor()); // Устанавливаем красный цвет
+        }
+    }
+
+    fonTexture.loadFromImage(image);
+
     sf::Font font;
     font.loadFromFile("../fonts/Consolas.ttf");
 
@@ -674,15 +791,16 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake 
     window.draw(Round); // Рисуем текст
     window.draw(Score1);  // Рисуем текст
     window.draw(Score2); // Рисуем текст
+
     window.display();
 
     //----------------------------------------------------------------------
-    // Спрайт для фонового изображения
     window.display();
+    // Спрайт для фонового изображения
     static sf::Sprite fon_sprite;
     fon_sprite.setTexture(fonTexture);
     window.draw(fon_sprite);
-
+    
     DrawMap(window, gameInfo, field); // Отрисовать карту
   }
 }
