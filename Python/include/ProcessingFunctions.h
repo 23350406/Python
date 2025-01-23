@@ -101,6 +101,7 @@ void ChangeWindowToGameWindow(sf::RenderWindow &window, GameInfo &gameInfo, Fiel
 
     // Многопользовательский игровой цикл
     GameLoop(window, gameInfo, field, snakePlayer, snakes);
+    return;
   }
 
   // Если многопользовательская игра
@@ -120,6 +121,7 @@ void ChangeWindowToGameWindow(sf::RenderWindow &window, GameInfo &gameInfo, Fiel
 
     // Игровой цикл для двух игроков
     GameLoop(window, gameInfo, field, firstSnake, secondSnake);
+    return;
   }
 }
 
@@ -361,9 +363,9 @@ void ProcessActionInStartGameMenu(sf::RenderWindow &window, sf::Event &event,
       for (int i = 0; i < gameInfo.GetNumberOfRounds(); ++i) {
         vector<int> temp = DefineParametersForField(gameInfo);
         Field fieldInfo(temp[0], temp[1]);
-
         ChangeWindowToGameWindow(window, gameInfo, fieldInfo);
       }
+
     }
 
     return;
@@ -848,6 +850,44 @@ void ProcessActionInAuthorsMenu(sf::RenderWindow &window, sf::Event &event,
   gameInfo.UnsetPressedButton();
 }
 
+void ProccessActionGameOver(sf::RenderWindow &window, sf::Event &event,
+                             GameInfo &gameInfo)
+{
+  
+  // Если пользователь нажал ЛКМ.
+  if (isLMC(event, gameInfo))
+  {
+
+    if (gameInfo.GetPressedButton())
+    {
+      return;
+    }
+
+    gameInfo.SetPressedButton();
+    // Пользователь нажал ЛКМ на кнопку назад -> переход на страницу главного меню игры.
+//Menu
+    if (isInBox(event, 430, 500, 730, 572))
+    {
+      // Переход между главным меню и меню начала игры.
+      // MoveWindowFromStartToMain(window);
+      ChangeWindowToMainMenuWindow(window, gameInfo);
+    }
+  //Restart
+    if (isInBox(event, 430, 390, 730, 465))
+    {
+      gameInfo.LoadFromFile("conf.txt");
+      vector<int> temp = DefineParametersForField(gameInfo);
+      Field fieldInfo(temp[0], temp[1]);
+
+      ChangeWindowToGameWindow(window, gameInfo, fieldInfo);
+    }
+
+    return;
+  }
+
+  gameInfo.UnsetPressedButton();
+}
+
 void ProcessEvent(sf::RenderWindow &window, sf::Event &event,
                   GameInfo &gameInfo)
 {
@@ -859,7 +899,9 @@ void ProcessEvent(sf::RenderWindow &window, sf::Event &event,
 
   if (gameInfo.GetCurrentWindowName() == "StartGame")
   {
+    gameInfo.SaveToFile("conf.txt");
     ProcessActionInStartGameMenu(window, event, gameInfo);
+
     return;
   }
 
@@ -881,9 +923,10 @@ void ProcessEvent(sf::RenderWindow &window, sf::Event &event,
     return;
   }
 
-  if (gameInfo.GetCurrentWindowName() == "Game")
+  if (gameInfo.GetCurrentWindowName() == "GameOver")
   {
-    // ProcessActionInGame(window, event, gameInfo);
+    window.display();
+    ProccessActionGameOver(window, event, gameInfo);
     return;
   }
 }

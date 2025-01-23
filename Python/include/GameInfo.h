@@ -64,26 +64,44 @@ void GameInfo::DecreaseNumberOfRounds()
   }
 }
 
-void GameInfo::LoadFromFile(const std::string &filename)
-{
-  std::ifstream inFile(filename);
-  if (!inFile)
-  {
-    throw std::runtime_error("Не удалось открыть файл для чтения: " + filename);
-  }
+void GameInfo::LoadFromFile(const std::string &filename) {
+    std::ifstream inFile(filename);
+    if (!inFile) {
+        throw std::runtime_error("Не удалось открыть файл для чтения: " + filename);
+    }
 
-  inFile >> _numberOfRounds;
-  inFile >> _numberOfBots;
-  inFile.ignore(); // Игнорируем символ новой строки
-  std::getline(inFile, _mapSize);
-  inFile >> _isSolo;
-  inFile >> _somethingIsPressed;
-  inFile.ignore(); // Игнорируем символ новой строки
-  std::getline(inFile, _currentWindowName);
+    std::string line;
+    while (std::getline(inFile, line)) {
+        std::string key;
+        size_t pos = line.find(' ');
+        if (pos != std::string::npos) {
+            key = line.substr(0, pos);
+        } else {
+            key = line; // Если пробелов нет, вся строка - это ключ
+        }
 
-  std::getline(inFile, _fieldInUse);
+        if (key == "NumberOfRounds") {
+            _numberOfRounds = std::stoi(line.substr(pos + 1));
+        } else if (key == "NumberOfBots") {
+            _numberOfBots = std::stoi(line.substr(pos + 1));
+        } else if (key == "MapSize") {
+            _mapSize = line.substr(pos + 1);
+        } else if (key == "IsSolo") {
+            _isSolo = (line.substr(pos + 1) == "true");
+        } else if (key == "SomethingIsPressed") {
+            _somethingIsPressed = (line.substr(pos + 1) == "true");
+        } else if (key == "CurrentWindowName") {
+            _currentWindowName = line.substr(pos + 1);
+        } else if (key == "FirstPlayerInfo") {
+            _firstPlayerInfo.LoadFromFile(inFile);
+        } else if (key == "SecondPlayerInfo") {
+            _secondPlayerInfo.LoadFromFile(inFile);
+        } else if (key == "FieldInUse") {
+            _fieldInUse = line.substr(pos + 1);
+        }
+    }
 
-  inFile.close();
+    inFile.close();
 }
 
 // Сохранение состояния в файл
@@ -101,7 +119,8 @@ void GameInfo::SaveToFile(const std::string &filename) const
   outFile << _isSolo << std::endl;
   outFile << _somethingIsPressed << std::endl;
   outFile << _currentWindowName << std::endl;
-
+  _firstPlayerInfo.SaveToFile(outFile);
+  _secondPlayerInfo.SaveToFile(outFile);
   outFile << _fieldInUse << std::endl;
 
   outFile.close();
