@@ -613,6 +613,7 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     }
 
     bool flag2 = false;
+    bool flag3 = true;
     // Проверка на столкновение с препятствиями и еду
     for (auto &snake : {std::ref(snake1), std::ref(snake2)}) {
       auto head = snake.get().GetBody()[0];
@@ -657,17 +658,26 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
           gameInfo.SetCurrentWindowName("GameOver");
           return;
         }
-        
+
         gameInfo.SetCurrentWindowName("GameOver");
         return; // Завершаем функцию, чтобы остановить игровой цикл
       }
       flag2 = true;
 
+      
       // Змейка съела еду
       if (field.GetField()[head.second][head.first].GetType() ==
           CellType::FOOD) {
-        ++countFlood1;
-        ++countFlood2;
+            if (flag3) {
+              ++countFlood1;
+              flag3 = false;
+            }
+
+            else {
+              ++countFlood2;
+            }
+        
+        
         snake.get().Grow();
         do {
           field.PlaceFood();
@@ -676,6 +686,8 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
                  field.GetField()[head.second][head.first].GetType() ==
                      CellType::SNAKE_HEAD);
       }
+
+      flag3 = false;
     }
 
     // Обновляем карту с текущим состоянием змей
@@ -753,7 +765,7 @@ void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
     Score1.setCharacterSize(24);           // Размер шрифта
     Score1.setFillColor(sf::Color::White); // Цвет текста
     Score1.setPosition(940, 290); // Позиция текста на экране
-    Score1.setString(score1Info + std::to_string(gameInfo.GetNumberOfBots()));
+    Score1.setString(score1Info + std::to_string(countFlood1));
 
     sf::Text Score2;
     std::string score2Info = "Score 2: ";
@@ -881,7 +893,8 @@ std::string ChoiceSelection(sf::Color color) {
 void ShowLegend(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
   window.clear();
 
-  sf::Texture legendTexture, obstacleTexture, klukvaTexture, p1Texture, p2Texture;
+  sf::Texture legendTexture, obstacleTexture, klukvaTexture, p1Texture,
+      p2Texture;
   std::string pathToP1, pathToP2;
 
   pathToP1 = ChoiceSelection(gameInfo.GetFirstPlayerInfo().GetColor());
@@ -911,51 +924,54 @@ void ShowLegend(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
   sf::Font font;
   font.loadFromFile("../fonts/Consolas.ttf");
 
-  sf::Text textGreeting1, textGreeting2, textP1, textP2, textObstacle, textKlukva, textStartGame1, textStartGame2;
+  sf::Text textGreeting1, textGreeting2, textP1, textP2, textObstacle,
+      textKlukva, textStartGame1, textStartGame2;
   textGreeting1.setFont(font);
-  textGreeting1.setCharacterSize(18);           // Размер шрифта
+  textGreeting1.setCharacterSize(18); // Размер шрифта
   textGreeting1.setFillColor(sf::Color(90, 255, 87)); // Цвет текста
   textGreeting1.setPosition(280, 170); // Позиция текста на экране
-  textGreeting1.setString("Welcome to my dungeon... Now you are facing the greatest challenge.");
+  textGreeting1.setString(
+      "Welcome to my dungeon... Now you are facing the greatest challenge.");
 
   textGreeting2.setFont(font);
-  textGreeting2.setCharacterSize(18);           // Размер шрифта
+  textGreeting2.setCharacterSize(18);         // Размер шрифта
   textGreeting2.setFillColor(sf::Color::Red); // Цвет текста
   textGreeting2.setPosition(280, 190); // Позиция текста на экране
   textGreeting2.setString("Try to kill all my friends, ENEMY OF THE PEOPLE.");
 
   textP1.setFont(font);
-  textP1.setCharacterSize(18);           // Размер шрифта
+  textP1.setCharacterSize(18);                 // Размер шрифта
   textP1.setFillColor(sf::Color(90, 255, 87)); // Цвет текста
   textP1.setPosition(320, 240); // Позиция текста на экране
   textP1.setString("- Is that you, you little prankster.");
 
   textP2.setFont(font);
-  textP2.setCharacterSize(18);           // Размер шрифта
+  textP2.setCharacterSize(18);                 // Размер шрифта
   textP2.setFillColor(sf::Color(90, 255, 87)); // Цвет текста
   textP2.setPosition(320, 270); // Позиция текста на экране
   textP2.setString("- You'll be lucky if it's your friend and not mine.");
 
   textObstacle.setFont(font);
-  textObstacle.setCharacterSize(18);           // Размер шрифта
+  textObstacle.setCharacterSize(18); // Размер шрифта
   textObstacle.setFillColor(sf::Color(90, 255, 87)); // Цвет текста
   textObstacle.setPosition(320, 330); // Позиция текста на экране
   textObstacle.setString("- Murderous poison - especially for you HAHA.");
 
   textKlukva.setFont(font);
-  textKlukva.setCharacterSize(18);           // Размер шрифта
+  textKlukva.setCharacterSize(18);                 // Размер шрифта
   textKlukva.setFillColor(sf::Color(90, 255, 87)); // Цвет текста
   textKlukva.setPosition(320, 360); // Позиция текста на экране
   textKlukva.setString("- Delicious blue cranberries for my friends.");
 
   textStartGame1.setFont(font);
-  textStartGame1.setCharacterSize(18);           // Размер шрифта
+  textStartGame1.setCharacterSize(18);         // Размер шрифта
   textStartGame1.setFillColor(sf::Color::Red); // Цвет текста
   textStartGame1.setPosition(280, 440); // Позиция текста на экране
-  textStartGame1.setString("You will start moving after you press the control buttons.");
+  textStartGame1.setString(
+      "You will start moving after you press the control buttons.");
 
   textStartGame2.setFont(font);
-  textStartGame2.setCharacterSize(18);           // Размер шрифта
+  textStartGame2.setCharacterSize(18); // Размер шрифта
   textStartGame2.setFillColor(sf::Color(90, 255, 87)); // Цвет текста
   textStartGame2.setPosition(280, 480); // Позиция текста на экране
   textStartGame2.setString("press \"Space\" and die, friend))");

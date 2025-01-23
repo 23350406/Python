@@ -82,28 +82,26 @@ void DrawMap(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
   // Спрайты
   static sf::Sprite currentCell;
 
-  if (!texturesLoaded) {
-    // Загрузка текстур для первой змеи
-    std::string colorFirstPlayer =
-        ChoiceSelection(gameInfo.GetFirstPlayerInfo().GetColor());
-    headTexture1.loadFromFile(colorFirstPlayer);
-    tailTexture1.loadFromFile(colorFirstPlayer);
-    bodyTexture1.loadFromFile(colorFirstPlayer);
+  // Загрузка текстур для первой змеи
+  std::string colorFirstPlayer =
+      ChoiceSelection(gameInfo.GetFirstPlayerInfo().GetColor());
+  headTexture1.loadFromFile(colorFirstPlayer);
+  tailTexture1.loadFromFile(colorFirstPlayer);
+  bodyTexture1.loadFromFile(colorFirstPlayer);
 
-    // Загрузка текстур для второй змеи или ботов
-    std::string colorSecondPlayer =
-        ChoiceSelection(gameInfo.GetSecondPlayerInfo().GetColor());
-    headTexture2.loadFromFile(colorSecondPlayer);
-    tailTexture2.loadFromFile(colorSecondPlayer);
-    bodyTexture2.loadFromFile(colorSecondPlayer);
+  // Загрузка текстур для второй змеи или ботов
+  std::string colorSecondPlayer =
+      ChoiceSelection(gameInfo.GetSecondPlayerInfo().GetColor());
+  headTexture2.loadFromFile(colorSecondPlayer);
+  tailTexture2.loadFromFile(colorSecondPlayer);
+  bodyTexture2.loadFromFile(colorSecondPlayer);
 
-    // Загрузка общих текстур
-    cellTexture.loadFromFile("../images/cell.png");
-    foodTexture.loadFromFile("../images/klukva.png");
-    obstacleTexture.loadFromFile("../images/obstacle.png");
+  // Загрузка общих текстур
+  cellTexture.loadFromFile("../images/cell.png");
+  foodTexture.loadFromFile("../images/klukva.png");
+  obstacleTexture.loadFromFile("../images/obstacle.png");
 
-    texturesLoaded = true;
-  }
+  texturesLoaded = true;
 
   // Определяем размер карты
   int mapWidth = field.GetWidth() * 20; // Каждая ячейка 20x20

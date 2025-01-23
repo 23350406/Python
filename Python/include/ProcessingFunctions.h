@@ -398,7 +398,7 @@ void ProcessActionInSettingsMenu(sf::RenderWindow &window, sf::Event &event,
 
     // Пользователь нажал ЛКМ на стрелку назад -> переход на главное меню.
     if (isInBox(event, 7, 10, 122, 71)) {
-
+      gameInfo.SaveToFile("conf.txt");
       // Функция осуществляет переход с экрана настроек игры на экран главного
       // меню.
       MoveWindowFromSettingsToMain(window);
@@ -766,6 +766,7 @@ void ProccessActionGameOver(sf::RenderWindow &window, sf::Event &event,
     if (isInBox(event, 430, 500, 730, 572)) {
       // Переход между главным меню и меню начала игры.
       // MoveWindowFromStartToMain(window);
+      gameInfo.LoadFromFile("conf.txt");
       ChangeWindowToMainMenuWindow(window, gameInfo);
     }
     // Restart
