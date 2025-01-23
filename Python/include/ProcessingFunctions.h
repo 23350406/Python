@@ -169,6 +169,8 @@ void ChangeWindowToAuthorsWindow(sf::RenderWindow &window, GameInfo &gameInfo) {
   // В вывод на экран заносится меню настроек.
   DrawAuthorsWindow(window);
 
+  Show(window);
+
   // Записанное в вывод показывается пользователю.
   window.display();
 }

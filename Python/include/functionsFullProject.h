@@ -456,4 +456,7 @@ std::string ChoiceSelection(sf::Color color);
 // Легенда карты
 void ShowLegend(sf::RenderWindow &window, GameInfo &gameInfo, Field &field);
 
+// Функция делающая экран авторов
+void Show(sf::RenderWindow &window);
+
 #endif // FULL_H

@@ -1004,3 +1004,49 @@ void ShowLegend(sf::RenderWindow &window, GameInfo &gameInfo, Field &field) {
     }
   }
 }
+
+void Show(sf::RenderWindow &window) {
+  sf::Texture gol, kru, tud;
+  sf::Sprite golS, kruS, tudS;
+
+  gol.loadFromFile("../images/gol.jpg");
+  golS.setTexture(gol);
+  golS.setPosition(40, 20);
+
+  kru.loadFromFile("../images/kru.jpg");
+  kruS.setTexture(kru);
+  kruS.setPosition(40, 220);
+
+  tud.loadFromFile("../images/tud.jpg");
+  tudS.setTexture(tud);
+  tudS.setPosition(40, 420);
+
+  sf::Font font;
+  font.loadFromFile("../fonts/Consolas.ttf");
+
+  sf::Text golT, kruT, tudT;
+  golT.setFont(font);
+  golT.setCharacterSize(18); // Размер шрифта
+  golT.setFillColor(sf::Color(90, 255, 87)); // Цвет текста
+  golT.setPosition(280, 170); // Позиция текста на экране
+  golT.setString("");
+
+  kruT.setFont(font);
+  kruT.setCharacterSize(18); // Размер шрифта
+  kruT.setFillColor(sf::Color(90, 255, 87)); // Цвет текста
+  kruT.setPosition(280, 170); // Позиция текста на экране
+  kruT.setString("");
+
+  tudT.setFont(font);
+  tudT.setCharacterSize(18); // Размер шрифта
+  tudT.setFillColor(sf::Color(90, 255, 87)); // Цвет текста
+  tudT.setPosition(280, 170); // Позиция текста на экране
+  tudT.setString("");
+
+  window.draw(golS);
+  window.draw(kruS);
+  window.draw(tudS);
+  window.draw(golT);
+  window.draw(kruT);
+  window.draw(tudT);
+}
