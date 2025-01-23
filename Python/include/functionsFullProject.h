@@ -325,27 +325,6 @@ private:
     void MoveRandomly();
 };
 
-// Функция устанавливает название текущего экрана.
-void SetCurrentWindowName(std::string newWindowName);
-
-// Функция возвращает информацию о первом игроке.
-PlayerInfo GetFirstPlayerInfo();
-
-// Функция устанавливает информацию о первом игроке.
-void SetFirstPlayerInfo(PlayerInfo newInfo);
-
-// Функция возвращает информацию о втором игроке.
-PlayerInfo GetSecondPlayerInfo();
-
-// Функция устанавливает информацию о втором игроке.
-void SetSecondPlayerInfo(PlayerInfo newInfo);
-
-// Функция возвращает название изменяемого поля.
-std::string GetFieldInUse();
-
-// Функция устанавливает название изменяемого поля.
-void SetFieldInUse(std::string fieldName);
-
 // Функция создает первого игрока.
 PlayerInfo CreateFirstPlayer();
 
@@ -382,6 +361,9 @@ void ProcessActionInStartGameMenu(sf::RenderWindow &window, sf::Event &event,
 void ProcessActionInLeaveGameMenu(sf::RenderWindow &window, sf::Event &event,
                                   GameInfo &gameInfo);
 
+// Функция уберет легенду карты
+void ProcessActionInLegend(sf::RenderWindow &window, sf::Event &event,
+                                  GameInfo &gameInfo);
 // Функция обрабатывает событие в меню настроек.
 void ProcessActionInSettingsMenu(sf::RenderWindow &window, sf::Event &event,
                                  GameInfo &gameInfo);
@@ -461,9 +443,6 @@ vector<int> GenerateRandomValues(int maxSize);
 void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field,
               Snake &playerSnake, std::vector<Snake> &bots);
 
-// Игровой процесс без ботов
-void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake &snake);
-
 // Игровой процесс многопользовательской игры
 void GameLoop(sf::RenderWindow &window, GameInfo &gameInfo, Field &field, Snake &snake1, Snake &snake2);
 
@@ -478,5 +457,8 @@ bool keyIsntUsed(GameInfo &gameInfo, sf::Keyboard::Key keyToUse);
 
 // Функция вернёт цвет змейки
 std::string ChoiceSelection(sf::Color color);
+
+// Легенда карты
+void ShowLegend(sf::RenderWindow &window, GameInfo &gameInfo, Field &field);
 
 #endif // FULL_H
